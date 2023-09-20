@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warframe Team Up</title>
+    <style>
+        .wrapper {
+            width: 100%;
+            height: 300px;
+            text-align: center;
+        }
+        .logo > * {
+            vertical-align: middle;
+        }
+        .logo > span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+        .activate {
+            padding: 8px;
+            width: 120px;
+            height: 20px;
+            background-color: #0b0b0b;
+            display: inline-block;
+            text-align: center;
+            border-radius: 1em;
+            cursor: pointer;
+            color: #fff;
+        }
+        .activate:hover {
+            background-color: #383838;
+        }
+        .mt-rem {
+            margin-top: 0.8rem;
+            user-select: none;
+        }
+        a {
+            text-decoration: none !important;
+            color: #fff;
+        }
+        .email > * {
+            color: #0b0b0b !important;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="logo">
+        <img
+                src="https://www.neorae.cn/data/svg/warframe.svg"
+                alt="icon"
+        />
+        <span> Warframe Team Up </span>
+    </div>
+    <div class="mt-rem">
+        账户&nbsp;<span th:text="${email}" class="email"></span>&nbsp;正在找回密码
+    </div>
+    <div class="mt-rem">如非本人操作，请忽视本邮件</div>
+    <div class="mt-rem">
+        <a th:href="${url}">
+            <div class="activate">点击此处找回</div>
+        </a>
+    </div>
+    <div class="mt-rem">Ciallo~(∠・ω< )⌒★</div>
+</div>
+</body>
+</html>
