@@ -17,14 +17,11 @@
             <result property="clanId" column="clan_id" jdbcType="INTEGER"/>
             <result property="level" column="level" jdbcType="INTEGER"/>
             <result property="onlineStatus" column="online_status" jdbcType="INTEGER"/>
-            <result property="bonusXp" column="bonus_xp" jdbcType="TINYINT"/>
-            <result property="bonusXpDays" column="bonus_xp_days" jdbcType="INTEGER"/>
-            <result property="bonusCash" column="bonus_cash" jdbcType="TINYINT"/>
-            <result property="bonusCashDays" column="bonus_cash_days" jdbcType="INTEGER"/>
-            <result property="bonusItem" column="bonus_item" jdbcType="TINYINT"/>
-            <result property="bonusItemDays" column="bonus_item_days" jdbcType="INTEGER"/>
-            <result property="bonusDropRate" column="bonus_drop_rate" jdbcType="TINYINT"/>
-            <result property="bonusDropRateDays" column="bonus_drop_rate_days" jdbcType="INTEGER"/>
+            <result property="affinityBooster" column="affinity_booster" jdbcType="TINYINT"/>
+            <result property="creditBooster" column="credit_booster" jdbcType="TINYINT"/>
+            <result property="resourceBooster" column="resource_booster" jdbcType="TINYINT"/>
+            <result property="resourceDropRateBooster" column="resource_drop_rate_booster" jdbcType="TINYINT"/>
+            <result property="modDropRateBooster" column="mod_drop_rate_booster" jdbcType="TINYINT"/>
             <result property="verified" column="verified" jdbcType="TINYINT"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
@@ -32,13 +29,20 @@
     <sql id="Base_Column_List">
         id,create_time,update_time,
         uuid,email,password,
-        name,avatar,clan_id,
-        level,online_status,bonus_xp,
-        bonus_xp_days,bonus_cash,bonus_cash_days,
-        bonus_item,bonus_item_days,bonus_drop_rate,
-        bonus_drop_rate_days,verified,id_deleted
+        name,avatar,description,
+        clan_id,level,online_status,
+        affinity_booster,credit_booster,resource_booster,
+        resource_droprate_booster,mod_droprate_booster,verified,
+        is_deleted
     </sql>
+
     <insert id="register" useGeneratedKeys="true">
         insert into user (email, password, uuid, online_status) values (#{email}, #{password}, #{uuid}, #{onlineStatus})
     </insert>
+    <select id="getUserByUUID" resultType="cn.neorae.wtu.module.account.domain.User">
+        select
+        *
+        from user
+        where uuid = #{uuid} and is_deleted = #{notDeleted}
+    </select>
 </mapper>

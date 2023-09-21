@@ -27,6 +27,7 @@ public enum ResponseEnum {
     BAD_REQUEST(305, "请求方法错误"),
     SERVICE_ERROR(306, "服务错误"),
     SERVICE_UNAVAILABLE(307, "服务不可用"),
+    INVALID_BOOSTER(308, "无效的加成类型"),
     UNAUTHORIZED(401, "尚未认证，请重新登录"),
     FORBIDDEN(402, "权限不足，禁止访问"),
     TIME_OUT(403, "请求超时"),

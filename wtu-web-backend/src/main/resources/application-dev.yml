@@ -93,6 +93,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
 
-server-addr:
+domain:
   frontend: https://localhost:67
   backend: https://localhost:6767
+  name: localhost

@@ -1,6 +1,9 @@
 package cn.neorae.wtu.module.account.domain.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class UserVO {
@@ -14,4 +17,6 @@ public class UserVO {
     private String description;
 
     private Integer onlineStatus;
+
+    private List<String> boosterList;
 }

@@ -1,10 +1,12 @@
 package cn.neorae.wtu.module.account.domain;
 
-import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
-
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * 用户
@@ -52,20 +54,19 @@ public class User implements Serializable {
     /**
      * 
      */
-    @TableField(value = "name", insertStrategy = FieldStrategy.DEFAULT)
+    @TableField(value = "name")
     private String name;
 
     /**
      * Avatar
      */
-    @TableField(value = "avatar", insertStrategy = FieldStrategy.DEFAULT)
+    @TableField(value = "avatar")
     private String avatar;
 
-
     /**
-     * Avatar
+     * description
      */
-    @TableField(value = "description", insertStrategy = FieldStrategy.DEFAULT)
+    @TableField(value = "description")
     private String description;
 
     /**
@@ -90,49 +91,31 @@ public class User implements Serializable {
      * Bonus XP 0: not available 1: available
      */
     @TableField(value = "affinity_booster")
-    private Integer bonusXp;
-
-    /**
-     * Bonus XP Days Left
-     */
-    @TableField(value = "bonus_xp_days")
-    private Integer bonusXpDays;
+    private Integer affinityBooster;
 
     /**
      * Bonus Cash 0: not available 1: available
      */
-    @TableField(value = "bonus_cash")
-    private Integer bonusCash;
-
-    /**
-     * Bonus Cash Days Left
-     */
-    @TableField(value = "bonus_cash_days")
-    private Integer bonusCashDays;
+    @TableField(value = "credit_booster")
+    private Integer creditBooster;
 
     /**
      * Bonus Item 0: not available 1: available
      */
-    @TableField(value = "bonus_item")
-    private Integer bonusItem;
-
-    /**
-     * Bonus Item Days Left
-     */
-    @TableField(value = "bonus_item_days")
-    private Integer bonusItemDays;
+    @TableField(value = "resource_booster")
+    private Integer resourceBooster;
 
     /**
      * Bonus Drop Rate 0: not available 1: available
      */
-    @TableField(value = "bonus_drop_rate")
-    private Integer bonusDropRate;
+    @TableField(value = "resource_drop_rate_booster")
+    private Integer resourceDropRateBooster;
 
     /**
-     * Bonus Drop Rate Days Left
+     * mod_droprate_booster 0: unavailable 1: available
      */
-    @TableField(value = "bonus_drop_rate_days")
-    private Integer bonusDropRateDays;
+    @TableField(value = "mod_drop_rate_booster")
+    private Integer modDropRateBooster;
 
     /**
      * 0: not verified, 1: verified
@@ -144,7 +127,6 @@ public class User implements Serializable {
      * Deleted 0: not deleted 1: deleted
      */
     @TableField(value = "is_deleted")
-    @TableLogic(value = "0", delval = "1")
     private Integer isDeleted;
 
     @TableField(exist = false)

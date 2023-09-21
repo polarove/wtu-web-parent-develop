@@ -93,6 +93,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
 
-server-addr:
+domain:
   frontend: https://www.neorae.cn
   backend: https://www.neorae.cn:6767
+  name: neorae.cn
