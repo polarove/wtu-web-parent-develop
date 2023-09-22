@@ -18,5 +18,7 @@ public class UserVO {
 
     private Integer onlineStatus;
 
+    private Integer server;
+
     private List<String> boosterList;
 }

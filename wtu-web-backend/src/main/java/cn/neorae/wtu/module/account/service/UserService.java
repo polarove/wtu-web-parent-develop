@@ -26,7 +26,7 @@ public interface UserService extends IService<User> {
 
     ResponseVO<UserVO> changePassword(RevisePasswordDTO revisePasswordDTO, HttpServletResponse response);
 
-    ResponseVO<UserVO> saveMyName(SaveMyNameDTO saveMyNameDTO);
+    ResponseVO<UserVO> saveMyProfile(SaveMyProfileDTO saveMyProfileDTO);
 
     ResponseVO<String> updateOnlineStatus(UpdateOnlineStatusDTO updateOnlineStatusDTO);
 
@@ -36,4 +36,5 @@ public interface UserService extends IService<User> {
 
     ResponseVO<String> logout(String uuid, HttpServletResponse response);
 
+    ResponseVO<UserVO> toggleServer(String uuid, Integer serverType);
 }

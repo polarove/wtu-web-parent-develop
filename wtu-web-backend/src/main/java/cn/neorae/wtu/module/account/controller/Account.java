@@ -92,9 +92,9 @@ public class Account {
 //    }
 
     @Operation(summary = "变更用户名")
-    @PostMapping("/saveMyName")
-    public ResponseVO<UserVO> saveMyName(@Valid @RequestBody SaveMyNameDTO saveMyNameDTO ) {
-        return userService.saveMyName(saveMyNameDTO);
+    @PostMapping("/saveMyProfile")
+    public ResponseVO<UserVO> saveMyProfile(@Valid @RequestBody SaveMyProfileDTO saveMyProfileDTO) {
+        return userService.saveMyProfile(saveMyProfileDTO);
     }
 
     @Operation(summary = "变更在线状态")
@@ -107,5 +107,11 @@ public class Account {
     @PostMapping("/updateUserBooster")
     public ResponseVO<String> updateUserBooster(@Valid @RequestBody UpdateUserBoosterDT0 updateUserBoosterDT0 ) {
         return userService.updateUserBooster(updateUserBoosterDT0);
+    }
+
+    @Operation(summary = "退出")
+    @GetMapping("/toggleServer")
+    public ResponseVO<UserVO> toggleServer(@RequestParam Integer serverType) {
+        return userService.toggleServer(StpUtil.getLoginIdAsString(), serverType);
     }
 }

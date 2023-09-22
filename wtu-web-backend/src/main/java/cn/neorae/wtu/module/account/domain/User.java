@@ -118,6 +118,13 @@ public class User implements Serializable {
     private Integer modDropRateBooster;
 
     /**
+     * 0: 国服, 1: 国际服
+     */
+    @TableField(value = "server")
+    private Integer server;
+
+
+    /**
      * 0: not verified, 1: verified
      */
     @TableField(value = "verified")

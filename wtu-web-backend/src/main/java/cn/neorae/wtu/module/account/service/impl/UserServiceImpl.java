@@ -24,6 +24,7 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.index.PathBasedRedisIndexDefinition;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -182,11 +183,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public ResponseVO<UserVO> getUserVOByUUID(String uuid) {
         User user = UserUtil.getUserByUuid(uuid);
-        UserVO userVO = new UserVO();
-        BeanUtil.copyProperties(user, userVO);
-        List<String> boosterList = getBoosters(user);
-        userVO.setBoosterList(boosterList);
-        return ResponseVO.wrapData(userVO);
+        return ResponseVO.wrapData(parseData(user));
     }
 
     @Override
@@ -200,16 +197,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public ResponseVO<UserVO> saveMyName(SaveMyNameDTO saveMyNameDTO) {
-        String email = saveMyNameDTO.getEmail();
+    public ResponseVO<UserVO> saveMyProfile(SaveMyProfileDTO saveMyProfileDTO) {
+        String email = saveMyProfileDTO.getEmail();
         User user = UserUtil.getUserByEmail(email);
-        user.setName(saveMyNameDTO.getName());
+        BeanUtil.copyProperties(saveMyProfileDTO, user);
         this.baseMapper.updateById(user);
-        UserVO userVO = new UserVO();
-        BeanUtil.copyProperties(user, userVO);
-        List<String> boosterList = getBoosters(user);
-        userVO.setBoosterList(boosterList);
-        return ResponseVO.wrapData(userVO);
+        return ResponseVO.wrapData(parseData(user));
     }
 
     @Override
@@ -233,6 +226,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         this.baseMapper.updateById(user);
         return ResponseVO.completed();
+    }
+
+    @Override
+    public ResponseVO<UserVO> toggleServer(String uuid, Integer serverType) {
+        User user = UserUtil.getUserByUuid(uuid);
+        user.setServer(serverType);
+        this.baseMapper.updateById(user);
+        return ResponseVO.wrapData(parseData(user));
     }
 
     private boolean setBooster(User user, String booster, Integer action){
@@ -288,6 +289,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         CookieUtil.setCookie(response, Values.Fingerprint, uuid, Values.CookieExpiry, values.domain);
 
         return ResponseVO.wrapData(userVO);
+    }
+
+    private UserVO parseData (User user) {
+        UserVO userVO = new UserVO();
+        BeanUtil.copyProperties(user, userVO);
+        List<String> boosterList = getBoosters(user);
+        userVO.setBoosterList(boosterList);
+        return userVO;
     }
 }
 
