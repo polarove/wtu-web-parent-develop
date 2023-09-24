@@ -20,5 +20,7 @@ public class UserVO {
 
     private Integer server;
 
+    private Integer level;
+
     private List<String> boosterList;
 }
