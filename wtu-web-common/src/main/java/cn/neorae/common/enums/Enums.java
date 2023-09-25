@@ -173,4 +173,5 @@ public interface Enums<T> {
             return typeMap.containsKey(code);
         }
     }
+
 }

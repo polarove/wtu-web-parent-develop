@@ -1,7 +1,9 @@
 package cn.neorae.wtu.module.team.domain;
 
-import com.baomidou.mybatisplus.annotation.*;
-
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
@@ -34,8 +36,8 @@ public class TeamRequirement implements Serializable {
     /**
      * Team UUID
      */
-    @TableField(value = "team_uuid")
-    private String teamUuid;
+    @TableField(value = "team_id")
+    private Integer teamId;
 
     /**
      * 
@@ -53,7 +55,6 @@ public class TeamRequirement implements Serializable {
      * 
      */
     @TableField(value = "is_deleted")
-    @TableLogic(delval = "1", value = "0")
     private Integer isDeleted;
 
     @TableField(exist = false)

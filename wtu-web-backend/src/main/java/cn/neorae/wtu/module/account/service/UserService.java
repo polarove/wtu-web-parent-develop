@@ -7,6 +7,7 @@ import cn.neorae.wtu.module.account.domain.dto.*;
 import cn.neorae.wtu.module.account.domain.vo.UserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
@@ -32,7 +33,7 @@ public interface UserService extends IService<User> {
 
     ResponseVO<String> updateUserBooster(UpdateUserBoosterDT0 updateUserBoosterDT0);
 
-    ResponseVO<UserVO> getUserVOByUUID(String uuid);
+    ResponseVO<UserVO> getUserVOByUUID(HttpServletRequest request);
 
     ResponseVO<String> logout(String uuid, HttpServletResponse response);
 

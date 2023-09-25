@@ -1,5 +1,6 @@
 package cn.neorae.wtu.module.account.service.impl;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
@@ -21,6 +22,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -181,7 +183,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
 
     @Override
-    public ResponseVO<UserVO> getUserVOByUUID(String uuid) {
+    public ResponseVO<UserVO> getUserVOByUUID(HttpServletRequest request) {
+        String uuid = CookieUtil.getUUID(request, Values.Fingerprint);
+        if (StrUtil.isBlank(uuid)){
+            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
+        }
+        if (!StpUtil.isLogin(uuid)){
+            return ResponseVO.failed(ResponseEnum.USER_NOT_LOGIN);
+        }
         User user = UserUtil.getUserByUuid(uuid);
         return ResponseVO.wrapData(parseData(user));
     }

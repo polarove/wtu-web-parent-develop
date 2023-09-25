@@ -20,6 +20,7 @@ public enum ResponseEnum {
     VERIFICATION_DUPLICATED(205,"当前帐号已通过验证"),
     VERIFICATION_FAILED(206,"验证时发生错误，加群问问狗群主吧"),
     USER_NOT_FOUND(207,"用户不存在"),
+    USER_NOT_LOGIN(208,"尚未登录"),
     BAD_PARAM(301, "请求参数错误"),
     INCORPORATE_CODE(302, "验证码错误"),
     USER_EXISTS(303, "邮箱已被注册"),
@@ -27,13 +28,15 @@ public enum ResponseEnum {
     BAD_REQUEST(305, "请求方法错误"),
     SERVICE_ERROR(306, "服务错误"),
     SERVICE_UNAVAILABLE(307, "服务不可用"),
-    INVALID_BOOSTER(308, "无效的加成类型"),
+    SERVICE_RESTARTED(308, "请刷新页面"),
     UNAUTHORIZED(401, "尚未认证，请重新登录"),
     FORBIDDEN(402, "权限不足，禁止访问"),
     TIME_OUT(403, "请求超时"),
     NOT_FOUND(404, "请求的资源不存在"),
     VERIFICATION_REQUIRED(405, "账户需要验证"),
-    FAILED(500, "请求失败");
+    FAILED(500, "请求失败"),
+
+    INVALID_BOOSTER(10001, "无效的加成类型");
 
     private final Integer code;
 

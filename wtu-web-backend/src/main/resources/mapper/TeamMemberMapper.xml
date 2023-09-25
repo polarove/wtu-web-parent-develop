@@ -8,7 +8,7 @@
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="teamUuid" column="team_uuid" jdbcType="VARCHAR"/>
+            <result property="teamId" column="team_id" jdbcType="INTEGER"/>
             <result property="userUuid" column="user_uuid" jdbcType="VARCHAR"/>
             <result property="warframeId" column="warframe_id" jdbcType="INTEGER"/>
             <result property="focus" column="focus" jdbcType="VARCHAR"/>
@@ -18,24 +18,7 @@
 
     <sql id="Base_Column_List">
         id,create_time,update_time,
-        team_uuid,user_uuid,warframe_id,
-        focus,is_deleted,role
+        team_id,user_uuid,warframe_id,
+        focus,role,is_deleted
     </sql>
-    <insert id="saveBatch">
-        insert into team_member
-        (team_uuid,user_uuid,warframe_id,focus,role)
-        values
-        <foreach collection="list" item="item" index="index" separator=",">
-            #{item.teamUuid},#{item.userUuid},#{item.warframeId},#{item.focus},#{item.role}
-        </foreach>
-    </insert>
-    <delete id="removeBatchByIds">
-        delete from team_member
-        where id in
-        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-            #{item}
-        </foreach>
-    </delete>
-
-
 </mapper>

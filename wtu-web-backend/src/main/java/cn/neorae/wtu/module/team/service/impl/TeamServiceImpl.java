@@ -4,12 +4,20 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ArrayUtil;
+import cn.neorae.common.enums.Enums;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.module.team.domain.bo.GetTeamListBO;
+import cn.neorae.wtu.module.team.domain.bo.TeamBO;
+import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
+import cn.neorae.wtu.module.team.domain.bo.TeamRequirementsBO;
+import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
 import cn.neorae.wtu.module.team.manager.TeamManager;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
 import cn.neorae.wtu.module.team.domain.TeamWarframe;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
+import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
+import cn.neorae.wtu.module.team.mapper.TeamRequirementMapper;
 import cn.neorae.wtu.module.team.mapper.TeamWarframeMapper;
 import cn.neorae.wtu.module.team.service.TeamMemberService;
 import cn.neorae.wtu.module.team.service.TeamRequirementService;
@@ -19,10 +27,14 @@ import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.service.TeamService;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
 import jakarta.annotation.Resource;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
 * @author Neorae
@@ -41,7 +53,13 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     private TeamRequirementService teamRequirementService;
 
     @Resource
+    private TeamRequirementMapper teamRequirementMapper;
+
+    @Resource
     private TeamMemberService teamMemberService;
+
+    @Resource
+    private TeamMemberMapper teamMemberMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -53,17 +71,20 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         team.setCreatorUuid(StpUtil.getLoginIdAsString());
         team.setChannel(createTeamDTO.getChannel());
         team.setUuid(UUID.randomUUID().toString());
-
+        // 保存队伍
+        if (BeanUtil.isNotEmpty(team)){
+            this.baseMapper.insert(team);
+        }
         List<TeamRequirement> requirementList = createTeamDTO.getRequirements().stream().map(requirement -> {
             TeamRequirement teamRequirement = new TeamRequirement();
-            teamRequirement.setTeamUuid(team.getUuid());
+            teamRequirement.setTeamId(team.getId());
             BeanUtil.copyProperties(requirement, teamRequirement);
             return teamRequirement;
         }).toList();
 
         List<TeamMember> memberList = createTeamDTO.getMembers().stream().map(member -> {
             TeamMember teamMember = new TeamMember();
-            teamMember.setTeamUuid(team.getUuid());
+            teamMember.setTeamId(team.getId());
             teamMember.setFocus(member.getFocus());
 
             Integer warframeId;
@@ -83,11 +104,6 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
             return teamMember;
         }).toList();
 
-        // 保存队伍
-        if (BeanUtil.isNotEmpty(team)){
-            save(team);
-            updateById(team);
-        }
         if (ArrayUtil.isNotEmpty(requirementList)){
             teamRequirementService.saveBatch(requirementList);
         }
@@ -99,17 +115,17 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
     @Override
     @Transactional
-    public ResponseVO<String> removeTeam(String teamUuid) {
-        Team team = this.getOne(new LambdaQueryWrapper<Team>().eq(Team::getUuid, teamUuid));
+    public ResponseVO<String> removeTeam(Integer teamId) {
+        Team team = this.getOne(new LambdaQueryWrapper<Team>().eq(Team::getId, teamId));
 
-        List<Integer> requirementIdList = teamRequirementService
-                .list(new LambdaQueryWrapper<TeamRequirement>().eq(TeamRequirement::getTeamUuid, teamUuid))
+        List<Integer> requirementIdList = teamRequirementMapper
+                .selectList(new LambdaQueryWrapper<TeamRequirement>().eq(TeamRequirement::getTeamId, teamId))
                 .stream()
                 .peek(teamRequirement -> {
                 }).map(TeamRequirement::getId).toList();
 
-        List<Integer> memberIdList = teamMemberService
-                .list(new LambdaQueryWrapper<TeamMember>().eq(TeamMember::getTeamUuid, teamUuid))
+        List<Integer> memberIdList = teamMemberMapper
+                .selectList(new LambdaQueryWrapper<TeamMember>().eq(TeamMember::getTeamId, teamId))
                 .stream()
                 .peek(teamRequirement -> {
                 }).map(TeamMember::getId).toList();
@@ -126,6 +142,29 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         }
         return ResponseVO.completed();
     }
+
+    @Override
+    public ResponseVO<List<GetTeamListBO>> getTeamList(GetTeamDTO getTeamDTO) {
+        List<Team> teams = this.list(new LambdaQueryWrapper<Team>().eq(Team::getChannel, getTeamDTO.getChannel()).eq(Team::getServer, getTeamDTO.getServer()).eq(Team::getStatus, Enums.Polar.TRUE.getCode()));
+        List<GetTeamListBO> teamList = teams.stream().map(team -> {
+            GetTeamListBO getTeamListBO = new GetTeamListBO();
+            getTeamListBO.setTeam(this.getTeamBO(team).join());
+            getTeamListBO.setMemberList(teamMemberService.getTeamMemberBOList(team).join());
+            getTeamListBO.setRequirementsList(teamRequirementService.getTeamRequirementList(team).join());
+            return getTeamListBO;
+        }).toList();
+        return ResponseVO.wrapData(teamList);
+    }
+
+    @Async
+    protected CompletableFuture<TeamBO> getTeamBO(Team team) {
+        TeamBO teamBO = new TeamBO();
+        BeanUtil.copyProperties(team, teamBO);
+        return CompletableFuture.completedFuture(teamBO);
+    }
+
+
+
 }
 
 

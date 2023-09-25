@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -72,8 +73,8 @@ public class Account {
 
     @Operation(summary = "获取用户信息")
     @GetMapping("/getUserVOByUUID")
-    public ResponseVO<UserVO> getUserVOByUUID() {
-        return userService.getUserVOByUUID(StpUtil.getLoginIdAsString());
+    public ResponseVO<UserVO> getUserVOByUUID(HttpServletRequest request) {
+        return userService.getUserVOByUUID(request);
     }
 
     @Operation(summary = "退出")

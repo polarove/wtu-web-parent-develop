@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="TeamWarframe" />
-                  <option name="tableName" value="team_warframe" />
+                  <option name="className" value="TeamRequirement" />
+                  <option name="tableName" value="team_requirement" />
                 </TableUIInfo>
               </list>
             </option>

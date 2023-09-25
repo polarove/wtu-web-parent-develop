@@ -8,7 +8,7 @@
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="teamUuid" column="team_uuid" jdbcType="VARCHAR"/>
+            <result property="teamId" column="team_id" jdbcType="INTEGER"/>
             <result property="type" column="type" jdbcType="VARCHAR"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
@@ -16,22 +16,7 @@
 
     <sql id="Base_Column_List">
         id,create_time,update_time,
-        team_uuid,type,content,
+        team_id,type,content,
         is_deleted
     </sql>
-    <insert id="saveBatch">
-        insert into team_requirement
-        (team_uuid,type,content)
-        values
-        <foreach collection="list" item="item" index="index" separator=",">
-            #{item.teamUuid},#{item.type},#{item.content},
-        </foreach>
-    </insert>
-    <delete id="removeBatchByIds">
-        delete from team_requirement
-        where id in
-        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-            #{item}
-        </foreach>
-    </delete>
 </mapper>

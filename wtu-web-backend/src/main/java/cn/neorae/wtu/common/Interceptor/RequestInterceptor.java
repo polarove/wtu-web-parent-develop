@@ -1,5 +1,6 @@
 package cn.neorae.wtu.common.Interceptor;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
@@ -71,7 +72,7 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
-
+        UserUtil.removeUser(CookieUtil.getUUID(request, Values.Fingerprint));
     }
 
 }

@@ -2,6 +2,7 @@ package cn.neorae.wtu.module.team.controller;
 
 
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.module.team.domain.bo.GetTeamListBO;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
 import cn.neorae.wtu.module.team.service.TeamService;
@@ -30,7 +31,7 @@ public class Team {
 
     // todo: 2021/10/3 未完成
     @PostMapping("/getTeamList")
-    public ResponseVO<GetTeamDTO> getTeamList(@RequestBody GetTeamDTO getTeamDTO) {
-        return ResponseVO.wrapData(getTeamDTO);
+    public ResponseVO<List<GetTeamListBO>> getTeamList(@RequestBody GetTeamDTO getTeamDTO) {
+        return teamService.getTeamList(getTeamDTO);
     }
 }

@@ -18,6 +18,14 @@ spring:
       min-idle: 1
       keep-alive: true
       min-evictable-idle-time-millis: 600000
+  task:
+    execution:
+      pool:
+        core-size: 4
+        max-size: 8
+        queue-capacity: 1000
+        keep-alive: 6000
+      thread-name-prefix: wtu-web-backend-task-
   servlet:
     multipart:
       max-request-size: 10MB
