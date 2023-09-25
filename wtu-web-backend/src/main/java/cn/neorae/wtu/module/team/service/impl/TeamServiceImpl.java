@@ -9,15 +9,15 @@ import cn.neorae.common.response.ResponseVO;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
-import cn.neorae.wtu.module.team.domain.TeamWarframe;
-import cn.neorae.wtu.module.team.domain.bo.GetTeamListBO;
+import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
+import cn.neorae.wtu.module.team.domain.bo.TeamRequirementsBO;
+import cn.neorae.wtu.module.team.domain.vo.TeamListVO;
 import cn.neorae.wtu.module.team.domain.bo.TeamBO;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
 import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
 import cn.neorae.wtu.module.team.mapper.TeamRequirementMapper;
-import cn.neorae.wtu.module.team.mapper.TeamWarframeMapper;
 import cn.neorae.wtu.module.team.service.TeamMemberService;
 import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import cn.neorae.wtu.module.team.service.TeamService;
@@ -42,9 +42,6 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
 
     @Resource
-    private TeamWarframeMapper teamWarframeMapper;
-
-    @Resource
     private TeamRequirementService teamRequirementService;
 
     @Resource
@@ -58,7 +55,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseVO<String> createTeam(CreateTeamDTO createTeamDTO) {
+    public ResponseVO<TeamListVO> createTeam(CreateTeamDTO createTeamDTO) {
 
         Team team = new Team();
         team.setTitle(createTeamDTO.getTitle());
@@ -70,6 +67,8 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         if (BeanUtil.isNotEmpty(team)){
             this.baseMapper.insert(team);
         }
+
+        // 装配队伍需求
         List<TeamRequirement> requirementList = createTeamDTO.getRequirements().stream().map(requirement -> {
             TeamRequirement teamRequirement = new TeamRequirement();
             teamRequirement.setTeamId(team.getId());
@@ -77,40 +76,48 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
             return teamRequirement;
         }).toList();
 
+        // 装配队伍成员信息
         List<TeamMember> memberList = createTeamDTO.getMembers().stream().map(member -> {
             TeamMember teamMember = new TeamMember();
             teamMember.setTeamId(team.getId());
-            teamMember.setFocus(member.getFocus());
-
-            Integer warframeId;
-            TeamWarframe teamWarframe = teamWarframeMapper.selectOne(new LambdaQueryWrapper<TeamWarframe>().eq(TeamWarframe::getEn, member.getWarframe().getEn()));
-            if (!BeanUtil.isNotEmpty(teamWarframe)) {
-                teamWarframe = new TeamWarframe();
-                teamWarframe.setEn(member.getWarframe().getEn());
-                teamWarframe.setCn(member.getWarframe().getCn());
-                teamWarframeMapper.insert(teamWarframe);
-            }
-            warframeId = teamWarframe.getId();
-            teamMember.setWarframeId(warframeId);
-
-            teamMember.setRole(member.getRole());
             teamMember.setUserUuid(member.getUser().getUuid());
-
+            teamMember.setEn(member.getWarframe().getEn());
+            teamMember.setCn(member.getWarframe().getCn());
+            BeanUtil.copyProperties(member, teamMember);
             return teamMember;
         }).toList();
 
+        // 保存队伍需求和队伍成员信息
         if (ArrayUtil.isNotEmpty(requirementList)){
             teamRequirementService.saveBatch(requirementList);
         }
         if (ArrayUtil.isNotEmpty(memberList)){
             teamMemberService.saveBatch(memberList);
         }
-        return ResponseVO.completed();
+
+        // 装配返回结果
+        TeamListVO teamListVO = new TeamListVO();
+        teamListVO.setTeam(this.getTeamBO(team).join());
+
+        List<TeamMemberBO> teamMemberBOS = memberList.stream().map(member -> {
+            TeamMemberBO teamMemberBO = new TeamMemberBO();
+            BeanUtil.copyProperties(member, teamMemberBO);
+            return teamMemberBO;
+        }).toList();
+        teamListVO.setMembers(teamMemberBOS);
+
+        List<TeamRequirementsBO> teamRequirementsBOS = requirementList.stream().map(requirement -> {
+            TeamRequirementsBO teamRequirementsBO = new TeamRequirementsBO();
+            BeanUtil.copyProperties(requirement, teamRequirementsBO);
+            return teamRequirementsBO;
+        }).toList();
+        teamListVO.setRequirements(teamRequirementsBOS);
+        return ResponseVO.wrapData(teamListVO);
     }
 
     @Override
     @Transactional
-    public ResponseVO<String> removeTeam(Integer teamId) {
+    public ResponseVO<String> removeTeamById(Integer teamId) {
         Team team = this.getOne(new LambdaQueryWrapper<Team>().eq(Team::getId, teamId));
 
         List<Integer> requirementIdList = teamRequirementMapper
@@ -139,14 +146,14 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     }
 
     @Override
-    public ResponseVO<List<GetTeamListBO>> getTeamList(GetTeamDTO getTeamDTO) {
+    public ResponseVO<List<TeamListVO>> getTeamList(GetTeamDTO getTeamDTO) {
         List<Team> teams = this.list(new LambdaQueryWrapper<Team>().eq(Team::getChannel, getTeamDTO.getChannel()).eq(Team::getServer, getTeamDTO.getServer()).eq(Team::getStatus, Enums.Polar.TRUE.getCode()));
-        List<GetTeamListBO> teamList = teams.stream().map(team -> {
-            GetTeamListBO getTeamListBO = new GetTeamListBO();
-            getTeamListBO.setTeam(this.getTeamBO(team).join());
-            getTeamListBO.setMemberList(teamMemberService.getTeamMemberBOList(team).join());
-            getTeamListBO.setRequirementsList(teamRequirementService.getTeamRequirementList(team).join());
-            return getTeamListBO;
+        List<TeamListVO> teamList = teams.stream().map(team -> {
+            TeamListVO teamListVO = new TeamListVO();
+            teamListVO.setTeam(this.getTeamBO(team).join());
+            teamListVO.setMembers(teamMemberService.getTeamMemberBOList(team).join());
+            teamListVO.setRequirements(teamRequirementService.getTeamRequirementList(team).join());
+            return teamListVO;
         }).toList();
         return ResponseVO.wrapData(teamList);
     }

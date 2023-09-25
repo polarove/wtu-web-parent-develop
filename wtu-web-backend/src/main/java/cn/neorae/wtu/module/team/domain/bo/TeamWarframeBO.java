@@ -6,8 +6,6 @@ import lombok.Data;
 @Data
 public class TeamWarframeBO {
 
-    private Integer id;
-
     private String en;
 
     private String cn;

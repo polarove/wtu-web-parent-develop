@@ -12,7 +12,7 @@ public class TeamMemberBO {
 
     private Integer role;
 
-    private TeamWarframeBO teamWarframeBO;
+    private TeamWarframeBO warframe;
 
     private Integer isDeleted;
 }

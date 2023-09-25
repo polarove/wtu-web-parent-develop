@@ -4,10 +4,12 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
+import cn.neorae.wtu.module.team.domain.bo.TeamWarframeBO;
 import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
 import cn.neorae.wtu.module.team.service.TeamMemberService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,10 @@ public class TeamMemberServiceImpl extends ServiceImpl<TeamMemberMapper, TeamMem
                 .stream().map(member -> {
                     TeamMemberBO teamMemberBO = new TeamMemberBO();
                     BeanUtil.copyProperties(member, teamMemberBO);
+                    TeamWarframeBO teamWarframeBO = new TeamWarframeBO();
+                    teamWarframeBO.setEn(member.getEn());
+                    teamWarframeBO.setCn(member.getCn());
+                    teamMemberBO.setWarframe(teamWarframeBO);
                     return teamMemberBO;
                 }).collect(Collectors.toList());
         return CompletableFuture.completedFuture(teamMemberList);

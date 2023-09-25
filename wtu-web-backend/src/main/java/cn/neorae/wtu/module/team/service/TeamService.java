@@ -2,7 +2,7 @@ package cn.neorae.wtu.module.team.service;
 
 import cn.neorae.common.response.ResponseVO;
 import cn.neorae.wtu.module.team.domain.Team;
-import cn.neorae.wtu.module.team.domain.bo.GetTeamListBO;
+import cn.neorae.wtu.module.team.domain.vo.TeamListVO;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -16,9 +16,9 @@ import java.util.List;
 */
 public interface TeamService extends IService<Team> {
 
-    ResponseVO<String> createTeam(CreateTeamDTO createTeamDTO);
+    ResponseVO<TeamListVO> createTeam(CreateTeamDTO createTeamDTO);
 
-    ResponseVO<String> removeTeam(Integer teamId);
+    ResponseVO<String> removeTeamById(Integer teamId);
 
-    ResponseVO<List<GetTeamListBO>> getTeamList(GetTeamDTO getTeamDTO);
+    ResponseVO<List<TeamListVO>> getTeamList(GetTeamDTO getTeamDTO);
 }

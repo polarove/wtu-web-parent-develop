@@ -47,10 +47,17 @@ public class TeamMember implements Serializable {
     private String userUuid;
 
     /**
-     * warframe id
+     *
      */
-    @TableField(value = "warframe_id")
-    private Integer warframeId;
+    @TableField(value = "en")
+    private String en;
+
+
+    /**
+     *
+     */
+    @TableField(value = "cn")
+    private String cn;
 
     /**
      * 

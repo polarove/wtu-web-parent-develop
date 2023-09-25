@@ -10,7 +10,8 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="teamId" column="team_id" jdbcType="INTEGER"/>
             <result property="userUuid" column="user_uuid" jdbcType="VARCHAR"/>
-            <result property="warframeId" column="warframe_id" jdbcType="INTEGER"/>
+            <result property="en" column="en" jdbcType="VARCHAR"/>
+            <result property="cn" column="cn" jdbcType="VARCHAR"/>
             <result property="focus" column="focus" jdbcType="VARCHAR"/>
             <result property="role" column="role" jdbcType="TINYINT"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
@@ -18,7 +19,7 @@
 
     <sql id="Base_Column_List">
         id,create_time,update_time,
-        team_id,user_uuid,warframe_id,
+        team_id,user_uuid,en,cn
         focus,role,is_deleted
     </sql>
 </mapper>
