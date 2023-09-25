@@ -29,8 +29,6 @@ public class Team {
         return teamService.createTeam(createTeamDTO);
     }
 
-
-    // todo: 2021/10/3 未完成
     @PostMapping("/getTeamList")
     public ResponseVO<Page<TeamListVO>> getTeamList(@RequestBody GetTeamDTO getTeamDTO) {
         return teamService.getTeamList(getTeamDTO);
