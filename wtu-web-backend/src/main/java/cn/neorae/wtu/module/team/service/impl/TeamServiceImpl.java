@@ -4,15 +4,18 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.enums.Enums;
+import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.module.account.domain.User;
+import cn.neorae.wtu.module.account.mapper.UserMapper;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
-import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
-import cn.neorae.wtu.module.team.domain.bo.TeamRequirementsBO;
+import cn.neorae.wtu.module.team.domain.bo.*;
+import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamListVO;
-import cn.neorae.wtu.module.team.domain.bo.TeamBO;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
@@ -54,6 +57,9 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     @Resource
     private TeamMemberMapper teamMemberMapper;
 
+    @Resource
+    private UserMapper userMapper;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseVO<TeamListVO> createTeam(CreateTeamDTO createTeamDTO) {
@@ -64,6 +70,8 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         team.setCreatorUuid(StpUtil.getLoginIdAsString());
         team.setChannel(createTeamDTO.getChannel());
         team.setUuid(UUID.randomUUID().toString());
+        team.setStatus(Enums.Polar.TRUE.getCode());
+        team.setIsDeleted(Enums.Polar.FALSE.getCode());
         // 保存队伍
         if (BeanUtil.isNotEmpty(team)){
             this.baseMapper.insert(team);
@@ -94,25 +102,21 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         }
         if (ArrayUtil.isNotEmpty(memberList)){
             teamMemberService.saveBatch(memberList);
+        }else{
+            return ResponseVO.failed(ResponseEnum.TEAM_MEMBER_NOT_SATISFIED);
         }
 
         // 装配返回结果
         TeamListVO teamListVO = new TeamListVO();
         teamListVO.setTeam(this.getTeamBO(team).join());
 
-        List<TeamMemberBO> teamMemberBOS = memberList.stream().map(member -> {
-            TeamMemberBO teamMemberBO = new TeamMemberBO();
-            BeanUtil.copyProperties(member, teamMemberBO);
-            return teamMemberBO;
-        }).toList();
+        List<TeamMemberBO> teamMemberBOS = teamMemberService.getTeamMemberBOList(team).join();
         teamListVO.setMembers(teamMemberBOS);
 
-        List<TeamRequirementsBO> teamRequirementsBOS = requirementList.stream().map(requirement -> {
-            TeamRequirementsBO teamRequirementsBO = new TeamRequirementsBO();
-            BeanUtil.copyProperties(requirement, teamRequirementsBO);
-            return teamRequirementsBO;
-        }).toList();
+        List<TeamRequirementsBO> teamRequirementsBOS = teamRequirementService.getTeamRequirementList(team).join();
         teamListVO.setRequirements(teamRequirementsBOS);
+
+        // todo: 广播到当前channel的所有用户
         return ResponseVO.wrapData(teamListVO);
     }
 
@@ -152,7 +156,6 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         Page<Team> teams = this.baseMapper.selectPage(page, new LambdaQueryWrapper<Team>()
                 .eq(Team::getChannel, getTeamDTO.getChannel())
                 .eq(Team::getServer, getTeamDTO.getServer())
-                .eq(Team::getStatus, Enums.Polar.TRUE.getCode())
                 .orderByDesc(Team::getCreateTime));
         List<TeamListVO> teamList = teams.getRecords().stream().map(team -> {
             TeamListVO teamListVO = new TeamListVO();
@@ -164,6 +167,20 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         Page<TeamListVO> teamListVOPage = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize(), teams.getTotal());
         teamListVOPage.setRecords(teamList);
         return ResponseVO.wrapData(teamListVOPage);
+    }
+
+    @Override
+    public ResponseVO<String> toggleTeamStatus(ToggleTeamStatusDTO toggleTeamStatusDTO) {
+        String uuid = toggleTeamStatusDTO.getUuid();
+        Integer status = toggleTeamStatusDTO.getStatus();
+
+        Team team = this.baseMapper.selectOne(new LambdaQueryWrapper<Team>().eq(Team::getUuid, uuid));
+        if (BeanUtil.isEmpty(team)){
+            return ResponseVO.failed(ResponseEnum.TEAM_NOT_FOUND);
+        }
+        team.setStatus(status);
+        this.baseMapper.updateById(team);
+        return ResponseVO.completed();
     }
 
     @Async

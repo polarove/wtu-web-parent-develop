@@ -11,6 +11,8 @@ public class CreateTeamMemberDTO {
 
     private String focus;
 
-    private Integer role;
+    private Integer leader;
+
+    private Integer occupied;
 
 }

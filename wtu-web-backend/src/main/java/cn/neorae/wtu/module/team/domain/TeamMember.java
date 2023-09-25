@@ -1,9 +1,6 @@
 package cn.neorae.wtu.module.team.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -66,15 +63,23 @@ public class TeamMember implements Serializable {
     private String focus;
 
     /**
-     * 队中角色, 0为队长，1/2/3为队员
+     * 是否为队长，0：否，1：是
      */
-    @TableField(value = "role")
-    private Integer role;
+    @TableField(value = "leader")
+    private Integer leader;
+
+    /**
+     * 是否已被选择，0：否，1：是
+     */
+    @TableField(value = "occupied")
+    private Integer occupied;
+
 
     /**
      * 0: not deleted, 1: deleted
      */
     @TableField(value = "is_deleted")
+    @TableLogic(delval = "1", value = "0")
     private Integer isDeleted;
 
     @TableField(exist = false)

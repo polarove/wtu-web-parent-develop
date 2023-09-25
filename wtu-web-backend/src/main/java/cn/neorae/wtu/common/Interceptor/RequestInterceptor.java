@@ -71,7 +71,10 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
-        UserUtil.removeUser(CookieUtil.getUUID(request, Values.Fingerprint));
+        String uuid = CookieUtil.getUUID(request, Values.Fingerprint);
+        if (StrUtil.isNotBlank(uuid)) {
+            UserUtil.removeUser(uuid);
+        }
     }
 
 }

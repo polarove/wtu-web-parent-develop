@@ -10,9 +10,13 @@ public class TeamMemberBO {
 
     private String focus;
 
-    private Integer role;
+    private Integer leader;
 
     private TeamWarframeBO warframe;
+
+    private Integer occupied;
+
+    private UserBO user;
 
     private Integer isDeleted;
 }

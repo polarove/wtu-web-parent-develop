@@ -1,10 +1,14 @@
 package cn.neorae.wtu.module.team.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.neorae.wtu.module.account.domain.User;
+import cn.neorae.wtu.module.account.mapper.UserMapper;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
 import cn.neorae.wtu.module.team.domain.bo.TeamWarframeBO;
+import cn.neorae.wtu.module.team.domain.bo.UserBO;
 import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
 import cn.neorae.wtu.module.team.service.TeamMemberService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -26,6 +30,8 @@ import java.util.stream.Collectors;
 public class TeamMemberServiceImpl extends ServiceImpl<TeamMemberMapper, TeamMember>
     implements TeamMemberService{
 
+    @Resource
+    private UserMapper userMapper;
 
     @Async
     @Override
@@ -39,6 +45,12 @@ public class TeamMemberServiceImpl extends ServiceImpl<TeamMemberMapper, TeamMem
                     teamWarframeBO.setEn(member.getEn());
                     teamWarframeBO.setCn(member.getCn());
                     teamMemberBO.setWarframe(teamWarframeBO);
+                    UserBO userBO = new UserBO();
+                    if (StrUtil.isNotBlank(member.getUserUuid())){
+                        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, member.getUserUuid()));
+                        BeanUtil.copyProperties(user, userBO);
+                    }
+                    teamMemberBO.setUser(userBO);
                     return teamMemberBO;
                 }).collect(Collectors.toList());
         return CompletableFuture.completedFuture(teamMemberList);

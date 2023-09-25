@@ -36,7 +36,10 @@ public enum ResponseEnum {
     VERIFICATION_REQUIRED(405, "账户需要验证"),
     FAILED(500, "请求失败"),
 
-    INVALID_BOOSTER(10001, "无效的加成类型");
+    INVALID_BOOSTER(1001, "无效的加成类型"),
+
+    TEAM_NOT_FOUND(2001, "队伍不存在"),
+    TEAM_MEMBER_NOT_SATISFIED(2002, "成员数量不足");
 
     private final Integer code;
 

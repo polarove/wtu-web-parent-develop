@@ -16,4 +16,5 @@ public class CreateTeamDTO {
     private Integer server;
 
     private String channel;
+
 }

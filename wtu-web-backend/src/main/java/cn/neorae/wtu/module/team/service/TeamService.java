@@ -2,6 +2,7 @@ package cn.neorae.wtu.module.team.service;
 
 import cn.neorae.common.response.ResponseVO;
 import cn.neorae.wtu.module.team.domain.Team;
+import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamListVO;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
@@ -22,4 +23,6 @@ public interface TeamService extends IService<Team> {
     ResponseVO<String> removeTeamById(Integer teamId);
 
     ResponseVO<Page<TeamListVO>> getTeamList(GetTeamDTO getTeamDTO);
+
+    ResponseVO<String> toggleTeamStatus(ToggleTeamStatusDTO toggleTeamStatusDTO);
 }

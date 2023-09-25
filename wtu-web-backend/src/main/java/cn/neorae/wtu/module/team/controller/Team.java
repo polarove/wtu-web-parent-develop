@@ -1,7 +1,9 @@
 package cn.neorae.wtu.module.team.controller;
 
 
+import cn.neorae.common.annotation.FreePass;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamListVO;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
@@ -9,10 +11,7 @@ import cn.neorae.wtu.module.team.service.TeamService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,7 +29,20 @@ public class Team {
     }
 
     @PostMapping("/getTeamList")
+    @FreePass
     public ResponseVO<Page<TeamListVO>> getTeamList(@RequestBody GetTeamDTO getTeamDTO) {
         return teamService.getTeamList(getTeamDTO);
     }
+
+    @PostMapping("/toggleTeamStatus")
+    public ResponseVO<String> toggleTeamStatus(@RequestBody ToggleTeamStatusDTO toggleTeamStatusDTO) {
+        return teamService.toggleTeamStatus(toggleTeamStatusDTO);
+    }
+
+    @GetMapping("/removeTeam")
+    public ResponseVO<String> removeTeam(@RequestParam Integer id) {
+        return teamService.removeTeamById(id);
+    }
+
+
 }

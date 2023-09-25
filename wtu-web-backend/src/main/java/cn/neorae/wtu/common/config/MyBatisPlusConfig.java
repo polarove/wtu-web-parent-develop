@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan("cn.neorae.wtu.module.*.mapper")
 public class MyBatisPlusConfig {
 
 
