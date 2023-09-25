@@ -71,9 +71,11 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
             return teamMember;
         }).toList();
+
+        // 保存队伍
         TeamManager teamManager = new TeamManager();
         teamManager.saveTeam(team, requirementList, memberList);
-        return null;
+        return ResponseVO.completed();
     }
 }
 
