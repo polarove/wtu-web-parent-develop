@@ -20,7 +20,7 @@ public class Team {
     private TeamService teamService;
 
     @PostMapping("/createTeam")
-    public ResponseVO<CreateTeamDTO> createTeam(@RequestBody CreateTeamDTO createTeamDTO) {
+    public ResponseVO<String> createTeam(@RequestBody CreateTeamDTO createTeamDTO) {
 
         return teamService.createTeam(createTeamDTO);
     }
