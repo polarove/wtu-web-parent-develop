@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
 * @author Neorae
@@ -72,6 +73,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         team.setUuid(UUID.randomUUID().toString());
         team.setStatus(Enums.Polar.TRUE.getCode());
         team.setIsDeleted(Enums.Polar.FALSE.getCode());
+
         // 保存队伍
         if (BeanUtil.isNotEmpty(team)){
             this.baseMapper.insert(team);
@@ -110,10 +112,32 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         TeamListVO teamListVO = new TeamListVO();
         teamListVO.setTeam(this.getTeamBO(team).join());
 
-        List<TeamMemberBO> teamMemberBOS = teamMemberService.getTeamMemberBOList(team).join();
+        List<TeamMemberBO> teamMemberBOS = teamMemberMapper
+                .selectList(new LambdaQueryWrapper<TeamMember>().eq(TeamMember::getTeamId, team.getId()))
+                .stream().map(member -> {
+                    TeamMemberBO teamMemberBO = new TeamMemberBO();
+                    BeanUtil.copyProperties(member, teamMemberBO);
+                    TeamWarframeBO teamWarframeBO = new TeamWarframeBO();
+                    teamWarframeBO.setEn(member.getEn());
+                    teamWarframeBO.setCn(member.getCn());
+                    teamMemberBO.setWarframe(teamWarframeBO);
+                    UserBO userBO = new UserBO();
+                    if (StrUtil.isNotBlank(member.getUserUuid())){
+                        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, member.getUserUuid()));
+                        BeanUtil.copyProperties(user, userBO);
+                    }
+                    teamMemberBO.setUser(userBO);
+                    return teamMemberBO;
+                }).collect(Collectors.toList());
         teamListVO.setMembers(teamMemberBOS);
 
-        List<TeamRequirementsBO> teamRequirementsBOS = teamRequirementService.getTeamRequirementList(team).join();
+        List<TeamRequirementsBO> teamRequirementsBOS = teamRequirementMapper.
+                selectList(new LambdaQueryWrapper<TeamRequirement>().eq(TeamRequirement::getTeamId, team.getId()))
+                .stream().map(requirement -> {
+                    TeamRequirementsBO teamRequirementsBO = new TeamRequirementsBO();
+                    BeanUtil.copyProperties(requirement, teamRequirementsBO);
+                    return teamRequirementsBO;
+                }).collect(Collectors.toList());
         teamListVO.setRequirements(teamRequirementsBOS);
 
         // todo: 广播到当前channel的所有用户
