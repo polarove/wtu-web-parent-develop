@@ -22,6 +22,7 @@ import cn.neorae.wtu.module.team.service.TeamMemberService;
 import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import cn.neorae.wtu.module.team.service.TeamService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.scheduling.annotation.Async;
@@ -146,16 +147,23 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     }
 
     @Override
-    public ResponseVO<List<TeamListVO>> getTeamList(GetTeamDTO getTeamDTO) {
-        List<Team> teams = this.list(new LambdaQueryWrapper<Team>().eq(Team::getChannel, getTeamDTO.getChannel()).eq(Team::getServer, getTeamDTO.getServer()).eq(Team::getStatus, Enums.Polar.TRUE.getCode()));
-        List<TeamListVO> teamList = teams.stream().map(team -> {
+    public ResponseVO<Page<TeamListVO>> getTeamList(GetTeamDTO getTeamDTO) {
+        Page<Team> page = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize());
+        Page<Team> teams = this.baseMapper.selectPage(page, new LambdaQueryWrapper<Team>()
+                .eq(Team::getChannel, getTeamDTO.getChannel())
+                .eq(Team::getServer, getTeamDTO.getServer())
+                .eq(Team::getStatus, Enums.Polar.TRUE.getCode())
+                .orderByDesc(Team::getCreateTime));
+        List<TeamListVO> teamList = teams.getRecords().stream().map(team -> {
             TeamListVO teamListVO = new TeamListVO();
             teamListVO.setTeam(this.getTeamBO(team).join());
             teamListVO.setMembers(teamMemberService.getTeamMemberBOList(team).join());
             teamListVO.setRequirements(teamRequirementService.getTeamRequirementList(team).join());
             return teamListVO;
         }).toList();
-        return ResponseVO.wrapData(teamList);
+        Page<TeamListVO> teamListVOPage = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize(), teams.getTotal());
+        teamListVOPage.setRecords(teamList);
+        return ResponseVO.wrapData(teamListVOPage);
     }
 
     @Async

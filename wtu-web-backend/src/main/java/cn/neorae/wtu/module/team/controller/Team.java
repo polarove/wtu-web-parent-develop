@@ -6,6 +6,7 @@ import cn.neorae.wtu.module.team.domain.vo.TeamListVO;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
 import cn.neorae.wtu.module.team.service.TeamService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ public class Team {
 
     // todo: 2021/10/3 未完成
     @PostMapping("/getTeamList")
-    public ResponseVO<List<TeamListVO>> getTeamList(@RequestBody GetTeamDTO getTeamDTO) {
+    public ResponseVO<Page<TeamListVO>> getTeamList(@RequestBody GetTeamDTO getTeamDTO) {
         return teamService.getTeamList(getTeamDTO);
     }
 }
