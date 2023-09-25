@@ -156,6 +156,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         Page<Team> teams = this.baseMapper.selectPage(page, new LambdaQueryWrapper<Team>()
                 .eq(Team::getChannel, getTeamDTO.getChannel())
                 .eq(Team::getServer, getTeamDTO.getServer())
+                .eq(StrUtil.isNotEmpty(getTeamDTO.getUuid()), Team::getUuid, getTeamDTO.getUuid())
                 .orderByDesc(Team::getCreateTime));
         List<TeamListVO> teamList = teams.getRecords().stream().map(team -> {
             TeamListVO teamListVO = new TeamListVO();

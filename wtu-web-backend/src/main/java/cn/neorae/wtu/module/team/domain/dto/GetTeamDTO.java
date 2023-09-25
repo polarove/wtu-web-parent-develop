@@ -12,4 +12,6 @@ public class GetTeamDTO {
     private String channel;
 
     private Integer server;
+
+    private String uuid;
 }
