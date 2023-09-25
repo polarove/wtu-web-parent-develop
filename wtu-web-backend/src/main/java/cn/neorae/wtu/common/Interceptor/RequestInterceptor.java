@@ -1,16 +1,15 @@
 package cn.neorae.wtu.common.Interceptor;
 
-import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.annotation.FreePass;
 import cn.neorae.common.enums.Enums;
-import cn.neorae.wtu.module.account.domain.User;
-import cn.neorae.wtu.module.account.mapper.UserMapper;
 import cn.neorae.wtu.common.util.CookieUtil;
 import cn.neorae.wtu.common.util.UserUtil;
 import cn.neorae.wtu.common.util.Values;
+import cn.neorae.wtu.module.account.domain.User;
+import cn.neorae.wtu.module.account.mapper.UserMapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

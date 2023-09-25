@@ -2,7 +2,6 @@ package cn.neorae.wtu.module.team.service;
 
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
-import cn.neorae.wtu.module.team.domain.bo.TeamBO;
 import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
 import com.baomidou.mybatisplus.extension.service.IService;
 

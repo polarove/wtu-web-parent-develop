@@ -1,6 +1,5 @@
 package cn.neorae.wtu.module.team.domain.dto;
 
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.Data;
 
 @Data

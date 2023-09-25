@@ -1,6 +1,5 @@
 package cn.neorae.wtu.module.account.service.impl;
 
-import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
@@ -9,15 +8,15 @@ import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.enums.Enums;
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.common.util.CookieUtil;
+import cn.neorae.wtu.common.util.UserUtil;
+import cn.neorae.wtu.common.util.Values;
 import cn.neorae.wtu.module.account.domain.User;
 import cn.neorae.wtu.module.account.domain.dto.*;
 import cn.neorae.wtu.module.account.domain.vo.UserVO;
 import cn.neorae.wtu.module.account.mapper.UserMapper;
 import cn.neorae.wtu.module.account.service.UserService;
 import cn.neorae.wtu.module.mail.MailService;
-import cn.neorae.wtu.common.util.CookieUtil;
-import cn.neorae.wtu.common.util.UserUtil;
-import cn.neorae.wtu.common.util.Values;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
@@ -26,7 +25,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.index.PathBasedRedisIndexDefinition;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

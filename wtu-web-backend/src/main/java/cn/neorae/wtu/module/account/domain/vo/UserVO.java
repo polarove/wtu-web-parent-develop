@@ -1,6 +1,5 @@
 package cn.neorae.wtu.module.account.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.util.List;

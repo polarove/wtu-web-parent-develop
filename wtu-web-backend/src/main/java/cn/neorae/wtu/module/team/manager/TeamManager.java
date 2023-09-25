@@ -6,14 +6,10 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
-import cn.neorae.wtu.module.team.mapper.TeamMapper;
-import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
-import cn.neorae.wtu.module.team.mapper.TeamRequirementMapper;
 import cn.neorae.wtu.module.team.service.TeamMemberService;
 import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import cn.neorae.wtu.module.team.service.TeamService;
 import jakarta.annotation.Resource;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

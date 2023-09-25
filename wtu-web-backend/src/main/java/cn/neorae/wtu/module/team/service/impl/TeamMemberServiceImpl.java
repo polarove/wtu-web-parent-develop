@@ -2,19 +2,16 @@ package cn.neorae.wtu.module.team.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.neorae.wtu.module.team.domain.Team;
-import cn.neorae.wtu.module.team.domain.bo.TeamBO;
+import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
+import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
+import cn.neorae.wtu.module.team.service.TeamMemberService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import cn.neorae.wtu.module.team.domain.TeamMember;
-import cn.neorae.wtu.module.team.service.TeamMemberService;
-import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 

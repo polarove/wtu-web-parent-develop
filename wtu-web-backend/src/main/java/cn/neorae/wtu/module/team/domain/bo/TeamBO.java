@@ -1,8 +1,6 @@
 package cn.neorae.wtu.module.team.domain.bo;
 
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 @Data

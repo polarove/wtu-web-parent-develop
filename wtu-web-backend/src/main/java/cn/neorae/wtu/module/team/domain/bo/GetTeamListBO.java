@@ -1,7 +1,6 @@
 package cn.neorae.wtu.module.team.domain.bo;
 
 
-import cn.neorae.wtu.module.team.domain.Team;
 import lombok.Data;
 
 import java.util.List;

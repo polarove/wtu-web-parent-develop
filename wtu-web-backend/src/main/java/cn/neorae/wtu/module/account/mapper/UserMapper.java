@@ -1,6 +1,5 @@
 package cn.neorae.wtu.module.account.mapper;
 
-import cn.neorae.common.enums.Enums;
 import cn.neorae.wtu.module.account.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
