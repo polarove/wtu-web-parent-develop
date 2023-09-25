@@ -3,6 +3,8 @@ package cn.neorae.wtu.module.team.mapper;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
 * @author Neorae
 * @description 针对表【team_member(创建队伍时的队员信息)】的数据库操作Mapper
@@ -11,6 +13,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface TeamMemberMapper extends BaseMapper<TeamMember> {
 
+    void saveBatch(List<TeamMember> teamMemberList);
+
+    void removeBatchByIds(List<Integer> teamMemberIdsList);
 }
 
 

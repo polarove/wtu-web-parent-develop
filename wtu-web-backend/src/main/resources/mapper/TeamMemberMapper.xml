@@ -12,8 +12,8 @@
             <result property="userUuid" column="user_uuid" jdbcType="VARCHAR"/>
             <result property="warframeId" column="warframe_id" jdbcType="INTEGER"/>
             <result property="focus" column="focus" jdbcType="VARCHAR"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
             <result property="role" column="role" jdbcType="TINYINT"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -21,4 +21,21 @@
         team_uuid,user_uuid,warframe_id,
         focus,is_deleted,role
     </sql>
+    <insert id="saveBatch">
+        insert into team_member
+        (team_uuid,user_uuid,warframe_id,focus,role)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            #{item.teamUuid},#{item.userUuid},#{item.warframeId},#{item.focus},#{item.role}
+        </foreach>
+    </insert>
+    <delete id="removeBatchByIds">
+        delete from team_member
+        where id in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+
 </mapper>

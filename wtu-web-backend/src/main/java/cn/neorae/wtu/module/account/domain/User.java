@@ -1,9 +1,7 @@
 package cn.neorae.wtu.module.account.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
@@ -134,6 +132,7 @@ public class User implements Serializable {
      * Deleted 0: not deleted 1: deleted
      */
     @TableField(value = "is_deleted")
+    @TableLogic(delval = "1", value = "0")
     private Integer isDeleted;
 
     @TableField(exist = false)
