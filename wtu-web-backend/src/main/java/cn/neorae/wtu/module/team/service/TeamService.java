@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface TeamService extends IService<Team> {
 
     ResponseVO<String> createTeam(CreateTeamDTO createTeamDTO);
+
+    ResponseVO<String> removeTeam(String teamUuid);
 }

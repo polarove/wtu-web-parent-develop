@@ -30,7 +30,7 @@
         <mybatis.version>3.0.2</mybatis.version>
         <druid.version>1.2.18</druid.version>
         <hutool.version>5.8.20</hutool.version>
-        <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
+        <mybatis.plus.version>3.5.3.2</mybatis.plus.version>
         <wtu.version>0.0.1-SNAPSHOT</wtu.version>
     </properties>
 

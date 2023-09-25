@@ -3,6 +3,7 @@ package cn.neorae.wtu.module.team.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.ArrayUtil;
 import cn.neorae.common.response.ResponseVO;
 import cn.neorae.wtu.module.team.manager.TeamManager;
 import cn.neorae.wtu.module.team.domain.TeamMember;
@@ -10,6 +11,8 @@ import cn.neorae.wtu.module.team.domain.TeamRequirement;
 import cn.neorae.wtu.module.team.domain.TeamWarframe;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.mapper.TeamWarframeMapper;
+import cn.neorae.wtu.module.team.service.TeamMemberService;
+import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.neorae.wtu.module.team.domain.Team;
@@ -17,6 +20,7 @@ import cn.neorae.wtu.module.team.service.TeamService;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,7 +37,14 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     @Resource
     private TeamWarframeMapper teamWarframeMapper;
 
+    @Resource
+    private TeamRequirementService teamRequirementService;
+
+    @Resource
+    private TeamMemberService teamMemberService;
+
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseVO<String> createTeam(CreateTeamDTO createTeamDTO) {
 
         Team team = new Team();
@@ -73,11 +84,50 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         }).toList();
 
         // 保存队伍
-        TeamManager teamManager = new TeamManager();
-        teamManager.saveTeam(team, requirementList, memberList);
+        if (BeanUtil.isNotEmpty(team)){
+            save(team);
+            updateById(team);
+        }
+        if (ArrayUtil.isNotEmpty(requirementList)){
+            teamRequirementService.saveBatch(requirementList);
+        }
+        if (ArrayUtil.isNotEmpty(memberList)){
+            teamMemberService.saveBatch(memberList);
+        }
+        return ResponseVO.completed();
+    }
+
+    @Override
+    @Transactional
+    public ResponseVO<String> removeTeam(String teamUuid) {
+        Team team = this.getOne(new LambdaQueryWrapper<Team>().eq(Team::getUuid, teamUuid));
+
+        List<Integer> requirementIdList = teamRequirementService
+                .list(new LambdaQueryWrapper<TeamRequirement>().eq(TeamRequirement::getTeamUuid, teamUuid))
+                .stream()
+                .peek(teamRequirement -> {
+                }).map(TeamRequirement::getId).toList();
+
+        List<Integer> memberIdList = teamMemberService
+                .list(new LambdaQueryWrapper<TeamMember>().eq(TeamMember::getTeamUuid, teamUuid))
+                .stream()
+                .peek(teamRequirement -> {
+                }).map(TeamMember::getId).toList();
+
+
+        if (BeanUtil.isNotEmpty(team)){
+            removeById(team);
+        }
+        if (ArrayUtil.isNotEmpty(requirementIdList)){
+            teamRequirementService.removeBatchByIds(requirementIdList);
+        }
+        if (ArrayUtil.isNotEmpty(memberIdList)){
+            teamMemberService.removeBatchByIds(memberIdList);
+        }
         return ResponseVO.completed();
     }
 }
+
 
 
 
