@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.module.team.Manager.TeamManager;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
 import cn.neorae.wtu.module.team.domain.TeamWarframe;
@@ -70,7 +71,8 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
             return teamMember;
         }).toList();
-
+        TeamManager teamManager = new TeamManager();
+        teamManager.saveTeam(team, requirementList, memberList);
         return null;
     }
 }

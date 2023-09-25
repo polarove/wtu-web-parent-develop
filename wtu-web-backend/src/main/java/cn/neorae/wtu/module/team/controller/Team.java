@@ -21,7 +21,6 @@ public class Team {
 
     @PostMapping("/createTeam")
     public ResponseVO<String> createTeam(@RequestBody CreateTeamDTO createTeamDTO) {
-
         return teamService.createTeam(createTeamDTO);
     }
 }
