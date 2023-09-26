@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.enums.Enums;
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.module.account.domain.User;
 import cn.neorae.wtu.module.account.mapper.UserMapper;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
@@ -26,6 +27,7 @@ import cn.neorae.wtu.module.team.service.TeamMemberService;
 import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import cn.neorae.wtu.module.team.service.TeamService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
@@ -166,6 +168,13 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
                 .eq(StrUtil.isNotBlank(getTeamDTO.getUuid()), Team::getUuid, getTeamDTO.getUuid())
                 .orderByDesc(Team::getCreateTime));
         List<TeamVO> teamList = teams.getRecords().stream().map(team -> {
+            String creator = team.getCreatorUuid();
+            if (StrUtil.isNotBlank(creator)){
+                User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, creator));
+                if (user.getOnlineStatus().equals(Enums.OnlineStatus.OFFLINE.getCode())) {
+                    return null;
+                }
+            }
             TeamVO teamVO = new TeamVO();
             teamVO.setTeam(this.getTeamBO(team).join());
             teamVO.setMembers(teamMemberService.getTeamMemberBOList(team).join());
