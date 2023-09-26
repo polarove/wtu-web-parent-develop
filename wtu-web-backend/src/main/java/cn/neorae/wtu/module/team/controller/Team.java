@@ -3,10 +3,10 @@ package cn.neorae.wtu.module.team.controller;
 
 import cn.neorae.common.annotation.FreePass;
 import cn.neorae.common.response.ResponseVO;
-import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
-import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
+import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.service.TeamService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.tags.Tag;

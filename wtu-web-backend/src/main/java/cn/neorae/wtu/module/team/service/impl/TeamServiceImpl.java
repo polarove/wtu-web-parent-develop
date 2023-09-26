@@ -8,16 +8,17 @@ import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.enums.Enums;
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
-import cn.neorae.wtu.module.account.domain.User;
 import cn.neorae.wtu.module.account.mapper.UserMapper;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
-import cn.neorae.wtu.module.team.domain.bo.*;
-import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
-import cn.neorae.wtu.module.team.domain.vo.TeamVO;
+import cn.neorae.wtu.module.team.domain.bo.TeamBO;
+import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
+import cn.neorae.wtu.module.team.domain.bo.TeamRequirementsBO;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
+import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
 import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
 import cn.neorae.wtu.module.team.mapper.TeamRequirementMapper;
@@ -34,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
 * @author Neorae
