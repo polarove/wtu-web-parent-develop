@@ -168,9 +168,6 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
     @Override
     public ResponseVO<IPage<TeamVO>> getTeamList(GetTeamDTO getTeamDTO) {
-
-        System.out.println("uuid+++++++++++++++++++++++++++++++++:::-> " + getTeamDTO.getUuid());
-
         IPage<Team> teamPage = teamMapper.selectJoinPage(
                 new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize()),
                 Team.class,
@@ -178,10 +175,11 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
                         .selectAll(Team.class) // 主表
                         .select(User::getUuid) // 连表查询的字段
                         .leftJoin(User.class, User::getUuid, Team::getCreatorUuid) // 连表条件
-                        .eq(StrUtil.isNotBlank(getTeamDTO.getChannel()), Team::getChannel, getTeamDTO.getChannel()) // 查询条件
-                        .eq(Team::getServer, getTeamDTO.getServer()) // 查询条件
-                        .eq(StrUtil.isNotBlank(getTeamDTO.getUuid()), User::getUuid, getTeamDTO.getUuid()) // 查询条件
-                        .ne(StrUtil.isBlank(getTeamDTO.getUuid()), User::getOnlineStatus, Enums.OnlineStatus.OFFLINE.getCode()) // 查询条件
+                        .eq(StrUtil.isNotBlank(getTeamDTO.getChannel()), Team::getChannel, getTeamDTO.getChannel()) // 查询指定频道的组队信息
+                        .eq(Team::getServer, getTeamDTO.getServer()) // 查询指定服务器的组队信息
+                        .eq(StrUtil.isNotBlank(getTeamDTO.getUuid()), User::getUuid, getTeamDTO.getUuid()) // 若uuid不为空，查询该用户发布的组队信息
+                        .eq(StrUtil.isBlank(getTeamDTO.getUuid()), Team::getStatus, Enums.Polar.TRUE.getCode()) // 若uuid为空，则只查询公开的组队
+                        .ne(StrUtil.isBlank(getTeamDTO.getUuid()), User::getOnlineStatus, Enums.OnlineStatus.OFFLINE.getCode()) // 若uuid为空，则只查询在线和在游戏中的用户发布的组队信息
                         .orderByDesc(Team::getCreateTime) // 排序
         );
 
