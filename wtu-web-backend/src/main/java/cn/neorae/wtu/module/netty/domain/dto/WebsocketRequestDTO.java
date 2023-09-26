@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class WebsocketRequestDTO {
 
+    private Integer channelId;
+
     private Integer type;
 
     private String uuid;

@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class WtuWebBackendApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, Exception{
         SpringApplication.run(WtuWebBackendApplication.class, args);
         NettyServer.start();
     }
