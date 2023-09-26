@@ -27,9 +27,13 @@ import cn.neorae.wtu.module.team.service.TeamMemberService;
 import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import cn.neorae.wtu.module.team.service.TeamService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.query.MPJLambdaQueryWrapper;
+import com.github.yulichang.toolkit.JoinWrappers;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import jakarta.annotation.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -62,6 +66,9 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private TeamMapper teamMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -160,29 +167,37 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     }
 
     @Override
-    public ResponseVO<Page<TeamVO>> getTeamList(GetTeamDTO getTeamDTO) {
-        Page<Team> page = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize());
-        Page<Team> teams = this.baseMapper.selectPage(page, new LambdaQueryWrapper<Team>()
-                .eq(StrUtil.isNotBlank(getTeamDTO.getChannel()), Team::getChannel, getTeamDTO.getChannel())
-                .eq(Team::getServer, getTeamDTO.getServer())
-                .eq(StrUtil.isNotBlank(getTeamDTO.getUuid()), Team::getUuid, getTeamDTO.getUuid())
-                .orderByDesc(Team::getCreateTime));
-        List<TeamVO> teamList = teams.getRecords().stream().map(team -> {
-            String creator = team.getCreatorUuid();
-            if (StrUtil.isNotBlank(creator)){
-                User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, creator));
-                if (user.getOnlineStatus().equals(Enums.OnlineStatus.OFFLINE.getCode())) {
-                    return null;
-                }
-            }
+    public ResponseVO<IPage<TeamVO>> getTeamList(GetTeamDTO getTeamDTO) {
+
+        System.out.println("uuid+++++++++++++++++++++++++++++++++:::-> " + getTeamDTO.getUuid());
+
+        IPage<Team> teamPage = teamMapper.selectJoinPage(
+                new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize()),
+                Team.class,
+                new MPJLambdaWrapper<Team>()
+                        .selectAll(Team.class) // 主表
+                        .select(User::getUuid) // 连表查询的字段
+                        .leftJoin(User.class, User::getUuid, Team::getCreatorUuid) // 连表条件
+                        .eq(StrUtil.isNotBlank(getTeamDTO.getChannel()), Team::getChannel, getTeamDTO.getChannel()) // 查询条件
+                        .eq(Team::getServer, getTeamDTO.getServer()) // 查询条件
+                        .eq(StrUtil.isNotBlank(getTeamDTO.getUuid()), User::getUuid, getTeamDTO.getUuid()) // 查询条件
+                        .ne(StrUtil.isBlank(getTeamDTO.getUuid()), User::getOnlineStatus, Enums.OnlineStatus.OFFLINE.getCode()) // 查询条件
+                        .orderByDesc(Team::getCreateTime) // 排序
+        );
+
+        List<TeamVO> teamList = teamPage.getRecords().stream().map(team -> {
             TeamVO teamVO = new TeamVO();
             teamVO.setTeam(this.getTeamBO(team).join());
             teamVO.setMembers(teamMemberService.getTeamMemberBOList(team).join());
             teamVO.setRequirements(teamRequirementService.getTeamRequirementList(team).join());
             return teamVO;
         }).toList();
-        Page<TeamVO> teamListVOPage = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize(), teams.getTotal());
+
+
+        IPage<TeamVO> teamListVOPage = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize(), teamPage.getTotal());
         teamListVOPage.setRecords(teamList);
+
+
         return ResponseVO.wrapData(teamListVOPage);
     }
 

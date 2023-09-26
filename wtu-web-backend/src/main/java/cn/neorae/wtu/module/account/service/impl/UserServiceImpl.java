@@ -75,7 +75,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return ResponseVO.wrapData(userVO);
     }
 
-    private static List<String> getBoosters(User user) {
+    @Override
+    public List<String> getBoosters(User user) {
         // 最无语的一集
         List<String> boosterList = new ArrayList<>();
         if (BeanUtil.isEmpty(user)){

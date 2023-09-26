@@ -1,7 +1,7 @@
 package cn.neorae.wtu.module.team.mapper;
 
 import cn.neorae.wtu.module.team.domain.Team;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 
 /**
 * @author Neorae
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2023-09-25 08:50:11
 * @Entity cn.neorae.wtu.module.team.domain.Team
 */
-public interface TeamMapper extends BaseMapper<Team> {
+public interface TeamMapper extends MPJBaseMapper<Team> {
 
 }
 

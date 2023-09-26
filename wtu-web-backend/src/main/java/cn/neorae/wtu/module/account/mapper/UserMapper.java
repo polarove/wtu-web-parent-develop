@@ -2,6 +2,7 @@ package cn.neorae.wtu.module.account.mapper;
 
 import cn.neorae.wtu.module.account.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 
 /**
 * @author Neorae
@@ -9,7 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2023-09-20 22:37:41
 * @Entity cn.neorae.wtu.module.account.domain.User
 */
-public interface UserMapper extends BaseMapper<User> {
+public interface UserMapper extends MPJBaseMapper<User> {
     void register (User user);
 
     User getUserByUUID(String uuid, Integer notDeleted);

@@ -16,8 +16,6 @@ public class TeamMemberBO {
 
     private TeamWarframeBO warframe;
 
-    private List<String> booster;
-
     private Integer occupied;
 
     private UserBO user;

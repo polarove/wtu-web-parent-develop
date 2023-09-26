@@ -8,6 +8,7 @@ import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.service.TeamService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -33,7 +34,7 @@ public class Team {
 
     @PostMapping("/getTeamList")
     @FreePass
-    public ResponseVO<Page<TeamVO>> getTeamList(@RequestBody GetTeamDTO getTeamDTO) {
+    public ResponseVO<IPage<TeamVO>> getTeamList(@RequestBody GetTeamDTO getTeamDTO) {
         return teamService.getTeamList(getTeamDTO);
     }
 

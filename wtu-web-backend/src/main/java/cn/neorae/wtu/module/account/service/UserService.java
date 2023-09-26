@@ -10,6 +10,8 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.List;
+
 /**
 * @author Neorae
 * @description 针对表【user(用户)】的数据库操作Service
@@ -38,4 +40,6 @@ public interface UserService extends IService<User> {
     ResponseVO<String> logout(String uuid, HttpServletResponse response);
 
     ResponseVO<UserVO> toggleServer(String uuid, Integer serverType);
+
+    List<String> getBoosters(User user);
 }

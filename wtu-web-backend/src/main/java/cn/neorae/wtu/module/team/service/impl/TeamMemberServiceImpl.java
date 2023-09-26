@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.neorae.wtu.module.account.domain.User;
 import cn.neorae.wtu.module.account.mapper.UserMapper;
+import cn.neorae.wtu.module.account.service.UserService;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
@@ -33,6 +34,9 @@ public class TeamMemberServiceImpl extends ServiceImpl<TeamMemberMapper, TeamMem
     @Resource
     private UserMapper userMapper;
 
+    @Resource
+    private UserService userService;
+
     @Async
     @Override
     public CompletableFuture<List<TeamMemberBO>> getTeamMemberBOList(Team team) {
@@ -49,6 +53,7 @@ public class TeamMemberServiceImpl extends ServiceImpl<TeamMemberMapper, TeamMem
                     if (StrUtil.isNotBlank(member.getUserUuid())){
                         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, member.getUserUuid()));
                         BeanUtil.copyProperties(user, userBO);
+                        userBO.setBoosterList(userService.getBoosters(user));
                     }
                     teamMemberBO.setUser(userBO);
                     return teamMemberBO;

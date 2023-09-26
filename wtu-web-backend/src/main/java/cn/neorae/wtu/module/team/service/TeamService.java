@@ -6,6 +6,7 @@ import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,7 +21,7 @@ public interface TeamService extends IService<Team> {
 
     ResponseVO<String> removeTeamById(Integer teamId);
 
-    ResponseVO<Page<TeamVO>> getTeamList(GetTeamDTO getTeamDTO);
+    ResponseVO<IPage<TeamVO>> getTeamList(GetTeamDTO getTeamDTO);
 
     ResponseVO<String> toggleTeamStatus(ToggleTeamStatusDTO toggleTeamStatusDTO);
 
