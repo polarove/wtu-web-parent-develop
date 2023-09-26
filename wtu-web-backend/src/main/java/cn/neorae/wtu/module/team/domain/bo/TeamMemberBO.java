@@ -3,6 +3,8 @@ package cn.neorae.wtu.module.team.domain.bo;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class TeamMemberBO {
 
@@ -13,6 +15,8 @@ public class TeamMemberBO {
     private Integer leader;
 
     private TeamWarframeBO warframe;
+
+    private List<String> booster;
 
     private Integer occupied;
 

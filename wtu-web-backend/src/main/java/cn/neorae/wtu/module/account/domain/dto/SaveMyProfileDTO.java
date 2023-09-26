@@ -7,10 +7,9 @@ import lombok.Data;
 @Data
 public class SaveMyProfileDTO {
 
-    @Schema(description = "邮箱")
-    @NotBlank(message = "邮箱不能为空")
-    private String email;
-
+    @Schema(description = "uuid")
+    @NotBlank(message = "uuid不能为空")
+    private String uuid;
 
     @Schema(description = "昵称")
     @NotBlank(message = "昵称不能为空")

@@ -15,7 +15,7 @@ import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
 import cn.neorae.wtu.module.team.domain.bo.*;
 import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
-import cn.neorae.wtu.module.team.domain.vo.TeamListVO;
+import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
@@ -63,7 +63,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseVO<TeamListVO> createTeam(CreateTeamDTO createTeamDTO) {
+    public ResponseVO<Integer> createTeam(CreateTeamDTO createTeamDTO) {
 
         Team team = new Team();
         team.setTitle(createTeamDTO.getTitle());
@@ -108,40 +108,8 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
             return ResponseVO.failed(ResponseEnum.TEAM_MEMBER_NOT_SATISFIED);
         }
 
-        // 装配返回结果
-        TeamListVO teamListVO = new TeamListVO();
-        teamListVO.setTeam(this.getTeamBO(team).join());
-
-        List<TeamMemberBO> teamMemberBOS = teamMemberMapper
-                .selectList(new LambdaQueryWrapper<TeamMember>().eq(TeamMember::getTeamId, team.getId()))
-                .stream().map(member -> {
-                    TeamMemberBO teamMemberBO = new TeamMemberBO();
-                    BeanUtil.copyProperties(member, teamMemberBO);
-                    TeamWarframeBO teamWarframeBO = new TeamWarframeBO();
-                    teamWarframeBO.setEn(member.getEn());
-                    teamWarframeBO.setCn(member.getCn());
-                    teamMemberBO.setWarframe(teamWarframeBO);
-                    UserBO userBO = new UserBO();
-                    if (StrUtil.isNotBlank(member.getUserUuid())){
-                        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, member.getUserUuid()));
-                        BeanUtil.copyProperties(user, userBO);
-                    }
-                    teamMemberBO.setUser(userBO);
-                    return teamMemberBO;
-                }).collect(Collectors.toList());
-        teamListVO.setMembers(teamMemberBOS);
-
-        List<TeamRequirementsBO> teamRequirementsBOS = teamRequirementMapper.
-                selectList(new LambdaQueryWrapper<TeamRequirement>().eq(TeamRequirement::getTeamId, team.getId()))
-                .stream().map(requirement -> {
-                    TeamRequirementsBO teamRequirementsBO = new TeamRequirementsBO();
-                    BeanUtil.copyProperties(requirement, teamRequirementsBO);
-                    return teamRequirementsBO;
-                }).collect(Collectors.toList());
-        teamListVO.setRequirements(teamRequirementsBOS);
-
         // todo: 广播到当前channel的所有用户
-        return ResponseVO.wrapData(teamListVO);
+        return ResponseVO.wrapData(team.getId());
     }
 
     @Override
@@ -175,21 +143,36 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     }
 
     @Override
-    public ResponseVO<Page<TeamListVO>> getTeamList(GetTeamDTO getTeamDTO) {
+    public ResponseVO<TeamVO> getTeamById(Integer teamId) {
+        Team team = this.baseMapper.selectOne(new LambdaQueryWrapper<Team>().eq(Team::getId, teamId));
+        if (BeanUtil.isEmpty(team)){
+            return ResponseVO.failed(ResponseEnum.TEAM_NOT_FOUND);
+        }
+        TeamVO teamVO = new TeamVO();
+        teamVO.setTeam(this.getTeamBO(team).join());
+        List<TeamMemberBO> teamMemberBOS = teamMemberService.getTeamMemberBOList(team).join();
+        List<TeamRequirementsBO> teamRequirementsBOS = teamRequirementService.getTeamRequirementList(team).join();
+        teamVO.setMembers(teamMemberBOS);
+        teamVO.setRequirements(teamRequirementsBOS);
+        return ResponseVO.wrapData(teamVO);
+    }
+
+    @Override
+    public ResponseVO<Page<TeamVO>> getTeamList(GetTeamDTO getTeamDTO) {
         Page<Team> page = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize());
         Page<Team> teams = this.baseMapper.selectPage(page, new LambdaQueryWrapper<Team>()
                 .eq(Team::getChannel, getTeamDTO.getChannel())
                 .eq(Team::getServer, getTeamDTO.getServer())
                 .eq(StrUtil.isNotEmpty(getTeamDTO.getUuid()), Team::getUuid, getTeamDTO.getUuid())
                 .orderByDesc(Team::getCreateTime));
-        List<TeamListVO> teamList = teams.getRecords().stream().map(team -> {
-            TeamListVO teamListVO = new TeamListVO();
-            teamListVO.setTeam(this.getTeamBO(team).join());
-            teamListVO.setMembers(teamMemberService.getTeamMemberBOList(team).join());
-            teamListVO.setRequirements(teamRequirementService.getTeamRequirementList(team).join());
-            return teamListVO;
+        List<TeamVO> teamList = teams.getRecords().stream().map(team -> {
+            TeamVO teamVO = new TeamVO();
+            teamVO.setTeam(this.getTeamBO(team).join());
+            teamVO.setMembers(teamMemberService.getTeamMemberBOList(team).join());
+            teamVO.setRequirements(teamRequirementService.getTeamRequirementList(team).join());
+            return teamVO;
         }).toList();
-        Page<TeamListVO> teamListVOPage = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize(), teams.getTotal());
+        Page<TeamVO> teamListVOPage = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize(), teams.getTotal());
         teamListVOPage.setRecords(teamList);
         return ResponseVO.wrapData(teamListVOPage);
     }

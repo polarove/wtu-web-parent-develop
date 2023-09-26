@@ -86,12 +86,6 @@ public class Account {
         return userService.logout(uuid, response);
     }
 
-//    @Operation(summary = "是否登录")
-//    @GetMapping("/isLogin")
-//    public ResponseVO<Boolean> isLogin(@RequestParam String uuid) {
-//        return ResponseVO.wrapData(StpUtil.isLogin(uuid));
-//    }
-
     @Operation(summary = "变更用户名")
     @PostMapping("/saveMyProfile")
     public ResponseVO<UserVO> saveMyProfile(@Valid @RequestBody SaveMyProfileDTO saveMyProfileDTO) {
@@ -110,7 +104,7 @@ public class Account {
         return userService.updateUserBooster(updateUserBoosterDT0);
     }
 
-    @Operation(summary = "退出")
+    @Operation(summary = "切换服务器")
     @GetMapping("/toggleServer")
     public ResponseVO<UserVO> toggleServer(@RequestParam Integer serverType) {
         return userService.toggleServer(StpUtil.getLoginIdAsString(), serverType);

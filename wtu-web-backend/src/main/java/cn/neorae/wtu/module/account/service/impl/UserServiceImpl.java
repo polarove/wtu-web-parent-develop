@@ -205,8 +205,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public ResponseVO<UserVO> saveMyProfile(SaveMyProfileDTO saveMyProfileDTO) {
-        String email = saveMyProfileDTO.getEmail();
-        User user = UserUtil.getUserByEmail(email);
+        String uuid = saveMyProfileDTO.getUuid();
+        User user = UserUtil.getUserByUuid(uuid);
         BeanUtil.copyProperties(saveMyProfileDTO, user);
         this.baseMapper.updateById(user);
         return ResponseVO.wrapData(parseData(user));
@@ -281,6 +281,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userVO.setDescription("平平无奇的星际海盗罢了...");
         userVO.setUuid(uuid);
         userVO.setOnlineStatus(Enums.OnlineStatus.ONLINE.getCode());
+        userVO.setServer(Enums.Server.INTERNATIONAL.getCode());
+        userVO.setLevel(0);
 
         // 设置加成列表
         userVO.setBoosterList(new ArrayList<>());

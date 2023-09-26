@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TeamListVO {
+public class TeamVO {
 
 
     private TeamBO team;
