@@ -175,11 +175,48 @@ public interface Enums<T> {
     }
 
     @AllArgsConstructor
-    enum Server implements Enums<String>{
+    enum Server implements Enums<String> {
 
         CHINA(0, "国服"),
 
         INTERNATIONAL(1, "国际服");
+
+        private final Integer code;
+
+        private final String type;
+
+        @Getter
+        private static final Map<Integer, String> typeMap;
+
+        static {
+            typeMap = Arrays.stream(Polar.values()).collect(Collectors.toMap(Polar::getCode, Polar::getType));
+        }
+
+        @Override
+        public String getType() {
+            return type;
+        }
+
+        @Override
+        public Integer getCode() {
+            return code;
+        }
+
+        public static Boolean isValidType(Integer code) {
+            return typeMap.containsKey(code);
+        }
+    }
+    
+    @AllArgsConstructor
+    enum WebsocketRequestType implements Enums<String>{
+
+        INSERT(1, "添加"),
+
+        DELETE(2, "删除"),
+
+        UPDATE(3, "更新"),
+        
+        SELECT(4, "查询");
 
         private final Integer code;
 

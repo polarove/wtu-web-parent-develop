@@ -3,8 +3,6 @@ package cn.neorae.wtu.module.team.domain.bo;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class TeamMemberBO {
 

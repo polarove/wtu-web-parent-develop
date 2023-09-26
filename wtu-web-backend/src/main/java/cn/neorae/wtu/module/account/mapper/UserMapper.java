@@ -1,7 +1,6 @@
 package cn.neorae.wtu.module.account.mapper;
 
 import cn.neorae.wtu.module.account.domain.User;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.yulichang.base.MPJBaseMapper;
 
 /**

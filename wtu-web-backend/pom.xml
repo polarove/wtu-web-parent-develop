@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-   <parent>
-       <groupId>cn.neorae</groupId>
-       <artifactId>wtu-web-parent</artifactId>
-       <version>0.0.1-SNAPSHOT</version>
-   </parent>
+    <parent>
+        <groupId>cn.neorae</groupId>
+        <artifactId>wtu-web-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
     <artifactId>wtu-web-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -18,16 +19,16 @@
 
     <dependencies>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-bootstrap</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-bootstrap</artifactId>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
-<!--            <version>${spring.cloud.alibaba.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
+        <!--            <version>${spring.cloud.alibaba.version}</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -64,6 +65,12 @@
             <groupId>com.github.yulichang</groupId>
             <artifactId>mybatis-plus-join</artifactId>
             <version>1.4.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>2.0.31</version>
         </dependency>
 
 
@@ -117,7 +124,8 @@
             <version>${druid.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-openapi3-jakarta-spring-boot-starter-->
+        <!--
+        https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-openapi3-jakarta-spring-boot-starter-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
@@ -170,7 +178,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                        <mainClass>cn.neorae.wtu.WtuWebBackendApplication</mainClass>
+                    <mainClass>cn.neorae.wtu.WtuWebBackendApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
@@ -182,7 +190,6 @@
             </resource>
         </resources>
     </build>
-
 
 
     <profiles>
