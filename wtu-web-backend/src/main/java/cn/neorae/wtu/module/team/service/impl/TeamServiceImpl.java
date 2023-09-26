@@ -161,9 +161,9 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     public ResponseVO<Page<TeamVO>> getTeamList(GetTeamDTO getTeamDTO) {
         Page<Team> page = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize());
         Page<Team> teams = this.baseMapper.selectPage(page, new LambdaQueryWrapper<Team>()
-                .eq(Team::getChannel, getTeamDTO.getChannel())
+                .eq(StrUtil.isNotBlank(getTeamDTO.getChannel()), Team::getChannel, getTeamDTO.getChannel())
                 .eq(Team::getServer, getTeamDTO.getServer())
-                .eq(StrUtil.isNotEmpty(getTeamDTO.getUuid()), Team::getUuid, getTeamDTO.getUuid())
+                .eq(StrUtil.isNotBlank(getTeamDTO.getUuid()), Team::getUuid, getTeamDTO.getUuid())
                 .orderByDesc(Team::getCreateTime));
         List<TeamVO> teamList = teams.getRecords().stream().map(team -> {
             TeamVO teamVO = new TeamVO();
