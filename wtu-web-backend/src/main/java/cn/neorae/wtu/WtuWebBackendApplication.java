@@ -1,5 +1,6 @@
 package cn.neorae.wtu;
 
+import cn.neorae.wtu.module.netty.NettyServer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,6 +13,7 @@ public class WtuWebBackendApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(WtuWebBackendApplication.class, args);
+        NettyServer.start();
     }
 
 }
