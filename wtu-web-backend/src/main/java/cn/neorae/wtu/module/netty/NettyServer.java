@@ -3,14 +3,7 @@ package cn.neorae.wtu.module.netty;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManagerFactory;
-
-import org.apache.catalina.authenticator.SSLAuthenticator;
-import org.apache.tomcat.jni.SSL;
-
 import org.springframework.core.io.ClassPathResource;
-import cn.hutool.core.net.SSLContextBuilder;
 import cn.neorae.wtu.module.netty.handler.WebsocketHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

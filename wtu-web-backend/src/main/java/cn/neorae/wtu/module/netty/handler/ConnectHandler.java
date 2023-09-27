@@ -6,9 +6,7 @@ import cn.neorae.wtu.module.netty.domain.dto.WebsocketRequestDTO;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.handler.exceptions.NotLoginException;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class ConnectHandler {
     
 

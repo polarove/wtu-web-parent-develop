@@ -1,12 +1,8 @@
 package cn.neorae.wtu.module.netty.handler;
 
-import org.springframework.boot.autoconfigure.web.ServerProperties.Netty;
-
 import com.alibaba.fastjson.JSON;
 
 import cn.hutool.core.util.StrUtil;
-import cn.neorae.common.response.ResponseVO;
-import cn.neorae.wtu.module.netty.NettyServer;
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketRequestDTO;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.enums.WebsocketRequestType;
