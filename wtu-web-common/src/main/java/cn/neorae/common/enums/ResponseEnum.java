@@ -37,9 +37,30 @@ public enum ResponseEnum {
     FAILED(500, "请求失败"),
 
     INVALID_BOOSTER(1001, "无效的加成类型"),
+    TEAM_NOT_FOUND(1002, "队伍不存在"),
+    TEAM_MEMBER_NOT_SATISFIED(1003, "成员数量不足"),
 
-    TEAM_NOT_FOUND(2001, "队伍不存在"),
-    TEAM_MEMBER_NOT_SATISFIED(2002, "成员数量不足");
+
+    // Netty Server Error Code
+    NOT_LOGIN(2001, "尚未登录"),
+    NOT_SUPPORTED(2002, "不支持的请求类型"),
+    CHANNEL_NOT_FOUND(2003, "未找到对应的Channel"),
+    CHANNEL_NOT_CONNECTED(2004, "未连接至服务器"),
+    CHANNEL_NOT_ACTIVE(2005, "Channel未激活"),
+    CHANNEL_NOT_WRITABLE(2006, "Channel不可写"),
+    CHANNEL_NOT_READABLE(2007, "Channel不可读"),
+    CHANNEL_NOT_OPEN(2008, "Channel未打开"),
+    CHANNEL_NOT_BOUND(2009, "Channel未绑定"),
+    BAD_NETTY_TYPE(2010, "请求类型错误"),
+    BAD_NETTY_PARAM(2011, "请求参数错误"),
+    BAD_NETTY_BODY(2012, "请求体错误"),
+
+    // Netty Server Success Code
+    ORIGIN_CONNECTED(3001, "已连接至始源星系服务器");
+
+
+
+
 
     private final Integer code;
 

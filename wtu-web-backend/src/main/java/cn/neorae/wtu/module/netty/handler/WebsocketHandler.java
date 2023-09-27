@@ -4,10 +4,13 @@ import org.springframework.boot.autoconfigure.web.ServerProperties.Netty;
 
 import com.alibaba.fastjson.JSON;
 
+import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.response.ResponseVO;
 import cn.neorae.wtu.module.netty.NettyServer;
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketRequestDTO;
+import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.enums.WebsocketRequestType;
+import cn.neorae.wtu.module.netty.handler.exceptions.NotLoginException;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -18,10 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 public class WebsocketHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws NotLoginException {
         try{
             WebsocketRequestDTO websocketRequestDTO = JSON.parseObject(msg.text(), WebsocketRequestDTO.class);
-            switch (WebsocketRequestType.match(websocketRequestDTO.getType())) {
+            if (StrUtil.isBlank(websocketRequestDTO.getUuid())) {
+                return;
+            }
+            switch (WebsocketRequestType.match(websocketRequestDTO.getAction())) {
                 case INSERT -> {
                     log.info("request: insert");
                     break;
@@ -55,9 +61,8 @@ public class WebsocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
                     break;
                 }
             }
-        } catch (Exception e) {
-            ctx.channel().writeAndFlush(msg);
-            e.printStackTrace();
+        } catch (NotLoginException e) {
+            ctx.channel().writeAndFlush(WssResponseVO.fail(e.getResponseEnum()));
         }
     }
     

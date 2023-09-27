@@ -7,7 +7,7 @@ public class WebsocketRequestDTO {
 
     private Integer channelId;
 
-    private Integer type;
+    private Integer action;
 
     private String uuid;
 
