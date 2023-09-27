@@ -3,34 +3,36 @@ package cn.neorae.wtu.module.netty.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-public interface TeamServerEnum {
+public interface NettyServerEnum {
 
 
     @AllArgsConstructor
     @Getter
-    enum TeamRoutes implements TeamServerEnum {
+    enum TeamRoutes implements NettyServerEnum {
 
-        ORIGIN("/origin"),
+        ORIGIN("origin"),
 
-        EVENT("/event"),
+        EVENT("event"),
 
-        ALARM("/alarm"),
+        ALARM("alarm"),
 
-        INVASION("/invasion"),
+        STEEL_PATH("steelpath"),
 
-        SYNDICATE("/syndicate"),
+        INVASION("invasion"),
 
-        FISSURE("/fissure"),
+        SYNDICATE("syndicate"),
 
-        SORTIE("/sortie"),
+        FISSURE("fissure"),
 
-        HUNT("/HUNT"),
+        SORTIE("sortie"),
 
-        DURIVI("/durivi"),
+        HUNT("hunt"),
 
-        EMPYREAN("/empyrean"),
+        DURIVI("durivi"),
 
-        ROUTE_NOT_FOUNT("/route_not_found");
+        EMPYREAN("empyrean"),
+
+        CHANNEL_NOT_FOUND("channel_not_found");
 
         private final String route;
 
@@ -40,17 +42,42 @@ public interface TeamServerEnum {
                     return teamRoutes;
                 }
             }
-            return ROUTE_NOT_FOUNT;
+            return CHANNEL_NOT_FOUND;
+        }
+    }
+
+
+    @AllArgsConstructor
+    @Getter
+    enum GameServerEnum implements NettyServerEnum {
+
+        EN(1),
+
+        CN(0),
+
+        NOT_SUPPORTED(-1);
+
+        private final Integer type;
+
+        public static GameServerEnum match (Integer type) {
+            for (GameServerEnum gameServerEnum : GameServerEnum.values()) {
+                if (gameServerEnum.getType().equals(type)) {
+                    return gameServerEnum;
+                }
+            }
+            return NOT_SUPPORTED;
         }
     }
 
     @AllArgsConstructor
     @Getter
-    enum ConnectionEnum implements TeamServerEnum {
+    enum ConnectionEnum implements NettyServerEnum {
 
         CONNECT(1),
 
         DISCONNECT(2),
+
+        MESSAGE(3),
 
         NOT_SUPPORTED(0);
 
@@ -68,7 +95,7 @@ public interface TeamServerEnum {
 
     @AllArgsConstructor
     @Getter
-    enum ActionEnum implements TeamServerEnum {
+    enum ActionEnum implements NettyServerEnum {
 
         INSERT(1),
 

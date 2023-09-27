@@ -42,7 +42,6 @@ public enum ResponseEnum {
 
 
     // Netty Server Error Code
-    NOT_LOGIN(2001, "尚未登录"),
     NOT_SUPPORTED(2002, "不支持的请求类型"),
     CHANNEL_NOT_FOUND(2003, "未找到对应的Channel"),
     CHANNEL_NOT_CONNECTED(2004, "未连接至服务器"),
@@ -55,8 +54,10 @@ public enum ResponseEnum {
     BAD_NETTY_PARAM(2011, "请求参数错误"),
     BAD_NETTY_BODY(2012, "请求体错误"),
 
-    USER_REJECTED(2013, "请求被拒绝"),
-    USER_OFFLINE(2014, "用户不在线"),
+    UNKNOWN_GAME_SERVER(2013, "未知的游戏服务器"),
+
+    USER_REJECTED(2014, "请求被拒绝"),
+    USER_OFFLINE(2015, "用户不在线"),
 
     // Netty Server Success Code
     ORIGIN_CONNECTED(3001, "已连接至始源星系服务器");

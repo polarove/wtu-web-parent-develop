@@ -25,6 +25,17 @@ public class WssResponseVO {
 
     private LocalDateTime time;
 
+    public static TextWebSocketFrame connect(String message, Object data) {
+        return new TextWebSocketFrame(
+                JSON.toJSONString(
+                        new WssResponseVO(
+                                message,
+                                200,
+                                data,
+                                true,
+                                LocalDateTime.now())));
+    }
+
     public static TextWebSocketFrame fail(ResponseEnum responseEnum) {
         return new TextWebSocketFrame(
                 JSON.toJSONString(
@@ -35,17 +46,27 @@ public class WssResponseVO {
                         false,
                         LocalDateTime.now())));
     }
-    
-    public static TextWebSocketFrame hello() {
+
+    public static TextWebSocketFrame fail(ResponseEnum responseEnum, Object data) {
         return new TextWebSocketFrame(
                 JSON.toJSONString(
                         new WssResponseVO(
-                                "hello",
-                                200,
-                                null,
-                                true,
+                                responseEnum.getMessage(),
+                                responseEnum.getCode(),
+                                data,
+                                false,
                                 LocalDateTime.now())));
     }
-    
+
+    public static TextWebSocketFrame wrapData(Object data) {
+        return new TextWebSocketFrame(
+                JSON.toJSONString(
+                    new WssResponseVO(
+                        ResponseEnum.SUCCESS.getMessage(),
+                        200,
+                        data,
+                        true,
+                        LocalDateTime.now())));
+    }
 
 }

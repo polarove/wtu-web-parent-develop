@@ -11,8 +11,8 @@ public class OffLineException extends RuntimeException {
         this.responseEnum = responseEnum;
     }
 
-    public static void throwException() throws NotLoginException {
-        throw new NotLoginException(ResponseEnum.USER_OFFLINE);
+    public static void throwException() throws UserNotLoginException {
+        throw new UserNotLoginException(ResponseEnum.USER_OFFLINE);
     }
 
 

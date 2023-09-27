@@ -1,17 +1,22 @@
 package cn.neorae.wtu.module.netty.exceptions;
 
 import cn.neorae.common.enums.ResponseEnum;
+import lombok.Getter;
 
-public class RefusedException extends RuntimeException {
+@Getter
+public class UserNotFoundException extends RuntimeException{
+
 
     private final ResponseEnum responseEnum;
 
-    public RefusedException(ResponseEnum responseEnum) {
+
+    public UserNotFoundException(ResponseEnum responseEnum) {
         super(responseEnum.getMessage());
         this.responseEnum = responseEnum;
     }
 
     public static void throwException() throws UserNotLoginException {
-        throw new UserNotLoginException(ResponseEnum.USER_REJECTED);
+        throw new UserNotLoginException(ResponseEnum.USER_NOT_FOUND);
     }
+
 }

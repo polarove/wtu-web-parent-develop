@@ -4,19 +4,19 @@ import cn.neorae.common.enums.ResponseEnum;
 import lombok.Getter;
 
 @Getter
-public class NotLoginException extends RuntimeException {
-    
+public class UserNotLoginException extends RuntimeException {
+
 
     private final ResponseEnum responseEnum;
 
 
-    public NotLoginException(ResponseEnum responseEnum) {
+    public UserNotLoginException(ResponseEnum responseEnum) {
         super(responseEnum.getMessage());
         this.responseEnum = responseEnum;
     }
 
-    public static void throwException() throws NotLoginException {
-        throw new NotLoginException(ResponseEnum.NOT_LOGIN);
+    public static void throwException() throws UserNotLoginException {
+        throw new UserNotLoginException(ResponseEnum.USER_NOT_LOGIN);
     }
 
 
