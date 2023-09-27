@@ -1,20 +1,16 @@
 package cn.neorae.wtu.module.netty.module.team.connection;
 
+import cn.hutool.core.util.StrUtil;
+import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketRequestDTO;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.enums.TeamServerEnum;
 import cn.neorae.wtu.module.netty.exceptions.NotLoginException;
 import com.alibaba.fastjson.JSON;
-
-import cn.hutool.core.util.StrUtil;
-import cn.neorae.common.enums.ResponseEnum;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
-
-import static cn.neorae.wtu.module.netty.enums.TeamServerEnum.ConnectionEnum.CONNECT;
-import static cn.neorae.wtu.module.netty.enums.TeamServerEnum.ConnectionEnum.DISCONNECT;
 
 
 @Slf4j
