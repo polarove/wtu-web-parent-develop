@@ -177,7 +177,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
                         .eq(StrUtil.isNotBlank(getTeamDTO.getUuid()), User::getUuid, getTeamDTO.getUuid()) // 若uuid不为空，查询该用户发布的组队信息
                         .eq(StrUtil.isBlank(getTeamDTO.getUuid()), Team::getStatus, Enums.Polar.TRUE.getCode()) // 若uuid为空，则只查询公开的组队
                         .ne(StrUtil.isBlank(getTeamDTO.getUuid()), User::getOnlineStatus, Enums.OnlineStatus.OFFLINE.getCode()) // 若uuid为空，则只查询在线和在游戏中的用户发布的组队信息
-                        .orderByDesc(Team::getCreateTime) // 排序
+                        .orderByDesc(Team::getUpdateTime) // 排序
         );
 
         List<TeamVO> teamList = teamPage.getRecords().stream().map(team -> {
