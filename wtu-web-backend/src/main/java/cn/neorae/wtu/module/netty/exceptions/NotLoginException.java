@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.netty.team.handler.exceptions;
+package cn.neorae.wtu.module.netty.exceptions;
 
 import cn.neorae.common.enums.ResponseEnum;
 import lombok.Getter;

@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import cn.neorae.wtu.module.netty.team.NettyServer;
+import cn.neorae.wtu.module.netty.module.team.TeamNettyServer;
 
 @SpringBootApplication
 @MapperScan("cn.neorae.wtu.module.*.mapper")
@@ -14,7 +14,7 @@ public class WtuWebBackendApplication {
 
     public static void main(String[] args) throws InterruptedException, Exception{
         SpringApplication.run(WtuWebBackendApplication.class, args);
-        NettyServer.start();
+        TeamNettyServer.start();
     }
 
 }

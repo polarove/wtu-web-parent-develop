@@ -55,6 +55,9 @@ public enum ResponseEnum {
     BAD_NETTY_PARAM(2011, "请求参数错误"),
     BAD_NETTY_BODY(2012, "请求体错误"),
 
+    USER_REJECTED(2013, "请求被拒绝"),
+    USER_OFFLINE(2014, "用户不在线"),
+
     // Netty Server Success Code
     ORIGIN_CONNECTED(3001, "已连接至始源星系服务器");
 

@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.netty.team.domain.vo;
+package cn.neorae.wtu.module.netty.domain.vo;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.netty.team.domain.dto;
+package cn.neorae.wtu.module.netty.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

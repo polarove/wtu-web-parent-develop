@@ -1,9 +1,9 @@
-package cn.neorae.wtu.module.netty.team;
+package cn.neorae.wtu.module.netty.module.team;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cn.neorae.wtu.module.netty.team.handler.WebsocketHandler;
+import cn.neorae.wtu.module.netty.module.team.connection.TeamServerHandler;
 import org.springframework.core.io.ClassPathResource;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -27,9 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class NettyServer {
+public class TeamNettyServer {
 
-    public static final Map<String, Channel> USER_CHANNEL_MAP = new ConcurrentHashMap<>(1024);
+    public static final Map<String, Channel> TEAM_CHANNEL_MAP = new ConcurrentHashMap<>(1024);
 
     public static final ChannelGroup TEAM_ORIGIN = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
@@ -76,15 +76,15 @@ public class NettyServer {
                                 .addLast(new HttpObjectAggregator(1024 * 64))
                                 //websocket支持
                                 .addLast(new WebSocketServerProtocolHandler("/")) //websocket的根路径
-                                .addLast(new WebsocketHandler());
+                                .addLast(new TeamServerHandler());
                     }
                 });
         ChannelFuture channelFuture = serverBootstrap.bind(7676);
         channelFuture.addListener(future -> {
             if (future.isSuccess()) {
-                log.info("Netty Server started at port 7676");
+                log.info("Team Netty Server started at port 7676");
             } else {
-                log.error("Netty Server started failed at port 7676");
+                log.error("Team Netty started failed at port 7676");
             }
         });
     }
