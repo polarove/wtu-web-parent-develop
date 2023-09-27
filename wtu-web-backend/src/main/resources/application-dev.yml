@@ -1,8 +1,8 @@
 server:
   port: 6767
   ssl:
-    certificate: classpath:ssl/dev/localhost+3.pem
-    certificate-private-key: classpath:ssl/dev/localhost+3-key.pem
+    certificate: classpath:ssl/dev/cert.pem
+    certificate-private-key: classpath:ssl/dev/cert-key.pem
 
 spring:
   application:
