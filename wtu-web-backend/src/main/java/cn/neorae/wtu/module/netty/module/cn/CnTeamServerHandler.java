@@ -7,9 +7,6 @@ import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
 import cn.neorae.wtu.module.netty.exceptions.UserNotFoundException;
 import cn.neorae.wtu.module.netty.exceptions.UserNotLoginException;
 import cn.neorae.wtu.module.netty.module.PreHandler;
-import cn.neorae.wtu.module.netty.module.cn.connection.CnTeamConnectionHandler;
-import cn.neorae.wtu.module.netty.module.cn.connection.CnTeamDisconnectionHandler;
-import cn.neorae.wtu.module.netty.module.en.team.EnTeamMessageHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -30,7 +27,7 @@ public class CnTeamServerHandler extends SimpleChannelInboundHandler<TextWebSock
             switch (NettyServerEnum.ConnectionEnum.match(websocketConnectionDTO.getAction())) {
                 case CONNECT -> CnTeamConnectionHandler.execute(ctx, msg);
                 case DISCONNECT -> CnTeamDisconnectionHandler.execute(ctx, msg);
-                case MESSAGE -> EnTeamMessageHandler.execute(ctx, msg);
+                case MESSAGE -> CnTeamMessageHandler.execute(ctx, msg);
                 default -> ctx.channel().writeAndFlush(WssResponseVO.fail(ResponseEnum.NOT_SUPPORTED));
             }
         } catch (UserNotLoginException e) {

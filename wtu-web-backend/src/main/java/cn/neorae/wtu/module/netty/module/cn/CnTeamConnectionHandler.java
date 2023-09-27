@@ -1,5 +1,5 @@
 
-package cn.neorae.wtu.module.netty.module.cn.connection;
+package cn.neorae.wtu.module.netty.module.cn;
 
 
 import cn.neorae.common.enums.ResponseEnum;
@@ -24,7 +24,6 @@ public class CnTeamConnectionHandler {
     public static void execute(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame socketFrame) throws ChannelNotFoundException {
         WebsocketConnectionDTO dto = JSON.parseObject(socketFrame.text(), WebsocketConnectionDTO.class);
         NettyApplication.CN_PUBLIC_CHANNEL_POOL.putIfAbsent(dto.getUuid(), channelHandlerContext.channel());
-        channelHandlerContext.channel().writeAndFlush(WssResponseVO.connect("cn_已连接至广播服务器",null));
         AfterConnectionVO afterConnectionVO = new AfterConnectionVO();
         afterConnectionVO.setTotal(NettyApplication.CN_PUBLIC_CHANNEL_POOL.size());
         try {

@@ -2,6 +2,7 @@ cn\neorae\common\annotation\FreePass.class
 cn\neorae\common\enums\ResponseEnum.class
 cn\neorae\common\enums\Enums$Bool.class
 cn\neorae\common\enums\Enums$Server.class
+cn\neorae\common\enums\Enums$WebsocketRequestType.class
 cn\neorae\common\enums\Enums$OnlineStatus.class
 cn\neorae\common\enums\Enums.class
 cn\neorae\common\enums\Enums$Booster.class

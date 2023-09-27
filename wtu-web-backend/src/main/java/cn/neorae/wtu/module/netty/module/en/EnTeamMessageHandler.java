@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.netty.module.en.team;
+package cn.neorae.wtu.module.netty.module.en;
 
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketRequestDTO;
 import com.alibaba.fastjson2.JSON;

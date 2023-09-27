@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.netty.module.en.connection;
+package cn.neorae.wtu.module.netty.module.en;
 
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.wtu.module.netty.NettyApplication;
@@ -19,64 +19,75 @@ public class EnTeamDisconnectionHandler {
     public static void execute(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame msg)  {
         WebsocketConnectionDTO dto = JSON.parseObject(msg.text(), WebsocketConnectionDTO.class);
         NettyApplication.EN_PUBLIC_CHANNEL_POOL.remove(dto.getUuid());
+        log.info("{} has disconnected from en server",dto.getUuid());
         AfterConnectionVO afterConnectionVO = new AfterConnectionVO();
         afterConnectionVO.setTotal(NettyApplication.EN_PUBLIC_CHANNEL_POOL.size());
         try {
             switch (NettyServerEnum.TeamRoutes.match(dto.getRoute())) {
                 case ORIGIN -> {
-                    NettyApplication.EN_TEAM_ORIGIN.remove(channelHandlerContext.channel());
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_ORIGIN.size());
                     NettyApplication.EN_TEAM_ORIGIN.writeAndFlush(WssResponseVO.connect("已离开始源星系组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_ORIGIN.remove(channelHandlerContext.channel());
                 }
                 case EVENT -> {
-                    NettyApplication.EN_TEAM_EVENT.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_EVENT.size());
                     NettyApplication.EN_TEAM_EVENT.writeAndFlush(WssResponseVO.connect("已离开事件组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_EVENT.remove(channelHandlerContext.channel());
                 }
                 case ALARM -> {
-                    NettyApplication.EN_TEAM_ALARM.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_ALARM.size());
                     NettyApplication.EN_TEAM_ALARM.writeAndFlush(WssResponseVO.connect("已离开警报组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_ALARM.remove(channelHandlerContext.channel());
                 }
                 case STEEL_PATH -> {
-                    NettyApplication.EN_TEAM_STEEL_PATH.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_STEEL_PATH.size());
                     NettyApplication.EN_TEAM_STEEL_PATH.writeAndFlush(WssResponseVO.connect("已离开钢铁之路组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_STEEL_PATH.remove(channelHandlerContext.channel());
                 }
                 case INVASION -> {
-                    NettyApplication.EN_TEAM_INVASION.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_INVASION.size());
                     NettyApplication.EN_TEAM_INVASION.writeAndFlush(WssResponseVO.connect("已离开入侵组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_INVASION.remove(channelHandlerContext.channel());
                 }
                 case SYNDICATE -> {
-                    NettyApplication.EN_TEAM_SYNDICATE.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_SYNDICATE.size());
                     NettyApplication.EN_TEAM_SYNDICATE.writeAndFlush(WssResponseVO.connect("已离开集团组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_SYNDICATE.remove(channelHandlerContext.channel());
                 }
                 case FISSURE -> {
-                    NettyApplication.EN_TEAM_FISSURE.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_FISSURE.size());
                     NettyApplication.EN_TEAM_FISSURE.writeAndFlush(WssResponseVO.connect("已离开虚空遗物组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_FISSURE.remove(channelHandlerContext.channel());
                 }
                 case SORTIE -> {
-                    NettyApplication.EN_TEAM_SORTIE.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_SORTIE.size());
                     NettyApplication.EN_TEAM_SORTIE.writeAndFlush(WssResponseVO.connect("已离开突击组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_SORTIE.remove(channelHandlerContext.channel());
                 }
                 case HUNT -> {
-                    NettyApplication.EN_TEAM_HUNT.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_HUNT.size());
                     NettyApplication.EN_TEAM_HUNT.writeAndFlush(WssResponseVO.connect("已离开猎杀执行官组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_HUNT.remove(channelHandlerContext.channel());
                 }
                 case DURIVI -> {
-                    NettyApplication.EN_TEAM_DURIVI.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_DURIVI.size());
                     NettyApplication.EN_TEAM_DURIVI.writeAndFlush(WssResponseVO.connect("已离开双衍王境组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_DURIVI.remove(channelHandlerContext.channel());
                 }
                 case EMPYREAN -> {
-                    NettyApplication.EN_TEAM_EMPYREAN.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.EN_TEAM_EMPYREAN.size());
                     NettyApplication.EN_TEAM_EMPYREAN.writeAndFlush(WssResponseVO.connect("已离开九重天组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.EN_TEAM_EMPYREAN.remove(channelHandlerContext.channel());
                 }
                 default -> throw new ChannelNotFoundException(ResponseEnum.CHANNEL_NOT_FOUND);
             }
@@ -85,5 +96,7 @@ public class EnTeamDisconnectionHandler {
         } catch (Exception e) {
             log.info("error:{}",e.getMessage());
         }
+
+
     }
 }

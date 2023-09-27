@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.netty.module.cn.connection;
+package cn.neorae.wtu.module.netty.module.cn;
 
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.wtu.module.netty.NettyApplication;
@@ -25,59 +25,68 @@ public class CnTeamDisconnectionHandler {
         try {
             switch (NettyServerEnum.TeamRoutes.match(dto.getRoute())) {
                 case ORIGIN -> {
-                    NettyApplication.CN_TEAM_ORIGIN.remove(channelHandlerContext.channel());
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_ORIGIN.size());
                     NettyApplication.CN_TEAM_ORIGIN.writeAndFlush(WssResponseVO.connect("已离开始源星系组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_ORIGIN.remove(channelHandlerContext.channel());
                 }
                 case EVENT -> {
-                    NettyApplication.CN_TEAM_EVENT.remove(channelHandlerContext.channel());
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_EVENT.size());
                     NettyApplication.CN_TEAM_EVENT.writeAndFlush(WssResponseVO.connect("已离开事件组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_EVENT.remove(channelHandlerContext.channel());
                 }
                 case ALARM -> {
-                    NettyApplication.CN_TEAM_ALARM.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_ALARM.size());
                     NettyApplication.CN_TEAM_ALARM.writeAndFlush(WssResponseVO.connect("已离开警报组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_ALARM.remove(channelHandlerContext.channel());
                 }
                 case STEEL_PATH -> {
-                    NettyApplication.CN_TEAM_STEEL_PATH.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_STEEL_PATH.size());
                     NettyApplication.CN_TEAM_STEEL_PATH.writeAndFlush(WssResponseVO.connect("已离开钢铁之路组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_STEEL_PATH.remove(channelHandlerContext.channel());
                 }
                 case INVASION -> {
-                    NettyApplication.CN_TEAM_INVASION.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_INVASION.size());
                     NettyApplication.CN_TEAM_INVASION.writeAndFlush(WssResponseVO.connect("已离开入侵组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_INVASION.remove(channelHandlerContext.channel());
                 }
                 case SYNDICATE -> {
-                    NettyApplication.CN_TEAM_SYNDICATE.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_SYNDICATE.size());
                     NettyApplication.CN_TEAM_SYNDICATE.writeAndFlush(WssResponseVO.connect("已离开集团组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_SYNDICATE.remove(channelHandlerContext.channel());
                 }
                 case FISSURE -> {
-                    NettyApplication.CN_TEAM_FISSURE.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_FISSURE.size());
                     NettyApplication.CN_TEAM_FISSURE.writeAndFlush(WssResponseVO.connect("已离开虚空遗物组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_FISSURE.remove(channelHandlerContext.channel());
                 }
                 case SORTIE -> {
-                    NettyApplication.CN_TEAM_SORTIE.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_SORTIE.size());
                     NettyApplication.CN_TEAM_SORTIE.writeAndFlush(WssResponseVO.connect("已离开突击组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_SORTIE.remove(channelHandlerContext.channel());
                 }
                 case HUNT -> {
-                    NettyApplication.CN_TEAM_HUNT.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_HUNT.size());
                     NettyApplication.CN_TEAM_HUNT.writeAndFlush(WssResponseVO.connect("已离开猎杀执行官组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_HUNT.remove(channelHandlerContext.channel());
                 }
                 case DURIVI -> {
-                    NettyApplication.CN_TEAM_DURIVI.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_DURIVI.size());
                     NettyApplication.CN_TEAM_DURIVI.writeAndFlush(WssResponseVO.connect("已离开双衍王境组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_DURIVI.remove(channelHandlerContext.channel());
                 }
                 case EMPYREAN -> {
-                    NettyApplication.CN_TEAM_EMPYREAN.remove(channelHandlerContext.channel());
+
                     afterConnectionVO.setCurrentChannel(NettyApplication.CN_TEAM_EMPYREAN.size());
                     NettyApplication.CN_TEAM_EMPYREAN.writeAndFlush(WssResponseVO.connect("已离开九重天组队频道", JSON.toJSONString(afterConnectionVO)));
+                    NettyApplication.CN_TEAM_EMPYREAN.remove(channelHandlerContext.channel());
                 }
                 default -> throw new ChannelNotFoundException(ResponseEnum.CHANNEL_NOT_FOUND);
             }
