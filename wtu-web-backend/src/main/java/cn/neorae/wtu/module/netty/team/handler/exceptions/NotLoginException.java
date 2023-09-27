@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.netty.handler.exceptions;
+package cn.neorae.wtu.module.netty.team.handler.exceptions;
 
 import cn.neorae.common.enums.ResponseEnum;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Getter;
 public class NotLoginException extends RuntimeException {
     
 
-    private ResponseEnum responseEnum;
+    private final ResponseEnum responseEnum;
 
 
     public NotLoginException(ResponseEnum responseEnum) {
@@ -15,8 +15,8 @@ public class NotLoginException extends RuntimeException {
         this.responseEnum = responseEnum;
     }
 
-    public void throwException() throws NotLoginException {
-        throw new NotLoginException(this.responseEnum);
+    public static void throwException() throws NotLoginException {
+        throw new NotLoginException(ResponseEnum.NOT_LOGIN);
     }
 
 

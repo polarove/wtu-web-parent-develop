@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.netty.enums;
+package cn.neorae.wtu.module.netty.team.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public enum WebsocketRequestType {
 
     NOT_SUPPORTED(0);
 
-    private Integer type;
+    private final Integer type;
 
     public static WebsocketRequestType match (Integer type) {
         for (WebsocketRequestType websocketRequestType : WebsocketRequestType.values()) {

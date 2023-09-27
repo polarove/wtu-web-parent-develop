@@ -1,10 +1,10 @@
-package cn.neorae.wtu.module.netty;
+package cn.neorae.wtu.module.netty.team;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import cn.neorae.wtu.module.netty.team.handler.WebsocketHandler;
 import org.springframework.core.io.ClassPathResource;
-import cn.neorae.wtu.module.netty.handler.WebsocketHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -84,7 +84,7 @@ public class NettyServer {
             if (future.isSuccess()) {
                 log.info("Netty Server started at port 7676");
             } else {
-                log.error("Netty Server started failed at port 8080");
+                log.error("Netty Server started failed at port 7676");
             }
         });
     }

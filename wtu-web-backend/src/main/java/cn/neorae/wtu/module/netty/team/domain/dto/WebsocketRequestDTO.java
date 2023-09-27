@@ -1,8 +1,10 @@
-package cn.neorae.wtu.module.netty.domain.dto;
+package cn.neorae.wtu.module.netty.team.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class WebsocketRequestDTO {
 
     private Integer channelId;

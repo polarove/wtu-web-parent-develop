@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 public class ResponseVO<T> implements Serializable {
@@ -29,9 +30,9 @@ public class ResponseVO<T> implements Serializable {
     private Boolean success;
 
     /**
-     * 时间戳
+     * 时间
      */
-    private Long timestamp;
+    private LocalDateTime time;
 
     /**
      * 返回数据
@@ -48,7 +49,7 @@ public class ResponseVO<T> implements Serializable {
         this.setMessage(message);
         this.setCode(code);
         this.setSuccess(success);
-        this.setTimestamp(System.currentTimeMillis());
+        this.setTime(LocalDateTime.now());
     }
 
     /**
@@ -63,7 +64,7 @@ public class ResponseVO<T> implements Serializable {
         this.setCode(code);
         this.setSuccess(success);
         this.setData(data);
-        this.setTimestamp(System.currentTimeMillis());
+        this.setTime(LocalDateTime.now());
     }
 
 
