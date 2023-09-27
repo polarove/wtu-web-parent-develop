@@ -19,11 +19,10 @@ public class EnTeamServerHandler extends SimpleChannelInboundHandler<TextWebSock
     @Override
     public void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws UserNotFoundException, UserNotLoginException {
         try{
-            WebsocketConnectionDTO websocketConnectionDTO = PreHandler.execute(msg);
+            WebsocketConnectionDTO websocketConnectionDTO = PreHandler.execute(ctx, msg);
             if (websocketConnectionDTO.getServer().equals(NettyServerEnum.GameServerEnum.CN.getType())){
                 return;
             }
-            log.info("server type: {}",websocketConnectionDTO.getServer());
             switch (NettyServerEnum.ConnectionEnum.match(websocketConnectionDTO.getAction())) {
                 case CONNECT -> EnTeamConnectionHandler.execute(ctx, msg);
                 case DISCONNECT -> EnTeamDisconnectionHandler.execute(ctx, msg);

@@ -25,12 +25,22 @@ public class WssResponseVO {
 
     private LocalDateTime time;
 
+    public static TextWebSocketFrame pong(Object data){
+        // 将数据原封不动地返回
+        return new TextWebSocketFrame(JSON.toJSONString(new WssResponseVO(
+                ResponseEnum.SUCCESS.getMessage(),
+                ResponseEnum.SUCCESS.getCode(),
+                data,
+                true,
+                LocalDateTime.now())));
+    }
+
     public static TextWebSocketFrame connect(String message, Object data) {
         return new TextWebSocketFrame(
                 JSON.toJSONString(
                         new WssResponseVO(
                                 message,
-                                200,
+                                ResponseEnum.SUCCESS.getCode(),
                                 data,
                                 true,
                                 LocalDateTime.now())));
@@ -56,17 +66,6 @@ public class WssResponseVO {
                                 data,
                                 false,
                                 LocalDateTime.now())));
-    }
-
-    public static TextWebSocketFrame wrapData(Object data) {
-        return new TextWebSocketFrame(
-                JSON.toJSONString(
-                    new WssResponseVO(
-                        ResponseEnum.SUCCESS.getMessage(),
-                        200,
-                        data,
-                        true,
-                        LocalDateTime.now())));
     }
 
 }

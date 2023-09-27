@@ -9,5 +9,5 @@ public class AfterConnectionVO {
 
     private Integer total;
 
-    private Integer currentChannel;
+    private Integer clients;
 }

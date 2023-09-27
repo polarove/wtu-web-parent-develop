@@ -60,6 +60,8 @@ public enum ResponseEnum {
     USER_OFFLINE(2015, "用户不在线"),
 
     // Netty Server Success Code
+
+    PONG(3000, "PONG"),
     ORIGIN_CONNECTED(3001, "已连接至始源星系服务器");
 
 

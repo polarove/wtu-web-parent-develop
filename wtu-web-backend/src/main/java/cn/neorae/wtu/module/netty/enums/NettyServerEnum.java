@@ -73,13 +73,15 @@ public interface NettyServerEnum {
     @Getter
     enum ConnectionEnum implements NettyServerEnum {
 
+        PING(0),
+
         CONNECT(1),
 
         DISCONNECT(2),
 
         MESSAGE(3),
 
-        NOT_SUPPORTED(0);
+        NOT_SUPPORTED(-1);
 
         private final Integer type;
 
