@@ -80,10 +80,10 @@ public class NettyApplication {
         EventLoopGroup en_primitiveGroup = new NioEventLoopGroup();
         EventLoopGroup en_workGroup = new NioEventLoopGroup();
         
-        ClassPathResource pem = new ClassPathResource("ssl/dev/cert.pem");
-        ClassPathResource key = new ClassPathResource("ssl/dev/cert-key.pem");
+        ClassPathResource pem = new ClassPathResource("ssl/pro/cert.crt");
+        ClassPathResource key = new ClassPathResource("ssl/pro/cert-key.key");
 
-        SslContext sslContext = SslContextBuilder.forServer(pem.getFile(), key.getFile()).build();
+        SslContext sslContext = SslContextBuilder.forServer(pem.getInputStream(), key.getInputStream()).build();
 
         ServerBootstrap EnServer = new ServerBootstrap();
         EnServer.group(en_primitiveGroup, en_workGroup)
