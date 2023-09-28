@@ -109,8 +109,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
                                 //websocket支持
                                 .addLast(new WebSocketServerProtocolHandler(EnRoot)) //websocket的根路径
                                 .addLast(new EnTeamServerHandler());
-                        log.info("初始化国际服频道列表");
-
+                        log.info("新连接加入国际服");
                     }
                 });
 
@@ -131,8 +130,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
                                 //websocket支持
                                 .addLast(new WebSocketServerProtocolHandler(CnRoot)) //websocket的根路径
                                 .addLast(new CnTeamServerHandler());
-                        log.info("初始化国服频道列表");
-
+                        log.info("新连接加入国服");
                     }
                 });
 
