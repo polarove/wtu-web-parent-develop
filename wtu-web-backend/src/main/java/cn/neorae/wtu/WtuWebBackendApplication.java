@@ -15,10 +15,6 @@ public class WtuWebBackendApplication {
     public static void main(String[] args){
 
         SpringApplication.run(WtuWebBackendApplication.class, args);
-        log.info("初始化国际服频道列表");
-        EnChannelMap.init();
-        log.info("初始化国服频道列表");
-        CnChannelMap.init();
     }
 
 }
