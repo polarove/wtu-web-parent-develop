@@ -24,7 +24,7 @@ public class EnTeamConnectionHandler {
         AfterConnectionVO afterConnectionVO = new AfterConnectionVO();
         afterConnectionVO.setTotal(NettyApplication.EN_PUBLIC_CHANNEL_POOL.size());
         try {
-            NettyApplication.EN_CHANNEL_GROUP_STREAM.forEach(channelGroup ->{
+            NettyApplication.EN_CHANNEL_GROUP_LIST.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){
                     channelGroup.add(channelHandlerContext.channel());
                     afterConnectionVO.setClients(channelGroup.size());

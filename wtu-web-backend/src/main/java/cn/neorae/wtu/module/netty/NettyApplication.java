@@ -65,7 +65,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
 
     public static final ChannelGroup CN_TEAM_EMPYREAN   = new DefaultChannelGroup("empyrean",GlobalEventExecutor.INSTANCE);
 
-    public static List<ChannelGroup> CN_Channel_Group_Stream = List.of(CN_TEAM_ORIGIN, CN_TEAM_EVENT, CN_TEAM_ALARM, CN_TEAM_STEEL_PATH, CN_TEAM_INVASION, CN_TEAM_SYNDICATE, CN_TEAM_FISSURE, CN_TEAM_SORTIE, CN_TEAM_HUNT, CN_TEAM_DURIVI, CN_TEAM_EMPYREAN);
+    public static List<ChannelGroup> CN_CHANNEL_GROUP_LIST = List.of(CN_TEAM_ORIGIN, CN_TEAM_EVENT, CN_TEAM_ALARM, CN_TEAM_STEEL_PATH, CN_TEAM_INVASION, CN_TEAM_SYNDICATE, CN_TEAM_FISSURE, CN_TEAM_SORTIE, CN_TEAM_HUNT, CN_TEAM_DURIVI, CN_TEAM_EMPYREAN);
 
     public static final Map<String, Channel> EN_PUBLIC_CHANNEL_POOL = new ConcurrentHashMap<>(1024);
 
@@ -92,7 +92,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
 
     public static final ChannelGroup EN_TEAM_EMPYREAN = new DefaultChannelGroup("empyrean",GlobalEventExecutor.INSTANCE);
 
-    public static List<ChannelGroup> EN_CHANNEL_GROUP_STREAM = List.of(EN_TEAM_ORIGIN, EN_TEAM_EVENT, EN_TEAM_ALARM, EN_TEAM_STEEL_PATH, EN_TEAM_INVASION, EN_TEAM_SYNDICATE, EN_TEAM_FISSURE, EN_TEAM_SORTIE, EN_TEAM_HUNT, EN_TEAM_DURIVI, EN_TEAM_EMPYREAN);
+    public static List<ChannelGroup> EN_CHANNEL_GROUP_LIST = List.of(EN_TEAM_ORIGIN, EN_TEAM_EVENT, EN_TEAM_ALARM, EN_TEAM_STEEL_PATH, EN_TEAM_INVASION, EN_TEAM_SYNDICATE, EN_TEAM_FISSURE, EN_TEAM_SORTIE, EN_TEAM_HUNT, EN_TEAM_DURIVI, EN_TEAM_EMPYREAN);
 
     private static EventLoopGroup en_primitiveGroup;
     private static EventLoopGroup en_workGroup;
