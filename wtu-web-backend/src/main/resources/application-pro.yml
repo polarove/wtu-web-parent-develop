@@ -3,6 +3,7 @@ server:
   ssl:
     certificate: classpath:ssl/pro/cert.crt
     certificate-private-key: classpath:ssl/pro/cert-key.key
+
 netty:
   en:
     port: 3344

@@ -179,7 +179,6 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
                         .ne(StrUtil.isBlank(getTeamDTO.getUuid()), User::getOnlineStatus, Enums.OnlineStatus.OFFLINE.getCode()) // 若uuid为空，则只查询在线和在游戏中的用户发布的组队信息
                         .orderByDesc(Team::getUpdateTime) // 排序
         );
-
         List<TeamVO> teamList = teamPage.getRecords().stream().map(team -> {
             TeamVO teamVO = new TeamVO();
             teamVO.setTeam(this.getTeamBO(team).join());

@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @MapperScan("cn.neorae.wtu.module.*.mapper")
 @EnableAsync
-@Slf4j
 public class WtuWebBackendApplication {
 
     public static void main(String[] args){
