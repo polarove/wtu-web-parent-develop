@@ -10,37 +10,33 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 public class CnChannelMap {
-    public static final Map<String, Channel> CN_PUBLIC_CHANNEL_POOL = new ConcurrentHashMap<>(1024);
 
-    public static final ChannelGroup CN_TEAM_ORIGIN = new DefaultChannelGroup("origin", GlobalEventExecutor.INSTANCE);
+    public static Stream<ChannelGroup> CnChannelGroupStream;
 
-    public static final ChannelGroup CN_TEAM_EVENT = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup CN_TEAM_ORIGIN  = new DefaultChannelGroup("origin", GlobalEventExecutor.INSTANCE);
 
-    public static final ChannelGroup CN_TEAM_ALARM = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup CN_TEAM_EVENT  = new DefaultChannelGroup("event",GlobalEventExecutor.INSTANCE);
 
-    public static final ChannelGroup CN_TEAM_STEEL_PATH = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup CN_TEAM_ALARM = new DefaultChannelGroup("alarm",GlobalEventExecutor.INSTANCE);
 
-    public static final ChannelGroup CN_TEAM_INVASION = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup CN_TEAM_STEEL_PATH =  new DefaultChannelGroup("steelpath",GlobalEventExecutor.INSTANCE);
 
-    public static final ChannelGroup CN_TEAM_SYNDICATE = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup CN_TEAM_INVASION =   new DefaultChannelGroup("invasion",GlobalEventExecutor.INSTANCE);
 
-    public static final ChannelGroup CN_TEAM_FISSURE = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup CN_TEAM_SYNDICATE =  new DefaultChannelGroup("syndicate",GlobalEventExecutor.INSTANCE);
 
-    public static final ChannelGroup CN_TEAM_SORTIE = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup CN_TEAM_FISSURE =   new DefaultChannelGroup("fissure",GlobalEventExecutor.INSTANCE);
 
-    public static final ChannelGroup CN_TEAM_HUNT = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup CN_TEAM_SORTIE  = new DefaultChannelGroup("sortie",GlobalEventExecutor.INSTANCE);
 
-    public static final ChannelGroup CN_TEAM_DURIVI = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup CN_TEAM_HUNT  = new DefaultChannelGroup("hunt",GlobalEventExecutor.INSTANCE);
 
-    public static final ChannelGroup CN_TEAM_EMPYREAN = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup CN_TEAM_DURIVI = new DefaultChannelGroup("durivi",GlobalEventExecutor.INSTANCE);
+
+    private static final ChannelGroup CN_TEAM_EMPYREAN   = new DefaultChannelGroup("empyrean",GlobalEventExecutor.INSTANCE);
 
 
-    public static Stream<ChannelGroup> init(){
-        return Stream.of(CN_TEAM_ORIGIN, CN_TEAM_EVENT, CN_TEAM_ALARM, CN_TEAM_STEEL_PATH, CN_TEAM_INVASION, CN_TEAM_SYNDICATE, CN_TEAM_FISSURE, CN_TEAM_SORTIE, CN_TEAM_HUNT, CN_TEAM_DURIVI, CN_TEAM_EMPYREAN);
+    public static void init(){
+        CnChannelGroupStream = Stream.of(CN_TEAM_ORIGIN, CN_TEAM_EVENT, CN_TEAM_ALARM, CN_TEAM_STEEL_PATH, CN_TEAM_INVASION, CN_TEAM_SYNDICATE, CN_TEAM_FISSURE, CN_TEAM_SORTIE, CN_TEAM_HUNT, CN_TEAM_DURIVI, CN_TEAM_EMPYREAN);
     }
-
-    public static Channel getChannelByUUID(String uuid) {
-        return CN_PUBLIC_CHANNEL_POOL.get(uuid);
-    }
-
 }

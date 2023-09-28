@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 @Component
 public class CnTeamServerHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
+    // 行为控制器
     @Override
     public void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws UserNotFoundException, UserNotLoginException {
         try{
@@ -31,6 +32,7 @@ public class CnTeamServerHandler extends SimpleChannelInboundHandler<TextWebSock
             if (websocketConnectionDTO.getServer().equals(NettyServerEnum.GameServerEnum.EN.getType())){
                 return;
             }
+            CnChannelMap.init();
             switch (NettyServerEnum.ConnectionEnum.match(websocketConnectionDTO.getAction())) {
                 case CONNECT -> CnTeamConnectionHandler.execute(ctx, msg);
                 case DISCONNECT -> CnTeamDisconnectionHandler.execute(ctx, msg);

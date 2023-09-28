@@ -36,56 +36,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
-public class NettyApplication implements ApplicationRunner, ApplicationListener<ContextClosedEvent>, ApplicationContextAware {
+public class NettyApplication implements ApplicationRunner, ApplicationListener<ContextClosedEvent>, ApplicationContextAware{
 
     public static final Map<String, Channel> CN_PUBLIC_CHANNEL_POOL = new ConcurrentHashMap<>(1024);
-
-    public static final ChannelGroup CN_TEAM_ORIGIN = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup CN_TEAM_EVENT = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup CN_TEAM_ALARM = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup CN_TEAM_STEEL_PATH = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-     public static final ChannelGroup CN_TEAM_INVASION = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-     public static final ChannelGroup CN_TEAM_SYNDICATE = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-     public static final ChannelGroup CN_TEAM_FISSURE = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-     public static final ChannelGroup CN_TEAM_SORTIE = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-     public static final ChannelGroup CN_TEAM_HUNT = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-     public static final ChannelGroup CN_TEAM_DURIVI = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-     public static final ChannelGroup CN_TEAM_EMPYREAN = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
 
     public static final Map<String, Channel> EN_PUBLIC_CHANNEL_POOL = new ConcurrentHashMap<>(1024);
 
-    public static final ChannelGroup EN_TEAM_ORIGIN = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup EN_TEAM_EVENT = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup EN_TEAM_ALARM = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup EN_TEAM_STEEL_PATH = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup EN_TEAM_INVASION = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup EN_TEAM_SYNDICATE = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup EN_TEAM_FISSURE = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup EN_TEAM_SORTIE = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup EN_TEAM_HUNT = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup EN_TEAM_DURIVI = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public static final ChannelGroup EN_TEAM_EMPYREAN = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     private static EventLoopGroup en_primitiveGroup;
     private static EventLoopGroup en_workGroup;
@@ -95,7 +52,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
 
     private ApplicationContext applicationContext;
 
-
+    
     @Value("${netty.en.port}")
     private int EnPort;
 
