@@ -3,7 +3,16 @@ server:
   ssl:
     certificate: classpath:ssl/pro/cert.crt
     certificate-private-key: classpath:ssl/pro/cert-key.key
-
+netty:
+  en:
+    port: 3344
+    root: /en
+  cn:
+    port: 4433
+    root: /cn
+  ssl:
+    certificate: ssl/pro/netty.pem
+    certificate-private-key: ssl/pro/netty.key
 spring:
   application:
     name: wtu-web-backend
