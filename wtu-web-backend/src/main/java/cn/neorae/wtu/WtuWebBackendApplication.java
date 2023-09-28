@@ -12,8 +12,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class WtuWebBackendApplication {
 
     public static void main(String[] args) throws Exception{
+
         SpringApplication.run(WtuWebBackendApplication.class, args);
-        NettyApplication.start(3344, "/en", 4433, "/cn");
     }
 
 }

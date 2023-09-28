@@ -28,7 +28,6 @@ public class EnTeamConnectionHandler {
         try {
             switch (NettyServerEnum.TeamRoutes.match(dto.getRoute())) {
                 case ORIGIN -> {
-                    log.info("user:{} connected",dto.getUuid());
                     NettyApplication.EN_TEAM_ORIGIN.add(channelHandlerContext.channel());
                     afterConnectionVO.setClients(NettyApplication.EN_TEAM_ORIGIN.size());
                     NettyApplication.EN_TEAM_ORIGIN.writeAndFlush(WssResponseVO.connect("en_已连接至始源星系组队频道", JSON.toJSONString(afterConnectionVO)));

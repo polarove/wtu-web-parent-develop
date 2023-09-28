@@ -8,12 +8,17 @@ import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
 import cn.neorae.wtu.module.netty.exceptions.TestSocketException;
 import cn.neorae.wtu.module.netty.exceptions.UserNotFoundException;
+import cn.neorae.wtu.module.netty.module.cn.CnChannelMap;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.group.ChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.stream.Stream;
+
 @Slf4j
+
 public class PreHandler {
 
 
@@ -22,8 +27,7 @@ public class PreHandler {
 
         WebsocketConnectionDTO websocketConnectionDTO = JSON.parseObject(msg.text(), WebsocketConnectionDTO.class);
         if (websocketConnectionDTO.getAction().equals(NettyServerEnum.ConnectionEnum.PING.getType())){
-            ctx.channel().writeAndFlush(WssResponseVO.pong(websocketConnectionDTO));
-            throw new TestSocketException(ResponseEnum.PONG);
+            throw new TestSocketException(ResponseEnum.SUCCESS);
         }
         String uuid = websocketConnectionDTO.getUuid();
         if (StrUtil.isBlank(uuid)){

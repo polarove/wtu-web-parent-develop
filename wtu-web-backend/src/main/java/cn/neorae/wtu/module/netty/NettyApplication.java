@@ -16,15 +16,27 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
 @Slf4j
-public class NettyApplication {
+@Component
+public class NettyApplication implements ApplicationRunner, ApplicationListener<ContextClosedEvent>, ApplicationContextAware {
 
     public static final Map<String, Channel> CN_PUBLIC_CHANNEL_POOL = new ConcurrentHashMap<>(1024);
 
@@ -34,7 +46,7 @@ public class NettyApplication {
 
     public static final ChannelGroup CN_TEAM_ALARM = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-     public static final ChannelGroup CN_TEAM_STEEL_PATH = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    public static final ChannelGroup CN_TEAM_STEEL_PATH = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
      public static final ChannelGroup CN_TEAM_INVASION = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
@@ -75,25 +87,64 @@ public class NettyApplication {
 
     public static final ChannelGroup EN_TEAM_EMPYREAN = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
+    private static EventLoopGroup en_primitiveGroup;
+    private static EventLoopGroup en_workGroup;
 
-    public static void start(Integer EnPort, String EnRoot, Integer CnPort, String  CnRoot) throws Exception{
-        EventLoopGroup en_primitiveGroup = new NioEventLoopGroup();
-        EventLoopGroup en_workGroup = new NioEventLoopGroup();
-        
-        ClassPathResource pem = new ClassPathResource("ssl/pro/cert.crt");
-        ClassPathResource key = new ClassPathResource("ssl/pro/cert-key.key");
+    private static EventLoopGroup cn_primitiveGroup;
+    private static EventLoopGroup cn_workGroup;
 
+    private ApplicationContext applicationContext;
+
+
+    @Value("${netty.en.port}")
+    private int EnPort;
+
+    @Value("${netty.en.root}")
+    private String EnRoot;
+
+    @Value("${netty.cn.port}")
+    private int CnPort;
+
+    @Value("${netty.cn.root}")
+    private String CnRoot;
+
+    @Value("${netty.ssl.certificate}")
+    private String pem;
+
+    @Value("${netty.ssl.certificate-private-key}")
+    private String key;
+
+
+    @PreDestroy
+    public void destroy() throws InterruptedException {
+        en_primitiveGroup.shutdownGracefully().sync();
+        en_workGroup.shutdownGracefully().sync();
+        cn_primitiveGroup.shutdownGracefully().sync();
+        cn_workGroup.shutdownGracefully().sync();
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception{
+
+        ClassPathResource key = new ClassPathResource(this.key);
+        ClassPathResource pem = new ClassPathResource(this.pem);
         SslContext sslContext = SslContextBuilder.forServer(pem.getInputStream(), key.getInputStream()).build();
+
+        en_primitiveGroup = new NioEventLoopGroup();
+        en_workGroup = new NioEventLoopGroup();
+
+        cn_primitiveGroup = new NioEventLoopGroup();
+        cn_workGroup = new NioEventLoopGroup();
 
         ServerBootstrap EnServer = new ServerBootstrap();
         EnServer.group(en_primitiveGroup, en_workGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel socketChannel){
+                    protected void initChannel(SocketChannel socketChannel) throws IOException {
                         ChannelPipeline pipeline = socketChannel.pipeline();
                         //添加http编码解码器
-                        pipeline.addLast(sslContext.newHandler(socketChannel.alloc()))
+                        pipeline.addFirst(sslContext.newHandler(socketChannel.alloc()))
                                 .addLast(new HttpServerCodec())
                                 //支持大数据流
                                 .addLast(new ChunkedWriteHandler())
@@ -106,16 +157,14 @@ public class NettyApplication {
                 });
 
         ServerBootstrap CnServer = new ServerBootstrap();
-        EventLoopGroup cn_primitiveGroup = new NioEventLoopGroup();
-        EventLoopGroup cn_workGroup = new NioEventLoopGroup();
         CnServer.group(cn_primitiveGroup, cn_workGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel socketChannel){
+                    protected void initChannel(SocketChannel socketChannel) throws IOException {
                         ChannelPipeline pipeline = socketChannel.pipeline();
                         //添加http编码解码器
-                        pipeline.addLast(sslContext.newHandler(socketChannel.alloc()))
+                        pipeline.addFirst(sslContext.newHandler(socketChannel.alloc()))
                                 .addLast(new HttpServerCodec())
                                 //支持大数据流
                                 .addLast(new ChunkedWriteHandler())
@@ -144,5 +193,23 @@ public class NettyApplication {
                 log.error("Cn Team Netty started failed at port:{}", CnPort);
             }
         });
+
+
     }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+    @Override
+    public void onApplicationEvent(ContextClosedEvent event) {
+        if (event.getApplicationContext().equals(this.applicationContext)) {
+            try {
+                destroy();
+            } catch (InterruptedException e) {
+                log.info("NettyApplication destroy failed: ", e.fillInStackTrace());
+            }
+        }
+    }
+
 }

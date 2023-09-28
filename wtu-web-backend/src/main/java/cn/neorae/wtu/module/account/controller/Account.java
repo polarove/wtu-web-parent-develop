@@ -16,12 +16,16 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/account")
 @Tag(name = "账户接口")
 public class Account {
+
+    @Value("${spring.profiles.active}")
+    private String env;
 
     @Resource
     private UserService userService;
@@ -33,7 +37,7 @@ public class Account {
     @GetMapping("/hello")
     @FreePass
     public ResponseVO<String> hello() {
-        return ResponseVO.wrapData("hello");
+        return ResponseVO.wrapData(env);
     }
 
     @Operation(summary = "登录")

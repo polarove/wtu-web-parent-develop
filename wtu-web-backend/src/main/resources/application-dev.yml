@@ -4,6 +4,16 @@ server:
     certificate: classpath:ssl/dev/cert.pem
     certificate-private-key: classpath:ssl/dev/cert-key.pem
 
+netty:
+  en:
+    port: 3344
+    root: /en
+  cn:
+    port: 4433
+    root: /cn
+  ssl:
+    certificate: ssl/dev/cert.pem
+    certificate-private-key: ssl/dev/cert-key.pem
 spring:
   application:
     name: wtu-web-backend

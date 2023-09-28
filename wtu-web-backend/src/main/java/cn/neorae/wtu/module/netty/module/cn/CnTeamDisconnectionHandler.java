@@ -9,6 +9,7 @@ import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
 import cn.neorae.wtu.module.netty.exceptions.ChannelNotFoundException;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.group.ChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +27,6 @@ public class CnTeamDisconnectionHandler {
         try {
             switch (NettyServerEnum.TeamRoutes.match(dto.getRoute())) {
                 case ORIGIN -> {
-
                     afterConnectionVO.setClients(NettyApplication.CN_TEAM_ORIGIN.size() - 1);
                     NettyApplication.CN_TEAM_ORIGIN.writeAndFlush(WssResponseVO.connect("已离开始源星系组队频道", JSON.toJSONString(afterConnectionVO)));
                     NettyApplication.CN_TEAM_ORIGIN.remove(channelHandlerContext.channel());

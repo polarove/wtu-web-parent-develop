@@ -46,6 +46,17 @@ public class WssResponseVO {
                                 LocalDateTime.now())));
     }
 
+    public static TextWebSocketFrame connect( Object data) {
+        return new TextWebSocketFrame(
+                JSON.toJSONString(
+                        new WssResponseVO(
+                                ResponseEnum.SUCCESS.getMessage(),
+                                ResponseEnum.SUCCESS.getCode(),
+                                data,
+                                true,
+                                LocalDateTime.now())));
+    }
+
     public static TextWebSocketFrame fail(ResponseEnum responseEnum) {
         return new TextWebSocketFrame(
                 JSON.toJSONString(
