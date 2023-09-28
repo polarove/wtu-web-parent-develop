@@ -8,6 +8,8 @@ import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.exceptions.ChannelNotFoundException;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.group.ChannelMatcher;
+import io.netty.channel.group.ChannelMatchers;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +28,8 @@ public class EnTeamConnectionHandler {
         try {
             NettyApplication.EN_CHANNEL_GROUP_LIST.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){
+                    // todo: ChannelMatchers
+//                    channelGroup.disconnect(ChannelMatchers.is(channelHandlerContext.channel()));
                     channelGroup.add(channelHandlerContext.channel());
                     afterConnectionVO.setClients(channelGroup.size());
                     channelGroup.writeAndFlush(WssResponseVO.connect(JSON.toJSONString(afterConnectionVO)));
