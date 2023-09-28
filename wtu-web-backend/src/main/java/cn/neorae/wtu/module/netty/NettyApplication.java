@@ -1,6 +1,8 @@
 package cn.neorae.wtu.module.netty;
 
+import cn.neorae.wtu.module.netty.module.cn.CnChannelMap;
 import cn.neorae.wtu.module.netty.module.cn.CnTeamServerHandler;
+import cn.neorae.wtu.module.netty.module.en.EnChannelMap;
 import cn.neorae.wtu.module.netty.module.en.EnTeamServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -107,6 +109,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
                                 //websocket支持
                                 .addLast(new WebSocketServerProtocolHandler(EnRoot)) //websocket的根路径
                                 .addLast(new EnTeamServerHandler());
+                        EnChannelMap.init();
                     }
                 });
 
@@ -127,6 +130,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
                                 //websocket支持
                                 .addLast(new WebSocketServerProtocolHandler(CnRoot)) //websocket的根路径
                                 .addLast(new CnTeamServerHandler());
+                        CnChannelMap.init();
                     }
                 });
 

@@ -28,7 +28,6 @@ public class CnTeamServerHandler extends SimpleChannelInboundHandler<TextWebSock
             if (websocketConnectionDTO.getServer().equals(NettyServerEnum.GameServerEnum.EN.getType())){
                 return;
             }
-            CnChannelMap.init();
             switch (NettyServerEnum.ConnectionEnum.match(websocketConnectionDTO.getAction())) {
                 case CONNECT -> CnTeamConnectionHandler.execute(ctx, msg);
                 case DISCONNECT -> CnTeamDisconnectionHandler.execute(ctx, msg);

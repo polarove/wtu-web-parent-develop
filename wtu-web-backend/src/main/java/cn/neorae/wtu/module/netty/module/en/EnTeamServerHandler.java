@@ -28,7 +28,6 @@ public class EnTeamServerHandler extends SimpleChannelInboundHandler<TextWebSock
             if (websocketConnectionDTO.getServer().equals(NettyServerEnum.GameServerEnum.CN.getType())){
                 return;
             }
-            EnChannelMap.init();
             switch (NettyServerEnum.ConnectionEnum.match(websocketConnectionDTO.getAction())) {
                 case CONNECT -> EnTeamConnectionHandler.execute(ctx, msg);
                 case DISCONNECT -> EnTeamDisconnectionHandler.execute(ctx, msg);
