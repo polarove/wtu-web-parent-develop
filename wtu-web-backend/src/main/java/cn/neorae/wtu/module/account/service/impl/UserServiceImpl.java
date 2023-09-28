@@ -237,6 +237,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public ResponseVO<UserVO> toggleServer(String uuid, Integer serverType) {
         User user = UserUtil.getUserByUuid(uuid);
+        if(BeanUtil.isEmpty(user)){
+            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
+        }
         user.setServer(serverType);
         this.baseMapper.updateById(user);
         return ResponseVO.wrapData(parseData(user));
