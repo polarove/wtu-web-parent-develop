@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class WtuWebBackendApplication {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args){
 
         SpringApplication.run(WtuWebBackendApplication.class, args);
     }
