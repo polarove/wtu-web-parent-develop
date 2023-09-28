@@ -26,7 +26,7 @@ public class CnTeamConnectionHandler  {
         AfterConnectionVO afterConnectionVO = new AfterConnectionVO();
         afterConnectionVO.setTotal(NettyApplication.CN_PUBLIC_CHANNEL_POOL.size());
         try {
-            CnChannelMap.CnChannelGroupStream.forEach(channelGroup ->{
+            NettyApplication.CN_Channel_Group_Stream.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){
                     channelGroup.add(channelHandlerContext.channel());
                     afterConnectionVO.setClients(channelGroup.size());

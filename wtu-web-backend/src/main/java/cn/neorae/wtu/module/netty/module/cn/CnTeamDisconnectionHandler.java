@@ -22,7 +22,7 @@ public class CnTeamDisconnectionHandler {
             afterConnectionVO.setTotal(NettyApplication.CN_PUBLIC_CHANNEL_POOL.size());
 
             try {
-                CnChannelMap.CnChannelGroupStream.forEach(channelGroup ->{
+                NettyApplication.CN_Channel_Group_Stream.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){
                     afterConnectionVO.setClients(channelGroup.size() - 1);
                     channelGroup.writeAndFlush(WssResponseVO.connect(JSON.toJSONString(afterConnectionVO)));
