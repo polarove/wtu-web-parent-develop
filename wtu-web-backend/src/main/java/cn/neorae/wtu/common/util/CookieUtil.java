@@ -1,5 +1,10 @@
 package cn.neorae.wtu.common.util;
 
+import cn.hutool.core.collection.ArrayIter;
+import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,23 +28,22 @@ public class CookieUtil {
 
 
     // 获取Cookie
-    public static Map<String, String> getCookies(HttpServletRequest request) {
+    public static Map<String, Cookie> getCookies(HttpServletRequest request) {
 
-        Map<String, String> cookieMap = new HashMap<>();
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (!"JSSESSIONID".equals(cookie.getName())) {
-                    cookieMap.put(cookie.getName(), cookie.getValue());
-                }
-            }
+        final Cookie[] cookies = request.getCookies();
+        if (ArrayUtil.isEmpty(cookies)) {
+            return MapUtil.empty();
         }
-        return cookieMap;
+
+        return IterUtil.toMap(
+                new ArrayIter<>(request.getCookies()),
+                new CaseInsensitiveMap<>(),
+                Cookie::getName);
     }
 
     public static String getUUID(HttpServletRequest request, String key) {
-        Map<String, String> cookieMap = getCookies(request);
-        return cookieMap.get(key);
+        Map<String, Cookie> cookieMap = getCookies(request);
+        return cookieMap.get(key).getValue();
     }
 
     public static void removeCookie(HttpServletResponse response, String key, String domain) {

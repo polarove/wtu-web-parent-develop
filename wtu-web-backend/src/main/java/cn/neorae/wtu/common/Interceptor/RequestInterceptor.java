@@ -3,9 +3,11 @@ package cn.neorae.wtu.common.Interceptor;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.servlet.ServletUtil;
 import cn.neorae.common.annotation.FreePass;
 import cn.neorae.common.enums.Enums;
 import cn.neorae.wtu.common.util.CookieUtil;
+import cn.neorae.wtu.common.util.IpUtil;
 import cn.neorae.wtu.common.util.UserUtil;
 import cn.neorae.wtu.common.util.Values;
 import cn.neorae.wtu.module.account.domain.User;
@@ -20,6 +22,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Component
 @Slf4j
@@ -42,6 +47,9 @@ public class RequestInterceptor implements HandlerInterceptor {
             // 获取方法上有没有打FreePass注解
             FreePass freePass = method.getMethodAnnotation(FreePass.class);
             String uuid = CookieUtil.getUUID(request, Values.Fingerprint);
+            String ip = IpUtil.getClientIP(request);
+            log.info("uuid:{}", uuid);
+            log.info("ip:{}", ip);
             // 为null表示该方法没打注解，需校验登录状态
             if (freePass == null) {
                 if (StrUtil.isBlank(uuid)) {
