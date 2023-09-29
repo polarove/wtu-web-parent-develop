@@ -114,4 +114,4 @@ mybatis-plus:
 domain:
   frontend: https://www.neorae.cn
   backend: https://www.neorae.cn:6767
-  name: neorae.cn
+  name: www.neorae.cn

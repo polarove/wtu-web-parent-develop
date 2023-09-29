@@ -8,17 +8,21 @@ import lombok.Data;
 @Data
 public class UpdateUserBoosterDT0 {
 
-    @Schema(description = "uuid")
     @NotBlank(message = "uuid不能为空")
     private String uuid;
 
+    @NotNull(message = "经验值加成不能为空")
+    private Integer affinityBooster;
 
-    @Schema(description = "行为")
-    @NotNull(message = "行为不能为空, 0取消，1启用")
-    private Integer action;
+    @NotNull(message = "现金加成不能为空")
+    private Integer creditBooster;
 
+    @NotNull(message = "资源加成不能为空")
+    private Integer resourceBooster;
 
-    @Schema(description = "账户加成类型")
-    @NotBlank(message = "账户类型不能为空")
-    private String booster;
+    @NotNull(message = "资源掉落加成不能为空")
+    private Integer resourceDropRateBooster;
+
+    @NotNull(message = "MOD掉落加成不能为空")
+    private Integer modDropRateBooster;
 }

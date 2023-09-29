@@ -1,5 +1,6 @@
 package cn.neorae.wtu.module.account.domain.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.util.List;
@@ -21,5 +22,13 @@ public class UserVO {
 
     private Integer level;
 
-    private List<String> boosterList;
+    private Integer affinityBooster;
+
+    private Integer creditBooster;
+
+    private Integer resourceBooster;
+
+    private Integer resourceDropRateBooster;
+
+    private Integer modDropRateBooster;
 }

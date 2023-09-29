@@ -28,8 +28,8 @@ public class WssResponseVO {
     public static TextWebSocketFrame pong(Object data){
         // 将数据原封不动地返回
         return new TextWebSocketFrame(JSON.toJSONString(new WssResponseVO(
-                ResponseEnum.SUCCESS.getMessage(),
-                ResponseEnum.SUCCESS.getCode(),
+                ResponseEnum.WSS_RESPONSE_SUCCESS.getMessage(),
+                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
                 data,
                 true,
                 LocalDateTime.now())));
@@ -40,7 +40,7 @@ public class WssResponseVO {
                 JSON.toJSONString(
                         new WssResponseVO(
                                 message,
-                                ResponseEnum.SUCCESS.getCode(),
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
                                 data,
                                 true,
                                 LocalDateTime.now())));
@@ -50,8 +50,8 @@ public class WssResponseVO {
         return new TextWebSocketFrame(
                 JSON.toJSONString(
                         new WssResponseVO(
-                                ResponseEnum.SUCCESS.getMessage(),
-                                ResponseEnum.SUCCESS.getCode(),
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getMessage(),
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
                                 data,
                                 true,
                                 LocalDateTime.now())));

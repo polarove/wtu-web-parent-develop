@@ -73,7 +73,7 @@ public class ResponseVO<T> implements Serializable {
      * @return ResponseVO
      */
     public static  <T> ResponseVO<T> completed(){
-        return new ResponseVO<>(ResponseEnum.SUCCESS.getMessage(), Enums.Bool.TRUE.getType(), ResponseEnum.SUCCESS.getCode());
+        return new ResponseVO<>(ResponseEnum.HTTP_RESPONSE_SUCCESS.getMessage(), Enums.Bool.TRUE.getType(), ResponseEnum.HTTP_RESPONSE_SUCCESS.getCode());
     }
 
     /**
@@ -82,7 +82,7 @@ public class ResponseVO<T> implements Serializable {
      * @return ResponseVO
      */
     public static  <T> ResponseVO<T> wrapData(T data){
-        return new ResponseVO<>(ResponseEnum.SUCCESS.getMessage(), Enums.Bool.TRUE.getType(), ResponseEnum.SUCCESS.getCode(), data);
+        return new ResponseVO<>(ResponseEnum.HTTP_RESPONSE_SUCCESS.getMessage(), Enums.Bool.TRUE.getType(), ResponseEnum.HTTP_RESPONSE_SUCCESS.getCode(), data);
     }
 
     /**

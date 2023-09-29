@@ -12,7 +12,11 @@ public enum ResponseEnum {
     /**
      * 返回码和状态说明
      */
-    SUCCESS(200, "成功"),
+
+    SERVER_RESTART(0, "服务器重启导致登陆状态失效，请重新登陆"),
+    WSS_RESPONSE_SUCCESS(100, "WSS请求成功"),
+    WSS_RESPONSE_FAILED(199, "WSS请求失败"),
+    HTTP_RESPONSE_SUCCESS(200, "成功"),
     UPDATE_SUCCESS(201,"修改成功"),
     CREATE_SUCCESS(202,"创建成功"),
     DELETE_SUCCESS(203,"删除成功"),
@@ -21,6 +25,7 @@ public enum ResponseEnum {
     VERIFICATION_FAILED(206,"验证时发生错误，加群问问狗群主吧"),
     USER_NOT_FOUND(207,"用户不存在"),
     USER_NOT_LOGIN(208,"尚未登录"),
+    HTTP_RESPONSE_FAILED(299,"修改成功"),
     BAD_PARAM(301, "请求参数错误"),
     INCORPORATE_CODE(302, "验证码错误"),
     USER_EXISTS(303, "邮箱已被注册"),
@@ -63,6 +68,7 @@ public enum ResponseEnum {
 
     PONG(3000, "PONG"),
     ORIGIN_CONNECTED(3001, "已连接至始源星系服务器");
+
 
 
 

@@ -15,6 +15,14 @@ public class UserBO {
 
     private Integer onlineStatus;
 
-    private List<String> boosterList;
+    private Integer affinityBooster;
+
+    private Integer creditBooster;
+
+    private Integer resourceBooster;
+
+    private Integer resourceDropRateBooster;
+
+    private Integer modDropRateBooster;
 
 }

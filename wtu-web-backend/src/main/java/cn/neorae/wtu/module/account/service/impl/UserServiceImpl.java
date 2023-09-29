@@ -1,5 +1,6 @@
 package cn.neorae.wtu.module.account.service.impl;
 
+import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
@@ -64,13 +65,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return ResponseVO.failed(ResponseEnum.LOGIN_ERROR);
         }
         user.setOnlineStatus(Enums.OnlineStatus.ONLINE.getCode());
-        BeanUtil.copyProperties(user, userVO);
-        List<String> boosterList = getBoosters(user);
-        userVO.setBoosterList(boosterList);
         this.baseMapper.updateById(user);
         StpUtil.login(user.getUuid());
         CookieUtil.setCookie(response, Values.Fingerprint, user.getUuid(), Values.CookieExpiry, values.domain);
-        return ResponseVO.wrapData(userVO);
+        return ResponseVO.wrapData(parseUserVO(user));
     }
 
     @Override
@@ -166,37 +164,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 设置cookie
         CookieUtil.setCookie(response, Values.Fingerprint, uuid, Values.CookieExpiry, values.domain);
 
-        // 属性拷贝
-        UserVO userVO = new UserVO();
-        BeanUtil.copyProperties(user, userVO);
-
-        // 设置加成列表
-        List<String> boosterList = getBoosters(user);
-        userVO.setBoosterList(boosterList);
-
         stringRedisTemplate.delete(email);
-        return ResponseVO.wrapData(userVO);
+        return ResponseVO.wrapData(parseUserVO(user));
     }
 
 
     @Override
-    public ResponseVO<UserVO> getUserVOByUUID(HttpServletRequest request) {
-        String uuid = CookieUtil.getUUID(request, Values.Fingerprint);
-        if (StrUtil.isBlank(uuid)){
-            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
-        }
-        if (!StpUtil.isLogin(uuid)){
-            return ResponseVO.failed(ResponseEnum.USER_NOT_LOGIN);
-        }
+    public ResponseVO<UserVO> getUserVOByUUID(HttpServletRequest httpServletRequest) {
+        String uuid = CookieUtil.getUUID(httpServletRequest, Values.Fingerprint);
         User user = UserUtil.getUserByUuid(uuid);
-        return ResponseVO.wrapData(parseData(user));
+        return ResponseVO.wrapData(parseUserVO(user));
     }
 
     @Override
     public ResponseVO<String> logout(String uuid, HttpServletResponse response) {
         User user = UserUtil.getUserByUuid(uuid);
+        StpUtil.getSession().set(uuid, user);
         user.setOnlineStatus(Enums.OnlineStatus.OFFLINE.getCode());
         this.baseMapper.updateById(user);
+        StpUtil.logout(uuid);
         CookieUtil.removeCookie(response, Values.Fingerprint, values.domain);
         CookieUtil.removeCookie(response, Values.Token, values.domain);
         return ResponseVO.completed();
@@ -208,7 +194,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         User user = UserUtil.getUserByUuid(uuid);
         BeanUtil.copyProperties(saveMyProfileDTO, user);
         this.baseMapper.updateById(user);
-        return ResponseVO.wrapData(parseData(user));
+        return ResponseVO.wrapData(parseUserVO(user));
     }
 
     @Override
@@ -224,12 +210,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public ResponseVO<String> updateUserBooster(UpdateUserBoosterDT0 updateUserBoosterDT0) {
         String uuid = updateUserBoosterDT0.getUuid();
-        Integer action = updateUserBoosterDT0.getAction();
-        String booster = updateUserBoosterDT0.getBooster();
         User user = UserUtil.getUserByUuid(uuid);
-        if (!setBooster(user, booster, action)){
-            return ResponseVO.failed(ResponseEnum.INVALID_BOOSTER);
-        }
+        BeanUtil.copyProperties(updateUserBoosterDT0, user);
         this.baseMapper.updateById(user);
         return ResponseVO.completed();
     }
@@ -242,24 +224,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         user.setServer(serverType);
         this.baseMapper.updateById(user);
-        return ResponseVO.wrapData(parseData(user));
-    }
-
-    private boolean setBooster(User user, String booster, Integer action){
-        if(StrUtil.equals(booster, Enums.Booster.AFFINITY.getType())){
-            user.setAffinityBooster(action);
-        }else if (StrUtil.equals(booster, Enums.Booster.CREDIT.getType())) {
-            user.setCreditBooster(action);
-        }else if (StrUtil.equals(booster, Enums.Booster.RESOURCE.getType())) {
-            user.setResourceBooster(action);
-        }else if (StrUtil.equals(booster, Enums.Booster.MOD_DROP_CHANCE.getType())) {
-            user.setModDropRateBooster(action);
-        }else if (StrUtil.equals(booster, Enums.Booster.RESOURCE_DROP_CHANCE.getType())) {
-            user.setResourceDropRateBooster(action);
-        }else{
-            return false;
-        }
-        return true;
+        return ResponseVO.wrapData(parseUserVO(user));
     }
 
     private ResponseVO<UserVO> register (String email, String password, UserVO userVO, HttpServletResponse response) throws MessagingException {
@@ -286,9 +251,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userVO.setServer(Enums.Server.INTERNATIONAL.getCode());
         userVO.setLevel(0);
 
-        // 设置加成列表
-        userVO.setBoosterList(new ArrayList<>());
-
         // 发送验证邮件
         String url = values.frontAddr + "/account/verify?uuid=" + uuid + "&email=" + email;
         mailService.verifyAccount(email, "Warframe Team Up - 账户验证", url);
@@ -302,11 +264,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return ResponseVO.wrapData(userVO);
     }
 
-    private UserVO parseData (User user) {
+    private UserVO parseUserVO (User user) {
         UserVO userVO = new UserVO();
         BeanUtil.copyProperties(user, userVO);
-        List<String> boosterList = getBoosters(user);
-        userVO.setBoosterList(boosterList);
         return userVO;
     }
 }

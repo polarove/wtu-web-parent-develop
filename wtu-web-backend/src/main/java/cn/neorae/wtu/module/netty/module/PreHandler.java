@@ -22,14 +22,14 @@ public class PreHandler {
 
         WebsocketConnectionDTO websocketConnectionDTO = JSON.parseObject(msg.text(), WebsocketConnectionDTO.class);
         if (websocketConnectionDTO.getAction().equals(NettyServerEnum.ConnectionEnum.PING.getType())){
-            throw new TestSocketException(ResponseEnum.SUCCESS);
+            throw new TestSocketException(ResponseEnum.PONG);
         }
         String uuid = websocketConnectionDTO.getUuid();
         if (StrUtil.isBlank(uuid)){
             throw new UserNotFoundException(ResponseEnum.USER_NOT_FOUND);
         }
         if (!StpUtil.isLogin(uuid)){
-            throw new UserNotFoundException(ResponseEnum.USER_NOT_FOUND);
+            throw new UserNotFoundException(ResponseEnum.USER_NOT_LOGIN);
         }
         if (null == websocketConnectionDTO.getServer()){
             throw new UserNotFoundException(ResponseEnum.UNKNOWN_GAME_SERVER);

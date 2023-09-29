@@ -12,8 +12,6 @@ public class CookieUtil {
 
     // 设置Cookie
     public static void setCookie(HttpServletResponse response, String key, String value, int expiry, String domain) {
-        // TODO
-
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(expiry);
         cookie.setSecure(true);

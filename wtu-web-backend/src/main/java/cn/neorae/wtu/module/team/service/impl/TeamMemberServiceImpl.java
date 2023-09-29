@@ -53,7 +53,6 @@ public class TeamMemberServiceImpl extends ServiceImpl<TeamMemberMapper, TeamMem
                     if (StrUtil.isNotBlank(member.getUserUuid())){
                         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, member.getUserUuid()));
                         BeanUtil.copyProperties(user, userBO);
-                        userBO.setBoosterList(userService.getBoosters(user));
                     }
                     teamMemberBO.setUser(userBO);
                     return teamMemberBO;

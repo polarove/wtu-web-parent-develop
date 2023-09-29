@@ -53,7 +53,7 @@ public class RequestInterceptor implements HandlerInterceptor {
                     response.sendRedirect("/redirect/unauthorized?route=login");
                     return false;
                 }
-                // 如果之前登陆过，就刷新登录状态
+                // 服务器重启后，重新登陆
                 if (!StpUtil.isLogin(uuid)){
                     StpUtil.login(uuid);
                 }

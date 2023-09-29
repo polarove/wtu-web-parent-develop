@@ -84,9 +84,6 @@ public class Account {
     @Operation(summary = "退出")
     @GetMapping("/logout")
     public ResponseVO<String> logout(@RequestParam String uuid,HttpServletResponse response) {
-        StpUtil.logout(uuid);
-        CookieUtil.removeCookie(response, Values.Fingerprint, values.domain);
-        CookieUtil.removeCookie(response, Values.Token, values.domain);
         return userService.logout(uuid, response);
     }
 

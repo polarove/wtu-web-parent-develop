@@ -1,5 +1,8 @@
 package cn.neorae.wtu.common.config;
 
+import cn.dev33.satoken.context.model.SaRequest;
+import cn.dev33.satoken.interceptor.SaInterceptor;
+import cn.dev33.satoken.servlet.model.SaResponseForServlet;
 import cn.neorae.wtu.common.Interceptor.RequestInterceptor;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +21,14 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // 登录校验
+        // @FreePass 注解表示不需要登录校验
         registry.addInterceptor(requestInterceptor).addPathPatterns("/**");
+
+        // @SaIgnore 注解表示不需要权限校验
+        registry.addInterceptor(new SaInterceptor(handler -> {
+            /// 权限校验：
+        })).addPathPatterns("/**");
     }
 
     @Override

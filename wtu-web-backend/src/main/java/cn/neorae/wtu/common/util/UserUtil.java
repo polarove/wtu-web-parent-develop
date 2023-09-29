@@ -10,7 +10,6 @@ public class UserUtil {
 
     public static void addUser(User user) {
         userMap.put(user.getUuid(), user);
-        userMap.put(user.getEmail(), user);
     }
 
     public static void removeUser(String uuid) {
@@ -21,7 +20,4 @@ public class UserUtil {
         return userMap.get(uuid);
     }
 
-    public static User getUserByEmail(String email) {
-        return userMap.get(email);
-    }
 }
