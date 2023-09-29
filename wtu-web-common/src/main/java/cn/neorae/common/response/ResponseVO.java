@@ -8,6 +8,11 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * @author liuqi
+ * @description 返回对象
+ * @date 2023/9/29 11:03
+ **/
 @Data
 public class ResponseVO<T> implements Serializable {
 
