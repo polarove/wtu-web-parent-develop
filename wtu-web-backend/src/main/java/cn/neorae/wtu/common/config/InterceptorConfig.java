@@ -8,6 +8,11 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * @author liuqi
+ * @description http请求拦截器配置
+ * @date 2023/9/29 11:04
+ **/
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
