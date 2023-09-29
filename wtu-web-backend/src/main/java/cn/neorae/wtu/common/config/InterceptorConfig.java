@@ -1,8 +1,6 @@
 package cn.neorae.wtu.common.config;
 
-import cn.dev33.satoken.context.model.SaRequest;
 import cn.dev33.satoken.interceptor.SaInterceptor;
-import cn.dev33.satoken.servlet.model.SaResponseForServlet;
 import cn.neorae.wtu.common.Interceptor.RequestInterceptor;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;

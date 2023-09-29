@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.neorae.common.annotation.FreePass;
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
-import cn.neorae.wtu.common.util.CookieUtil;
 import cn.neorae.wtu.common.util.Values;
 import cn.neorae.wtu.module.account.domain.dto.*;
 import cn.neorae.wtu.module.account.domain.vo.UserVO;
