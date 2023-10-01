@@ -3,8 +3,8 @@ package cn.neorae.wtu.module.netty.module.en;
 
 import cn.neorae.wtu.module.netty.NettyApplication;
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketConnectionDTO;
-import cn.neorae.wtu.module.netty.domain.vo.connection.AfterConnectionBO;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
+import cn.neorae.wtu.module.netty.domain.vo.connection.AfterConnectionBO;
 import cn.neorae.wtu.module.netty.exceptions.ChannelNotFoundException;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;

@@ -10,8 +10,6 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.List;
-
 /**
 * @author Neorae
 * @description 针对表【user(用户)】的数据库操作Service

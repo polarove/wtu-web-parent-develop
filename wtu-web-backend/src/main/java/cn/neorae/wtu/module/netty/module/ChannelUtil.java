@@ -1,12 +1,9 @@
 package cn.neorae.wtu.module.netty.module;
 
 import cn.neorae.wtu.module.netty.NettyApplication;
-import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
-import com.alibaba.fastjson.JSON;
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class ChannelUtil {
