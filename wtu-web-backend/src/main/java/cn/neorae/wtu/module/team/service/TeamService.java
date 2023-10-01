@@ -2,9 +2,10 @@ package cn.neorae.wtu.module.team.service;
 
 import cn.neorae.common.response.ResponseVO;
 import cn.neorae.wtu.module.team.domain.Team;
-import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
+import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.get.GetTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.join.JoinTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.toggle.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -20,9 +21,11 @@ public interface TeamService extends IService<Team> {
 
     ResponseVO<String> removeTeamById(Integer teamId);
 
+    ResponseVO<TeamVO> getTeamById(Integer teamId);
+
     ResponseVO<IPage<TeamVO>> getTeamList(GetTeamDTO getTeamDTO);
 
     ResponseVO<String> toggleTeamStatus(ToggleTeamStatusDTO toggleTeamStatusDTO);
 
-    ResponseVO<TeamVO> getTeamById(Integer teamId);
+    ResponseVO<String> joinTeam(JoinTeamDTO joinTeamDTO);
 }

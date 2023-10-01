@@ -3,20 +3,23 @@ package cn.neorae.wtu.module.team.controller;
 
 import cn.neorae.common.annotation.FreePass;
 import cn.neorae.common.response.ResponseVO;
-import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
+import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.get.GetTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.join.JoinTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.toggle.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.service.TeamService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/team")
 @Tag(name = "队伍接口")
-public class Team {
+@Slf4j
+public class TeamController {
 
     @Resource
     private TeamService teamService;
@@ -47,5 +50,9 @@ public class Team {
         return teamService.removeTeamById(teamId);
     }
 
+    @PostMapping("/joinTeam")
+    public ResponseVO<String> joinTeam(@RequestBody JoinTeamDTO joinTeamDTO) {
+        return teamService.joinTeam(joinTeamDTO);
+    }
 
 }

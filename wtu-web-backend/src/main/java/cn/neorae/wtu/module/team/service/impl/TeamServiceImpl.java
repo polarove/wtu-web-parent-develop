@@ -8,17 +8,15 @@ import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.enums.Enums;
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.common.exception.TeamException;
 import cn.neorae.wtu.module.account.domain.User;
-import cn.neorae.wtu.module.account.mapper.UserMapper;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
-import cn.neorae.wtu.module.team.domain.bo.TeamBO;
-import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
-import cn.neorae.wtu.module.team.domain.bo.TeamRequirementsBO;
-import cn.neorae.wtu.module.team.domain.dto.CreateTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.GetTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.ToggleTeamStatusDTO;
+import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.get.GetTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.join.JoinTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.toggle.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
 import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
@@ -32,12 +30,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import jakarta.annotation.Resource;
-import org.springframework.scheduling.annotation.Async;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
 * @author Neorae
@@ -45,6 +42,7 @@ import java.util.concurrent.CompletableFuture;
 * @createDate 2023-09-25 08:50:11
 */
 @Service
+@Slf4j
 public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     implements TeamService{
 
@@ -62,7 +60,8 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     private TeamMemberMapper teamMemberMapper;
 
     @Resource
-    private UserMapper userMapper;
+    private TeamThreadTaskServiceImpl teamThreadTaskService;
+
 
     @Resource
     private TeamMapper teamMapper;
@@ -86,23 +85,18 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         }
 
         // 装配队伍需求
-        List<TeamRequirement> requirementList = createTeamDTO.getRequirements().stream().map(requirement -> {
-            TeamRequirement teamRequirement = new TeamRequirement();
-            teamRequirement.setTeamId(team.getId());
-            BeanUtil.copyProperties(requirement, teamRequirement);
-            return teamRequirement;
-        }).toList();
+        List<TeamRequirement> requirementList = createTeamDTO
+                .getRequirements()
+                .parallelStream()
+                .map(requirement -> teamThreadTaskService.handleTeamRequirements(requirement, team.getId()).join())
+                .toList();
 
         // 装配队伍成员信息
-        List<TeamMember> memberList = createTeamDTO.getMembers().stream().map(member -> {
-            TeamMember teamMember = new TeamMember();
-            teamMember.setTeamId(team.getId());
-            teamMember.setUserUuid(member.getUser().getUuid());
-            teamMember.setEn(member.getWarframe().getEn());
-            teamMember.setCn(member.getWarframe().getCn());
-            BeanUtil.copyProperties(member, teamMember);
-            return teamMember;
-        }).toList();
+        List<TeamMember> memberList = createTeamDTO
+                .getMembers()
+                .parallelStream()
+                .map(member -> teamThreadTaskService.handleTeamMembers(member,team.getId()).join())
+                .toList();
 
         // 保存队伍需求和队伍成员信息
         if (ArrayUtil.isNotEmpty(requirementList)){
@@ -111,7 +105,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         if (ArrayUtil.isNotEmpty(memberList)){
             teamMemberService.saveBatch(memberList);
         }else{
-            return ResponseVO.failed(ResponseEnum.TEAM_MEMBER_NOT_SATISFIED);
+            throw new TeamException(ResponseEnum.TEAM_MEMBER_NOT_SATISFIED);
         }
 
         // todo: 广播到当前channel的所有用户
@@ -125,46 +119,41 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
         List<Integer> requirementIdList = teamRequirementMapper
                 .selectList(new LambdaQueryWrapper<TeamRequirement>().eq(TeamRequirement::getTeamId, teamId))
-                .stream()
-                .peek(teamRequirement -> {
-                }).map(TeamRequirement::getId).toList();
+                .parallelStream()
+                .map(TeamRequirement::getId).toList();
 
         List<Integer> memberIdList = teamMemberMapper
                 .selectList(new LambdaQueryWrapper<TeamMember>().eq(TeamMember::getTeamId, teamId))
-                .stream()
-                .peek(teamRequirement -> {
-                }).map(TeamMember::getId).toList();
-
+                .parallelStream()
+                .map(TeamMember::getId).toList();
 
         if (BeanUtil.isNotEmpty(team)){
             removeById(team);
-        }
-        if (ArrayUtil.isNotEmpty(requirementIdList)){
-            teamRequirementService.removeBatchByIds(requirementIdList);
+        } else {
+            throw new TeamException(ResponseEnum.TEAM_NOT_FOUND);
         }
         if (ArrayUtil.isNotEmpty(memberIdList)){
             teamMemberService.removeBatchByIds(memberIdList);
+        } else {
+            throw new TeamException(ResponseEnum.TEAM_MEMBER_NOT_FOUND);
+        }
+        if (ArrayUtil.isNotEmpty(requirementIdList)){
+            teamRequirementService.removeBatchByIds(requirementIdList);
         }
         return ResponseVO.completed();
     }
 
     @Override
-    public ResponseVO<TeamVO> getTeamById(Integer teamId) {
+    public ResponseVO<TeamVO> getTeamById(Integer teamId){
         Team team = this.baseMapper.selectOne(new LambdaQueryWrapper<Team>().eq(Team::getId, teamId));
         if (BeanUtil.isEmpty(team)){
             return ResponseVO.failed(ResponseEnum.TEAM_NOT_FOUND);
         }
-        TeamVO teamVO = new TeamVO();
-        teamVO.setTeam(this.getTeamBO(team).join());
-        List<TeamMemberBO> teamMemberBOS = teamMemberService.getTeamMemberBOList(team).join();
-        List<TeamRequirementsBO> teamRequirementsBOS = teamRequirementService.getTeamRequirementList(team).join();
-        teamVO.setMembers(teamMemberBOS);
-        teamVO.setRequirements(teamRequirementsBOS);
-        return ResponseVO.wrapData(teamVO);
+        return teamThreadTaskService.getTeamVO(team).thenApply(ResponseVO::wrapData).join();
     }
 
     @Override
-    public ResponseVO<IPage<TeamVO>> getTeamList(GetTeamDTO getTeamDTO) {
+    public ResponseVO<IPage<TeamVO>> getTeamList(GetTeamDTO getTeamDTO){
         IPage<Team> teamPage = teamMapper.selectJoinPage(
                 new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize()),
                 Team.class,
@@ -179,19 +168,9 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
                         .ne(StrUtil.isBlank(getTeamDTO.getUuid()), User::getOnlineStatus, Enums.OnlineStatus.OFFLINE.getCode()) // 若uuid为空，则只查询在线和在游戏中的用户发布的组队信息
                         .orderByDesc(Team::getUpdateTime) // 排序
         );
-        List<TeamVO> teamList = teamPage.getRecords().stream().map(team -> {
-            TeamVO teamVO = new TeamVO();
-            teamVO.setTeam(this.getTeamBO(team).join());
-            teamVO.setMembers(teamMemberService.getTeamMemberBOList(team).join());
-            teamVO.setRequirements(teamRequirementService.getTeamRequirementList(team).join());
-            return teamVO;
-        }).toList();
-
-
+        List<TeamVO> teamList = teamPage.getRecords().parallelStream().map(team -> teamThreadTaskService.getTeamVO(team).join()).toList();
         IPage<TeamVO> teamListVOPage = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize(), teamPage.getTotal());
         teamListVOPage.setRecords(teamList);
-
-
         return ResponseVO.wrapData(teamListVOPage);
     }
 
@@ -209,12 +188,11 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         return ResponseVO.completed();
     }
 
-    @Async
-    protected CompletableFuture<TeamBO> getTeamBO(Team team) {
-        TeamBO teamBO = new TeamBO();
-        BeanUtil.copyProperties(team, teamBO);
-        return CompletableFuture.completedFuture(teamBO);
+    @Override
+    public ResponseVO<String> joinTeam(JoinTeamDTO joinTeamDTO) {
+        return null;
     }
+
 
 
 

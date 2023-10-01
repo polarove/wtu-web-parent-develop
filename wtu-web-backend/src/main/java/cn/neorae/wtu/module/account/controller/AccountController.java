@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.neorae.common.annotation.FreePass;
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
-import cn.neorae.wtu.common.util.Values;
 import cn.neorae.wtu.module.account.domain.dto.*;
 import cn.neorae.wtu.module.account.domain.vo.UserVO;
 import cn.neorae.wtu.module.account.service.UserService;
@@ -15,13 +14,15 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/account")
 @Tag(name = "账户接口")
-public class Account {
+@Slf4j
+public class AccountController {
 
     @Value("${spring.profiles.active}")
     private String env;
@@ -29,8 +30,6 @@ public class Account {
     @Resource
     private UserService userService;
 
-    @Resource
-    private Values values;
 
     @Operation(summary = "测试")
     @GetMapping("/hello")

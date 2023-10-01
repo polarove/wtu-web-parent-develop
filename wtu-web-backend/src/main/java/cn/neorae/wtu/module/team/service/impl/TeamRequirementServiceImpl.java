@@ -1,19 +1,15 @@
 package cn.neorae.wtu.module.team.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
 import cn.neorae.wtu.module.team.domain.bo.TeamRequirementsBO;
 import cn.neorae.wtu.module.team.mapper.TeamRequirementMapper;
 import cn.neorae.wtu.module.team.service.TeamRequirementService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
 * @author Neorae
@@ -26,16 +22,13 @@ public class TeamRequirementServiceImpl extends ServiceImpl<TeamRequirementMappe
 
     @Override
     @Async
-    public CompletableFuture<List<TeamRequirementsBO>> getTeamRequirementList(Team team) {
-        List<TeamRequirementsBO> teamRequirementList = this.baseMapper
-                .selectList(new LambdaQueryWrapper<TeamRequirement>().eq(TeamRequirement::getTeamId, team.getId()))
-                        .stream().map(requirement -> {
-                    TeamRequirementsBO teamRequirementsBO = new TeamRequirementsBO();
-                    BeanUtil.copyProperties(requirement, teamRequirementsBO);
-                    return teamRequirementsBO;
-                }).collect(Collectors.toList());
-        return CompletableFuture.completedFuture(teamRequirementList);
+    public CompletableFuture<TeamRequirementsBO> getTeamRequirement(TeamRequirement teamRequirement) {
+        TeamRequirementsBO teamRequirementsBO = new TeamRequirementsBO();
+        BeanUtil.copyProperties(teamRequirement, teamRequirementsBO);
+        return CompletableFuture.completedFuture(teamRequirementsBO);
     }
+
+
 }
 
 

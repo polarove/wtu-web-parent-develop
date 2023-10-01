@@ -4,8 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.neorae.wtu.module.account.domain.User;
 import cn.neorae.wtu.module.account.mapper.UserMapper;
-import cn.neorae.wtu.module.account.service.UserService;
-import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
 import cn.neorae.wtu.module.team.domain.bo.TeamWarframeBO;
@@ -18,9 +16,7 @@ import jakarta.annotation.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
 * @author Neorae
@@ -34,30 +30,22 @@ public class TeamMemberServiceImpl extends ServiceImpl<TeamMemberMapper, TeamMem
     @Resource
     private UserMapper userMapper;
 
-    @Resource
-    private UserService userService;
-
     @Async
     @Override
-    public CompletableFuture<List<TeamMemberBO>> getTeamMemberBOList(Team team) {
-        List<TeamMemberBO> teamMemberList =  this.baseMapper
-                .selectList(new LambdaQueryWrapper<TeamMember>().eq(TeamMember::getTeamId, team.getId()))
-                .stream().map(member -> {
-                    TeamMemberBO teamMemberBO = new TeamMemberBO();
-                    BeanUtil.copyProperties(member, teamMemberBO);
-                    TeamWarframeBO teamWarframeBO = new TeamWarframeBO();
-                    teamWarframeBO.setEn(member.getEn());
-                    teamWarframeBO.setCn(member.getCn());
-                    teamMemberBO.setWarframe(teamWarframeBO);
-                    UserBO userBO = new UserBO();
-                    if (StrUtil.isNotBlank(member.getUserUuid())){
-                        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, member.getUserUuid()));
-                        BeanUtil.copyProperties(user, userBO);
-                    }
-                    teamMemberBO.setUser(userBO);
-                    return teamMemberBO;
-                }).collect(Collectors.toList());
-        return CompletableFuture.completedFuture(teamMemberList);
+    public CompletableFuture<TeamMemberBO> getTeamMemberBO(TeamMember member) {
+        TeamMemberBO teamMemberBO = new TeamMemberBO();
+        BeanUtil.copyProperties(member, teamMemberBO);
+        TeamWarframeBO teamWarframeBO = new TeamWarframeBO();
+        teamWarframeBO.setEn(member.getEn());
+        teamWarframeBO.setCn(member.getCn());
+        teamMemberBO.setWarframe(teamWarframeBO);
+        UserBO userBO = new UserBO();
+        if (StrUtil.isNotBlank(member.getUserUuid())){
+            User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, member.getUserUuid()));
+            BeanUtil.copyProperties(user, userBO);
+        }
+        teamMemberBO.setUser(userBO);
+        return CompletableFuture.completedFuture(teamMemberBO);
     }
 }
 

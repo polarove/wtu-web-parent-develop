@@ -45,6 +45,8 @@ public enum ResponseEnum {
     TEAM_NOT_FOUND(1002, "队伍不存在"),
     TEAM_MEMBER_NOT_SATISFIED(1003, "成员数量不足"),
 
+    TEAM_MEMBER_NOT_FOUND(1004, "未找到队伍成员"),
+
 
     // Netty Server Error Code
     NOT_SUPPORTED(2002, "不支持的请求类型"),

@@ -1,11 +1,9 @@
 package cn.neorae.wtu.module.team.service;
 
-import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
 import cn.neorae.wtu.module.team.domain.bo.TeamRequirementsBO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -15,5 +13,5 @@ import java.util.concurrent.CompletableFuture;
 */
 public interface TeamRequirementService extends IService<TeamRequirement> {
 
-    CompletableFuture<List<TeamRequirementsBO>> getTeamRequirementList(Team team);
+    CompletableFuture<TeamRequirementsBO> getTeamRequirement(TeamRequirement teamRequirement);
 }

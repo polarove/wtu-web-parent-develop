@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.team.domain.dto;
+package cn.neorae.wtu.module.team.domain.dto.create;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

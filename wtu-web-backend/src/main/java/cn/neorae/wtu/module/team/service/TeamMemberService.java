@@ -1,11 +1,9 @@
 package cn.neorae.wtu.module.team.service;
 
-import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -15,5 +13,5 @@ import java.util.concurrent.CompletableFuture;
 */
 public interface TeamMemberService extends IService<TeamMember> {
 
-    CompletableFuture<List<TeamMemberBO>> getTeamMemberBOList(Team team);
+    CompletableFuture<TeamMemberBO> getTeamMemberBO(TeamMember team);
 }

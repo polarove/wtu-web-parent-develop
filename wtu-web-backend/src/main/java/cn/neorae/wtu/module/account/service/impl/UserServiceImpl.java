@@ -5,7 +5,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.servlet.ServletUtil;
 import cn.neorae.common.enums.Enums;
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
