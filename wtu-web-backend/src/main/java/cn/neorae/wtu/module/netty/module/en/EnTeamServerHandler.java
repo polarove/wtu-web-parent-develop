@@ -32,12 +32,12 @@ public class EnTeamServerHandler extends SimpleChannelInboundHandler<TextWebSock
                 case CONNECT -> EnTeamConnectionHandler.execute(ctx, msg);
                 case DISCONNECT -> EnTeamDisconnectionHandler.execute(ctx, msg);
                 case MESSAGE -> EnTeamMessageHandler.execute(ctx, msg);
-                default -> ctx.channel().writeAndFlush(WssResponseVO.fail(ResponseEnum.NOT_SUPPORTED));
+                default -> ctx.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(ResponseEnum.NOT_SUPPORTED));
             }
         } catch (UserNotLoginException e) {
-            ctx.channel().writeAndFlush(WssResponseVO.fail(e.getResponseEnum()));
+            ctx.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(e.getResponseEnum()));
         } catch (UserNotFoundException e) {
-            ctx.channel().writeAndFlush(WssResponseVO.fail(e.getResponseEnum()));
+            ctx.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(e.getResponseEnum()));
         } catch (Exception e) {
             log.info("error:{}",e.getMessage());
         }

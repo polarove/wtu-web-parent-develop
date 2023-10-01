@@ -1,6 +1,7 @@
 package cn.neorae.wtu.module.netty.domain.vo;
 
 import cn.neorae.common.enums.ResponseEnum;
+import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
 import com.alibaba.fastjson2.JSON;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.AllArgsConstructor;
@@ -25,28 +26,9 @@ public class WssResponseVO {
 
     private LocalDateTime time;
 
-    public static TextWebSocketFrame pong(Object data){
-        // 将数据原封不动地返回
-        return new TextWebSocketFrame(JSON.toJSONString(new WssResponseVO(
-                ResponseEnum.WSS_RESPONSE_SUCCESS.getMessage(),
-                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
-                data,
-                true,
-                LocalDateTime.now())));
-    }
+    private Integer action;
 
-    public static TextWebSocketFrame connect(String message, Object data) {
-        return new TextWebSocketFrame(
-                JSON.toJSONString(
-                        new WssResponseVO(
-                                message,
-                                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
-                                data,
-                                true,
-                                LocalDateTime.now())));
-    }
-
-    public static TextWebSocketFrame connect( Object data) {
+    public static TextWebSocketFrame ADD_TEAM(Object data) {
         return new TextWebSocketFrame(
                 JSON.toJSONString(
                         new WssResponseVO(
@@ -54,10 +36,51 @@ public class WssResponseVO {
                                 ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
                                 data,
                                 true,
-                                LocalDateTime.now())));
+                                LocalDateTime.now(),
+                                NettyServerEnum.ActionEnum.ADD_TEAM.getType()
+                        )));
     }
 
-    public static TextWebSocketFrame fail(ResponseEnum responseEnum) {
+    public static TextWebSocketFrame REMOVE_TEAM(Object data) {
+        return new TextWebSocketFrame(
+                JSON.toJSONString(
+                        new WssResponseVO(
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getMessage(),
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
+                                data,
+                                true,
+                                LocalDateTime.now(),
+                                NettyServerEnum.ActionEnum.REMOVE_TEAM.getType()
+                        )));
+    }
+
+    public static TextWebSocketFrame TOGGLE_STATUS(Object data) {
+        return new TextWebSocketFrame(
+                JSON.toJSONString(
+                        new WssResponseVO(
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getMessage(),
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
+                                data,
+                                true,
+                                LocalDateTime.now(),
+                                NettyServerEnum.ActionEnum.TOGGLE_STATUS.getType()
+                        )));
+    }
+
+    public static TextWebSocketFrame CONNECT_SUCCEED(Object data) {
+        return new TextWebSocketFrame(
+                JSON.toJSONString(
+                        new WssResponseVO(
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getMessage(),
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
+                                data,
+                                true,
+                                LocalDateTime.now(),
+                                NettyServerEnum.ActionEnum.CONNECTION.getType()
+                        )));
+    }
+
+    public static TextWebSocketFrame CONNECT_FAIL(ResponseEnum responseEnum) {
         return new TextWebSocketFrame(
                 JSON.toJSONString(
                     new WssResponseVO(
@@ -65,10 +88,12 @@ public class WssResponseVO {
                         responseEnum.getCode(),
                         null,
                         false,
-                        LocalDateTime.now())));
+                        LocalDateTime.now(),
+                        NettyServerEnum.ActionEnum.CONNECTION.getType()
+                            )));
     }
 
-    public static TextWebSocketFrame fail(ResponseEnum responseEnum, Object data) {
+    public static TextWebSocketFrame CONNECT_FAIL(ResponseEnum responseEnum, Object data) {
         return new TextWebSocketFrame(
                 JSON.toJSONString(
                         new WssResponseVO(
@@ -76,7 +101,9 @@ public class WssResponseVO {
                                 responseEnum.getCode(),
                                 data,
                                 false,
-                                LocalDateTime.now())));
+                                LocalDateTime.now(),
+                                NettyServerEnum.ActionEnum.CONNECTION.getType()
+                                )));
     }
 
 }

@@ -3,9 +3,12 @@ package cn.neorae.wtu.module.team.controller;
 
 import cn.neorae.common.annotation.FreePass;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.module.team.domain.dto.remove.BroadcastDeleteTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.create.BroadcastTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.get.GetTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.join.JoinTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.toggle.BroadcastToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.dto.toggle.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.service.TeamService;
@@ -27,6 +30,21 @@ public class TeamController {
     @PostMapping("/createTeam")
     public ResponseVO<Integer> createTeam(@RequestBody CreateTeamDTO createTeamDTO) {
         return teamService.createTeam(createTeamDTO);
+    }
+
+    @PostMapping("/broadcastTeam")
+    public ResponseVO<String> broadcastTeam(@RequestBody BroadcastTeamDTO broadcastTeamDTO) {
+        return teamService.broadcastTeam(broadcastTeamDTO);
+    }
+
+    @PostMapping("/broadcastDeleteTeam")
+    public ResponseVO<String> broadcastDeleteTeam(@RequestBody BroadcastDeleteTeamDTO broadcastDeleteTeamDTO) {
+        return teamService.broadcastDeleteTeam(broadcastDeleteTeamDTO);
+    }
+
+    @PostMapping("/broadcastToggleTeamStatus")
+    public ResponseVO<String> broadcastToggleTeamStatus(@RequestBody BroadcastToggleTeamStatusDTO broadcastToggleTeamStatusDTO) {
+        return teamService.broadcastToggleTeamStatus(broadcastToggleTeamStatusDTO);
     }
 
     @GetMapping("/getTeamById")

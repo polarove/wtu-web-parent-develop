@@ -104,8 +104,8 @@ public class AccountController {
     }
 
     @Operation(summary = "切换服务器")
-    @GetMapping("/toggleServer")
-    public ResponseVO<UserVO> toggleServer(@RequestParam Integer serverType) {
-        return userService.toggleServer(StpUtil.getLoginIdAsString(), serverType);
+    @PostMapping("/toggleServer")
+    public ResponseVO<UserVO> toggleServer(@RequestBody ToggleServerDTO toggleServerDTO) {
+        return userService.toggleServer(StpUtil.getLoginIdAsString(), toggleServerDTO);
     }
 }

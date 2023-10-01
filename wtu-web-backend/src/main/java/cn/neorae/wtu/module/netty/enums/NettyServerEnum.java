@@ -99,13 +99,13 @@ public interface NettyServerEnum {
     @Getter
     enum ActionEnum implements NettyServerEnum {
 
-        INSERT(1),
+        CONNECTION(1),
 
-        UPDATE(2),
+        ADD_TEAM(2),
 
-        DELETE(3),
+        REMOVE_TEAM(3),
 
-        SELECT(4),
+        TOGGLE_STATUS(4),
 
         NOT_SUPPORTED(0);
 
@@ -119,5 +119,17 @@ public interface NettyServerEnum {
             }
             return NOT_SUPPORTED;
         }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    enum TeamStatusEnum implements NettyServerEnum {
+
+        PRIVATE(0),
+
+        PUBLIC(1);
+
+        private final Integer type;
+
     }
 }

@@ -10,6 +10,8 @@ public class JoinTeamDTO {
 
     private Integer server;
 
+    private String from;
+
     private String creatorUuid;
 
     private String uuid;

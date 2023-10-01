@@ -3,7 +3,7 @@ package cn.neorae.wtu.module.netty.module.en;
 
 import cn.neorae.wtu.module.netty.NettyApplication;
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketConnectionDTO;
-import cn.neorae.wtu.module.netty.domain.vo.AfterConnectionVO;
+import cn.neorae.wtu.module.netty.domain.vo.connection.AfterConnectionBO;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.exceptions.ChannelNotFoundException;
 import com.alibaba.fastjson2.JSON;
@@ -21,16 +21,14 @@ public class EnTeamConnectionHandler {
     public static void execute(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame socketFrame) throws ChannelNotFoundException {
         WebsocketConnectionDTO dto = JSON.parseObject(socketFrame.text(), WebsocketConnectionDTO.class);
         NettyApplication.EN_PUBLIC_CHANNEL_POOL.putIfAbsent(dto.getUuid(), channelHandlerContext.channel());
-        AfterConnectionVO afterConnectionVO = new AfterConnectionVO();
-        afterConnectionVO.setTotal(NettyApplication.EN_PUBLIC_CHANNEL_POOL.size());
+        AfterConnectionBO afterConnectionBO = new AfterConnectionBO();
+        afterConnectionBO.setTotal(NettyApplication.EN_PUBLIC_CHANNEL_POOL.size());
         try {
             NettyApplication.EN_CHANNEL_GROUP_LIST.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){
-                    // todo: ChannelMatchers
-//                    channelGroup.disconnect(ChannelMatchers.is(channelHandlerContext.channel()));
                     channelGroup.add(channelHandlerContext.channel());
-                    afterConnectionVO.setClients(channelGroup.size());
-                    channelGroup.writeAndFlush(WssResponseVO.connect(JSON.toJSONString(afterConnectionVO)));
+                    afterConnectionBO.setClients(channelGroup.size());
+                    channelGroup.writeAndFlush(WssResponseVO.CONNECT_SUCCEED(JSON.toJSONString(afterConnectionBO)));
                 }
             });
 //            switch (NettyServerEnum.TeamRoutes.match(dto.getRoute())) {
@@ -92,7 +90,7 @@ public class EnTeamConnectionHandler {
 //                default -> throw new ChannelNotFoundException(ResponseEnum.CHANNEL_NOT_FOUND);
 //            }
         } catch (ChannelNotFoundException e) {
-            channelHandlerContext.channel().writeAndFlush(WssResponseVO.fail(e.getResponseEnum(), dto.getRoute()));
+            channelHandlerContext.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(e.getResponseEnum(), dto.getRoute()));
         } catch (Exception e) {
             log.info("error:{}",e.getMessage());
         }

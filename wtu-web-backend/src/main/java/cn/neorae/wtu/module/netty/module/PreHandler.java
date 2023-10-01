@@ -1,5 +1,6 @@
 package cn.neorae.wtu.module.netty.module;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.enums.ResponseEnum;
@@ -29,7 +30,7 @@ public class PreHandler {
             throw new UserNotFoundException(ResponseEnum.USER_NOT_FOUND);
         }
         if (!StpUtil.isLogin(uuid)){
-            throw new UserNotFoundException(ResponseEnum.USER_NOT_LOGIN);
+            throw new NotLoginException("用户未登录", null, null);
         }
         if (null == websocketConnectionDTO.getServer()){
             throw new UserNotFoundException(ResponseEnum.UNKNOWN_GAME_SERVER);

@@ -2,7 +2,7 @@ package cn.neorae.wtu.module.netty.module.en;
 
 import cn.neorae.wtu.module.netty.NettyApplication;
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketConnectionDTO;
-import cn.neorae.wtu.module.netty.domain.vo.AfterConnectionVO;
+import cn.neorae.wtu.module.netty.domain.vo.connection.AfterConnectionBO;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.exceptions.ChannelNotFoundException;
 import com.alibaba.fastjson2.JSON;
@@ -17,13 +17,13 @@ public class EnTeamDisconnectionHandler {
     public static void execute(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame msg)  {
         WebsocketConnectionDTO dto = JSON.parseObject(msg.text(), WebsocketConnectionDTO.class);
         NettyApplication.EN_PUBLIC_CHANNEL_POOL.remove(dto.getUuid());
-        AfterConnectionVO afterConnectionVO = new AfterConnectionVO();
-        afterConnectionVO.setTotal(NettyApplication.EN_PUBLIC_CHANNEL_POOL.size());
+        AfterConnectionBO afterConnectionBO = new AfterConnectionBO();
+        afterConnectionBO.setTotal(NettyApplication.EN_PUBLIC_CHANNEL_POOL.size());
         try {
             NettyApplication.EN_CHANNEL_GROUP_LIST.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){
-                    afterConnectionVO.setClients(channelGroup.size() - 1);
-                    channelGroup.writeAndFlush(WssResponseVO.connect(JSON.toJSONString(afterConnectionVO)));
+                    afterConnectionBO.setClients(channelGroup.size() - 1);
+                    channelGroup.writeAndFlush(WssResponseVO.CONNECT_SUCCEED(JSON.toJSONString(afterConnectionBO)));
                     channelGroup.remove(channelHandlerContext.channel());
                 }
             });
@@ -98,7 +98,7 @@ public class EnTeamDisconnectionHandler {
 //                default -> throw new ChannelNotFoundException(ResponseEnum.CHANNEL_NOT_FOUND);
 //            }
         } catch (ChannelNotFoundException e) {
-            channelHandlerContext.channel().writeAndFlush(WssResponseVO.fail(e.getResponseEnum(), dto.getRoute()));
+            channelHandlerContext.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(e.getResponseEnum(), dto.getRoute()));
         } catch (Exception e) {
             log.info("error:{}",e.getMessage());
         }

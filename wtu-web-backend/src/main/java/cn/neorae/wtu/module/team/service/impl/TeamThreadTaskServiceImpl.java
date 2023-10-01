@@ -77,4 +77,10 @@ public class TeamThreadTaskServiceImpl {
         BeanUtil.copyProperties(member, teamMember);
         return CompletableFuture.completedFuture(teamMember);
     }
+
+    @Async
+    public CompletableFuture<Team> setTeamStatus(Team team, Integer status) {
+        team.setStatus(status);
+        return CompletableFuture.completedFuture(team);
+    }
 }

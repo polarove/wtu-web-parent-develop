@@ -10,12 +10,19 @@ import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
 import cn.neorae.wtu.common.exception.TeamException;
 import cn.neorae.wtu.module.account.domain.User;
+import cn.neorae.wtu.module.netty.NettyApplication;
+import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
+import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
+import cn.neorae.wtu.module.netty.module.ChannelUtil;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
+import cn.neorae.wtu.module.team.domain.dto.remove.BroadcastDeleteTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.create.BroadcastTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.get.GetTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.join.JoinTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.toggle.BroadcastToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.dto.toggle.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
@@ -24,11 +31,14 @@ import cn.neorae.wtu.module.team.mapper.TeamRequirementMapper;
 import cn.neorae.wtu.module.team.service.TeamMemberService;
 import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import cn.neorae.wtu.module.team.service.TeamService;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -108,15 +118,25 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
             throw new TeamException(ResponseEnum.TEAM_MEMBER_NOT_SATISFIED);
         }
 
-        // todo: 广播到当前channel的所有用户
         return ResponseVO.wrapData(team.getId());
+    }
+
+    @Override
+    public ResponseVO<String> broadcastTeam(BroadcastTeamDTO broadcastTeamDTO) {
+        Integer server = broadcastTeamDTO.getTeam().getServer();
+        String route = broadcastTeamDTO.getTeam().getChannel();
+        switch (NettyServerEnum.GameServerEnum.match(server)) {
+            case EN -> ChannelUtil.getEnChannelGroupByRoute(route).writeAndFlush(WssResponseVO.ADD_TEAM(JSON.toJSONString(broadcastTeamDTO)));
+            case CN -> ChannelUtil.getCnChannelGroupByRoute(route).writeAndFlush(WssResponseVO.ADD_TEAM(JSON.toJSONString(broadcastTeamDTO)));
+            default -> throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
+        }
+        return ResponseVO.completed();
     }
 
     @Override
     @Transactional
     public ResponseVO<String> removeTeamById(Integer teamId) {
         Team team = this.getOne(new LambdaQueryWrapper<Team>().eq(Team::getId, teamId));
-
         List<Integer> requirementIdList = teamRequirementMapper
                 .selectList(new LambdaQueryWrapper<TeamRequirement>().eq(TeamRequirement::getTeamId, teamId))
                 .parallelStream()
@@ -144,6 +164,32 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     }
 
     @Override
+    public ResponseVO<String> broadcastDeleteTeam(BroadcastDeleteTeamDTO broadcastDeleteTeamDTO) {
+        Integer server = broadcastDeleteTeamDTO.getServer();
+        String route = broadcastDeleteTeamDTO.getRoute();
+        Integer teamId = broadcastDeleteTeamDTO.getTeamId();
+        switch (NettyServerEnum.GameServerEnum.match(server)) {
+            case EN -> ChannelUtil.getEnChannelGroupByRoute(route).writeAndFlush(WssResponseVO.REMOVE_TEAM(JSON.toJSONString(teamId)));
+            case CN -> ChannelUtil.getCnChannelGroupByRoute(route).writeAndFlush(WssResponseVO.REMOVE_TEAM(JSON.toJSONString(teamId)));
+            default -> throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
+        }
+        return ResponseVO.completed();
+    }
+
+    @Override
+    public ResponseVO<String> broadcastToggleTeamStatus(BroadcastToggleTeamStatusDTO broadcastToggleTeamStatusDTO) {
+        Integer server = broadcastToggleTeamStatusDTO.getTeam().getServer();
+        String route = broadcastToggleTeamStatusDTO.getTeam().getChannel();
+        System.out.println(JSON.toJSONString(broadcastToggleTeamStatusDTO));
+        switch (NettyServerEnum.GameServerEnum.match(server)) {
+            case EN -> ChannelUtil.getEnChannelGroupByRoute(route).writeAndFlush(WssResponseVO.TOGGLE_STATUS(JSON.toJSONString(broadcastToggleTeamStatusDTO)));
+            case CN -> ChannelUtil.getCnChannelGroupByRoute(route).writeAndFlush(WssResponseVO.TOGGLE_STATUS(JSON.toJSONString(broadcastToggleTeamStatusDTO)));
+            default -> throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
+        }
+        return ResponseVO.completed();
+    }
+
+    @Override
     public ResponseVO<TeamVO> getTeamById(Integer teamId){
         Team team = this.baseMapper.selectOne(new LambdaQueryWrapper<Team>().eq(Team::getId, teamId));
         if (BeanUtil.isEmpty(team)){
@@ -154,6 +200,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
     @Override
     public ResponseVO<IPage<TeamVO>> getTeamList(GetTeamDTO getTeamDTO){
+        long cur = System.currentTimeMillis();
         IPage<Team> teamPage = teamMapper.selectJoinPage(
                 new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize()),
                 Team.class,
@@ -171,15 +218,16 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         List<TeamVO> teamList = teamPage.getRecords().parallelStream().map(team -> teamThreadTaskService.getTeamVO(team).join()).toList();
         IPage<TeamVO> teamListVOPage = new Page<>(getTeamDTO.getPage(), getTeamDTO.getSize(), teamPage.getTotal());
         teamListVOPage.setRecords(teamList);
+        log.info("查询组队信息耗时：{}ms", System.currentTimeMillis() - cur);
         return ResponseVO.wrapData(teamListVOPage);
     }
 
     @Override
     public ResponseVO<String> toggleTeamStatus(ToggleTeamStatusDTO toggleTeamStatusDTO) {
-        String uuid = toggleTeamStatusDTO.getUuid();
+        Integer teamId = toggleTeamStatusDTO.getTeamId();
         Integer status = toggleTeamStatusDTO.getStatus();
 
-        Team team = this.baseMapper.selectOne(new LambdaQueryWrapper<Team>().eq(Team::getUuid, uuid));
+        Team team = this.baseMapper.selectOne(new LambdaQueryWrapper<Team>().eq(Team::getId, teamId));
         if (BeanUtil.isEmpty(team)){
             return ResponseVO.failed(ResponseEnum.TEAM_NOT_FOUND);
         }
@@ -190,11 +238,26 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
     @Override
     public ResponseVO<String> joinTeam(JoinTeamDTO joinTeamDTO) {
+        switch (NettyServerEnum.GameServerEnum.match(joinTeamDTO.getServer())) {
+            case EN -> {
+                Channel channel = NettyApplication.EN_PUBLIC_CHANNEL_POOL.get(joinTeamDTO.getCreatorUuid());
+                if (channel.isActive()){
+                    channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(joinTeamDTO)));
+                }
+            }
+            case CN ->{
+                Channel channel = NettyApplication.CN_PUBLIC_CHANNEL_POOL.get(joinTeamDTO.getCreatorUuid());
+                if (channel.isActive()){
+                    channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(joinTeamDTO)));
+                }
+            }
+            default -> {
+                throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
+            }
+        }
+        NettyApplication.EN_TEAM_ORIGIN.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(joinTeamDTO)));
         return null;
     }
-
-
-
 
 }
 

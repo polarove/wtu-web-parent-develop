@@ -14,6 +14,7 @@ public enum ResponseEnum {
      */
 
     SERVER_RESTART(0, "服务器重启导致登陆状态失效，请重新登陆"),
+
     WSS_RESPONSE_SUCCESS(100, "WSS请求成功"),
     WSS_RESPONSE_FAILED(199, "WSS请求失败"),
     HTTP_RESPONSE_SUCCESS(200, "成功"),
@@ -34,6 +35,8 @@ public enum ResponseEnum {
     SERVICE_ERROR(306, "服务错误"),
     SERVICE_UNAVAILABLE(307, "服务不可用"),
     SERVICE_RESTARTED(308, "请刷新页面"),
+
+    MAIL_CONNECT_FAILED(309, "邮件服务器连接失败"),
     UNAUTHORIZED(401, "尚未认证，请重新登录"),
     FORBIDDEN(402, "权限不足，禁止访问"),
     TIME_OUT(403, "请求超时"),
@@ -58,7 +61,7 @@ public enum ResponseEnum {
     CHANNEL_NOT_OPEN(2008, "Channel未打开"),
     CHANNEL_NOT_BOUND(2009, "Channel未绑定"),
     BAD_NETTY_TYPE(2010, "请求类型错误"),
-    BAD_NETTY_PARAM(2011, "请求参数错误"),
+    BAD_NETTY_PARAM(2011, "websocket请求参数错误"),
     BAD_NETTY_BODY(2012, "请求体错误"),
 
     UNKNOWN_GAME_SERVER(2013, "未知的游戏服务器"),

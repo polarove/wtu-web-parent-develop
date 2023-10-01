@@ -39,7 +39,5 @@ public interface UserService extends IService<User> {
 
     ResponseVO<String> logout(String uuid, HttpServletResponse response);
 
-    ResponseVO<UserVO> toggleServer(String uuid, Integer serverType);
-
-    List<String> getBoosters(User user);
+    ResponseVO<UserVO> toggleServer(String uuid, ToggleServerDTO toggleServerDTO);
 }

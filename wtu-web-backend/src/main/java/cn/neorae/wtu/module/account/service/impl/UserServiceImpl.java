@@ -17,6 +17,11 @@ import cn.neorae.wtu.module.account.domain.vo.UserVO;
 import cn.neorae.wtu.module.account.mapper.UserMapper;
 import cn.neorae.wtu.module.account.service.UserService;
 import cn.neorae.wtu.module.mail.MailService;
+import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
+import cn.neorae.wtu.module.team.domain.Team;
+import cn.neorae.wtu.module.team.mapper.TeamMapper;
+import cn.neorae.wtu.module.team.service.TeamService;
+import cn.neorae.wtu.module.team.service.impl.TeamThreadTaskServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
@@ -51,6 +56,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
+    @Resource
+    private TeamMapper teamMapper;
+
+    @Resource
+    private TeamThreadTaskServiceImpl teamThreadTaskService;
+
+    @Resource
+    private TeamService teamService;
+
     @Override
     public ResponseVO<UserVO> login(LoginDTO loginDTO, HttpServletResponse response) throws MessagingException {
         UserVO userVO = new UserVO();
@@ -69,32 +83,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         CookieUtil.setCookie(response, Values.Fingerprint, user.getUuid(), Values.CookieExpiry, values.domain);
         return ResponseVO.wrapData(parseUserVO(user));
     }
-
-    @Override
-    public List<String> getBoosters(User user) {
-        // 最无语的一集
-        List<String> boosterList = new ArrayList<>();
-        if (BeanUtil.isEmpty(user)){
-            return boosterList;
-        }
-        if (user.getAffinityBooster().equals(Enums.Polar.TRUE.getCode())){
-            boosterList.add(Enums.Booster.AFFINITY.getType());
-        }
-        if (user.getCreditBooster().equals(Enums.Polar.TRUE.getCode())){
-            boosterList.add(Enums.Booster.CREDIT.getType());
-        }
-        if (user.getResourceBooster().equals(Enums.Polar.TRUE.getCode())){
-            boosterList.add(Enums.Booster.RESOURCE.getType());
-        }
-        if (user.getModDropRateBooster().equals(Enums.Polar.TRUE.getCode())){
-            boosterList.add(Enums.Booster.MOD_DROP_CHANCE.getType());
-        }
-        if (user.getResourceDropRateBooster().equals(Enums.Polar.TRUE.getCode())){
-            boosterList.add(Enums.Booster.RESOURCE_DROP_CHANCE.getType());
-        }
-        return boosterList;
-    }
-
     @Override
     public ResponseVO<ResponseEnum> verify(VerificationDTO verificationDTO) {
         String email = verificationDTO.getEmail();
@@ -216,13 +204,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public ResponseVO<UserVO> toggleServer(String uuid, Integer serverType) {
+    public ResponseVO<UserVO> toggleServer(String uuid, ToggleServerDTO toggleServerDTO) {
         User user = UserUtil.getUserByUuid(uuid);
         if(BeanUtil.isEmpty(user)){
             return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
         }
-        user.setServer(serverType);
+        Integer current = toggleServerDTO.getCurrent();
+        Integer previous = toggleServerDTO.getPrevious();
+        user.setServer(current);
         this.baseMapper.updateById(user);
+        List<Team> teams = teamMapper
+                .selectList(
+                        new LambdaQueryWrapper<Team>()
+                                .eq(Team::getCreatorUuid, uuid))
+                .parallelStream()
+                .peek(team -> {
+                    if (team.getServer().equals(previous)){
+                        teamThreadTaskService.setTeamStatus(team, NettyServerEnum.TeamStatusEnum.PRIVATE.getType());
+                    }else {
+                        teamThreadTaskService.setTeamStatus(team, NettyServerEnum.TeamStatusEnum.PUBLIC.getType());
+                    }
+                })
+                .toList();
+        teamService.updateBatchById(teams);
         return ResponseVO.wrapData(parseUserVO(user));
     }
 
