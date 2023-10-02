@@ -1,6 +1,5 @@
 package cn.neorae.wtu.common.Interceptor;
 
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.annotation.FreePass;
@@ -14,7 +13,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -28,9 +26,6 @@ public class RequestInterceptor implements HandlerInterceptor {
     // HttpServlet 请求拦截器，只要是经过config/InterceptorConfig.java配置的请求，都会经过这里
     // 拦截器可以有多个
     // 然后在config/MvcConfig中     registry().addInterceptor(requestInterceptor).order(顺序)  即可添加
-
-    @Resource
-    private StringRedisTemplate stringRedisTemplate;
 
     @Resource
     private UserMapper userMapper;

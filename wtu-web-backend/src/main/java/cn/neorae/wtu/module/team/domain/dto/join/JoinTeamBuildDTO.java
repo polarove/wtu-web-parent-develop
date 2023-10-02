@@ -8,5 +8,5 @@ public class JoinTeamBuildDTO {
 
     private String focus;
 
-    private TeamWarframeBO teamWarframeBO;
+    private TeamWarframeBO warframe;
 }

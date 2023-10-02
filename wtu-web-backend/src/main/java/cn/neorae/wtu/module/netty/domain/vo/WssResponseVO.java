@@ -28,6 +28,19 @@ public class WssResponseVO {
 
     private Integer action;
 
+    public static TextWebSocketFrame JOIN(Object data) {
+        return new TextWebSocketFrame(
+                JSON.toJSONString(
+                        new WssResponseVO(
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getMessage(),
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
+                                data,
+                                true,
+                                LocalDateTime.now(),
+                                NettyServerEnum.ActionEnum.JOIN.getType()
+                        )));
+    }
+
     public static TextWebSocketFrame ADD_TEAM(Object data) {
         return new TextWebSocketFrame(
                 JSON.toJSONString(

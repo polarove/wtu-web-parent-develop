@@ -6,15 +6,11 @@ import lombok.Data;
 public class JoinTeamDTO {
 
 
-    private String channel;
+    private String receiver;
 
-    private Integer server;
+    private JoinTeamFromDTO from;
 
-    private String from;
+    private JoinTeamInstanceDTO team;
 
-    private String creatorUuid;
-
-    private String uuid;
-
-    private JoinTeamBuildDTO joinTeamBuildDTO;
+    private JoinTeamBuildDTO build;
 }

@@ -3,6 +3,7 @@ package cn.neorae.wtu.common.exception;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.module.netty.exceptions.ChannelException;
 import cn.neorae.wtu.module.netty.exceptions.UserException;
 import com.sun.mail.util.MailConnectException;
 import org.springframework.validation.BindingResult;
@@ -50,6 +51,11 @@ public class ControllerAdvisor extends RuntimeException{
 
     @ExceptionHandler(UserException.class)
     public ResponseVO<String> UserExceptionHandler(UserException e) {
+        return ResponseVO.failed(e.getResponseEnum());
+    }
+
+    @ExceptionHandler(ChannelException.class)
+    public ResponseVO<String> ChannelExceptionHandler(ChannelException e) {
         return ResponseVO.failed(e.getResponseEnum());
     }
 }

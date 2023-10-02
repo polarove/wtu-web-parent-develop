@@ -6,7 +6,7 @@ import cn.neorae.wtu.module.netty.NettyApplication;
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketConnectionDTO;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.domain.vo.connection.AfterConnectionBO;
-import cn.neorae.wtu.module.netty.exceptions.ChannelNotFoundException;
+import cn.neorae.wtu.module.netty.exceptions.ChannelException;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -20,7 +20,7 @@ public class CnTeamConnectionHandler  {
 
 
 
-    public static void execute(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame socketFrame) throws ChannelNotFoundException {
+    public static void execute(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame socketFrame) throws ChannelException {
         WebsocketConnectionDTO dto = JSON.parseObject(socketFrame.text(), WebsocketConnectionDTO.class);
         NettyApplication.CN_PUBLIC_CHANNEL_POOL.putIfAbsent(dto.getUuid(), channelHandlerContext.channel());
         AfterConnectionBO afterConnectionBO = new AfterConnectionBO();
@@ -91,7 +91,7 @@ public class CnTeamConnectionHandler  {
             //     }
             //     default -> throw new ChannelNotFoundException(ResponseEnum.CHANNEL_NOT_FOUND);
             // }
-        } catch (ChannelNotFoundException e) {
+        } catch (ChannelException e) {
             channelHandlerContext.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(e.getResponseEnum(), dto.getRoute()));
         } catch (Exception e) {
             log.info("error:{}",e.getMessage());

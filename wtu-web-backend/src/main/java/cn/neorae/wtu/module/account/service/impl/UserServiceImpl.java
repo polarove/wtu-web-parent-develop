@@ -27,7 +27,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -50,13 +49,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private Values values;
 
     @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
     private UserMapper userMapper;
 
     @Resource
     private MailService mailService;
-
-    @Resource
-    private StringRedisTemplate stringRedisTemplate;
 
     @Resource
     private TeamMapper teamMapper;
@@ -150,6 +149,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String code = revisePasswordDTO.getCode();
 
         // 验证验证码
+
         if (!StrUtil.equals(code, stringRedisTemplate.opsForValue().get(email))){
             return ResponseVO.failed(ResponseEnum.INCORPORATE_CODE);
         }
@@ -166,7 +166,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         // 设置cookie
         CookieUtil.setCookie(response, Values.Fingerprint, uuid, Values.CookieExpiry, values.domain);
-
         stringRedisTemplate.delete(email);
         return ResponseVO.wrapData(parseUserVO(user));
     }

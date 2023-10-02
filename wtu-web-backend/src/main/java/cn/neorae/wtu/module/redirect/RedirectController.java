@@ -1,10 +1,7 @@
 package cn.neorae.wtu.module.redirect;
 
 import cn.neorae.common.annotation.FreePass;
-import cn.neorae.common.enums.ResponseEnum;
-import cn.neorae.common.response.ResponseVO;
 import cn.neorae.wtu.common.exception.RedirectException;
-import cn.neorae.wtu.module.netty.exceptions.UserException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;

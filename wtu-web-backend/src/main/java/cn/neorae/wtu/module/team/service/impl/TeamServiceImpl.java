@@ -17,11 +17,11 @@ import cn.neorae.wtu.module.netty.util.ChannelUtil;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
+import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastDeleteTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.get.GetTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastDeleteTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.dto.join.JoinTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.toggle.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
@@ -241,25 +241,22 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
     @Override
     public ResponseVO<String> joinTeam(JoinTeamDTO joinTeamDTO) {
-        switch (NettyServerEnum.GameServerEnum.match(joinTeamDTO.getServer())) {
-            case EN -> {
-                Channel channel = NettyApplication.EN_PUBLIC_CHANNEL_POOL.get(joinTeamDTO.getCreatorUuid());
-                if (channel.isActive()){
-                    channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(joinTeamDTO)));
-                }
-            }
-            case CN ->{
-                Channel channel = NettyApplication.CN_PUBLIC_CHANNEL_POOL.get(joinTeamDTO.getCreatorUuid());
-                if (channel.isActive()){
-                    channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(joinTeamDTO)));
-                }
-            }
-            default -> {
-                throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
-            }
+        Channel channel;
+
+        switch (NettyServerEnum.GameServerEnum.match(joinTeamDTO.getTeam().getServer())) {
+            case EN -> channel = NettyApplication.EN_PUBLIC_CHANNEL_POOL.get(joinTeamDTO.getReceiver());
+            case CN -> channel = NettyApplication.CN_PUBLIC_CHANNEL_POOL.get(joinTeamDTO.getReceiver());
+            default -> throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
+        }
+        if (channel == null){
+            throw new TeamException(ResponseEnum.CHANNEL_NOT_FOUND);
+        } else if (!channel.isActive()){
+            throw new TeamException(ResponseEnum.CHANNEL_NOT_ACTIVE);
+        } else{
+            channel.writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(joinTeamDTO)));
         }
         NettyApplication.EN_TEAM_ORIGIN.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(joinTeamDTO)));
-        return null;
+        return ResponseVO.completed();
     }
 
 }

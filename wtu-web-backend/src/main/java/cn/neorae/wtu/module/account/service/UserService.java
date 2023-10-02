@@ -7,7 +7,6 @@ import cn.neorae.wtu.module.account.domain.dto.*;
 import cn.neorae.wtu.module.account.domain.vo.UserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**

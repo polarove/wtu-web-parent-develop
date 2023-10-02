@@ -56,7 +56,7 @@ public enum ResponseEnum {
     NOT_SUPPORTED(2002, "不支持的请求类型"),
     CHANNEL_NOT_FOUND(2003, "未找到对应的Channel"),
     CHANNEL_NOT_CONNECTED(2004, "未连接至服务器"),
-    CHANNEL_NOT_ACTIVE(2005, "Channel未激活"),
+    CHANNEL_NOT_ACTIVE(2005, "对方当前不在线"),
     CHANNEL_NOT_WRITABLE(2006, "Channel不可写"),
     CHANNEL_NOT_READABLE(2007, "Channel不可读"),
     CHANNEL_NOT_OPEN(2008, "Channel未打开"),

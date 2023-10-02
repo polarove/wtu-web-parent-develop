@@ -2,6 +2,19 @@ server:
   port: 6767
 
 spring:
+  data:
+    redis:
+      database: 0
+      host: 140.210.195.116
+      port: 6379
+      password: liuqi6602
+      timeout: 10000
+      lettuce:
+          pool:
+            max-active: 8
+            max-idle: 1
+            max-wait: -1
+            min-idle: 10
   profiles:
     active: @spring.profiles.active@
   application:
@@ -20,9 +33,9 @@ spring:
   task:
     execution:
       pool:
-        core-size: 20
-        max-size: 200
-        queue-capacity: 1000
+        core-size: 10
+        max-size: 20
+        queue-capacity: 100
         keep-alive: 1000
       thread-name-prefix: thread-
   servlet:
@@ -31,18 +44,6 @@ spring:
       max-file-size: 10MB
       enabled: true
       file-size-threshold: 100B
-  data:
-    redis:
-      host: 140.210.195.116
-      port: 6379
-      password: liuqi6602
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 8
-          min-idle: 0
-          max-wait: 1000
-      database: 0
   mail:
     host: smtp.163.com
     username: liuqi6602@163.com

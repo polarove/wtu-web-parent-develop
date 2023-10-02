@@ -3,7 +3,6 @@ package cn.neorae.wtu.module.netty.module;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.enums.ResponseEnum;
-import cn.neorae.wtu.common.util.UserUtil;
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketConnectionDTO;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.enums.NettyServerEnum;

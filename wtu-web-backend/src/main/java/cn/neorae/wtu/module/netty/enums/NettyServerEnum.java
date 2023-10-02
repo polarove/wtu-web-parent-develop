@@ -107,6 +107,8 @@ public interface NettyServerEnum {
 
         TOGGLE_STATUS(4),
 
+        JOIN(5),
+
         NOT_SUPPORTED(0);
 
         private final Integer type;
