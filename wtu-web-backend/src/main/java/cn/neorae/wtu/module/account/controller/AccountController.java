@@ -47,7 +47,7 @@ public class AccountController {
     @Operation(summary = "通过uuid登录")
     @GetMapping("/loginByUUID")
     @FreePass
-    public ResponseVO<UserVO> loginByUUID(@Valid @RequestParam String uuid, HttpServletResponse response) throws MessagingException {
+    public ResponseVO<UserVO> loginByUUID(@Valid @RequestParam String uuid, HttpServletResponse response) {
         return userService.loginByUUID(uuid, response);
     }
 

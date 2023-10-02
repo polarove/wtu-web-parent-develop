@@ -58,11 +58,11 @@ public class RequestInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler, @Nullable ModelAndView modelAndView) throws Exception {
+    public void postHandle(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler, @Nullable ModelAndView modelAndView) {
     }
 
     @Override
-    public void afterCompletion(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler, @Nullable Exception ex) throws Exception {
+    public void afterCompletion(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler, @Nullable Exception ex) {
         String uuid = CookieUtil.getUUID(request, Values.Fingerprint);
         if (StrUtil.isNotBlank(uuid)) {
             UserUtil.removeUser(uuid);
