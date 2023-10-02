@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.team.domain.dto.remove;
+package cn.neorae.wtu.module.team.domain.dto.broadcast;
 
 import lombok.Data;
 

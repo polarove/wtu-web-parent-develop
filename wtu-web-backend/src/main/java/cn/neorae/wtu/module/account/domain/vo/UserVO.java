@@ -1,33 +1,16 @@
 package cn.neorae.wtu.module.account.domain.vo;
 
+import cn.neorae.wtu.module.team.domain.bo.TeamUserBO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserVO {
-
-    private String uuid;
-
-    private String name;
-
-    private String avatar;
+public class UserVO extends TeamUserBO {
 
     private String description;
-
-    private Integer onlineStatus;
 
     private Integer server;
 
     private Integer level;
-
-    private String accelerator;
-
-    private Integer affinityBooster;
-
-    private Integer creditBooster;
-
-    private Integer resourceBooster;
-
-    private Integer resourceDropRateBooster;
-
-    private Integer modDropRateBooster;
 }

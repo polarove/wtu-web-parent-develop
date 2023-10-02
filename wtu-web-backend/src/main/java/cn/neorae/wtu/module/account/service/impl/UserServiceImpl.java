@@ -201,11 +201,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public ResponseVO<String> updateOnlineStatus(UpdateOnlineStatusDTO updateOnlineStatusDTO) {
-        String uuid = updateOnlineStatusDTO.getUuid();
-        Integer onlineStatus = updateOnlineStatusDTO.getOnlineStatus();
+    // todo: wss广播通知
+    public ResponseVO<String> updateOnlineStatus(Integer status) {
+        String uuid = StpUtil.getLoginIdAsString();
         User user = UserUtil.getUserByUuid(uuid);
-        user.setOnlineStatus(onlineStatus);
+        user.setOnlineStatus(status);
         this.baseMapper.updateById(user);
         return ResponseVO.completed();
     }
@@ -215,6 +215,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String uuid = updateUserBoosterDT0.getUuid();
         User user = UserUtil.getUserByUuid(uuid);
         BeanUtil.copyProperties(updateUserBoosterDT0, user);
+        this.baseMapper.updateById(user);
+        return ResponseVO.completed();
+    }
+
+    @Override
+    // todo: wss广播通知
+    public ResponseVO<String> updateUserAccelerator(String name) {
+        String uuid = StpUtil.getLoginIdAsString();
+        User user = UserUtil.getUserByUuid(uuid);
+        user.setAccelerator(name);
         this.baseMapper.updateById(user);
         return ResponseVO.completed();
     }
@@ -262,7 +272,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userMapper.register(user);
 
         // 属性拷贝
-        userVO.setName("一般路过Tenno");
+        String append = StrUtil.sub(uuid, 0, 4);
+        userVO.setName("未更改的用户名" + append);
         userVO.setAvatar("https://www.neorae.cn/data/avatar/default/excalibur.png");
         userVO.setDescription("平平无奇的星际海盗罢了...");
         userVO.setUuid(uuid);

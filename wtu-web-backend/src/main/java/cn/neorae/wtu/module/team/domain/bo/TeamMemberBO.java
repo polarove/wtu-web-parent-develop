@@ -16,7 +16,7 @@ public class TeamMemberBO {
 
     private Integer occupied;
 
-    private UserBO user;
+    private TeamUserBO user;
 
     private Integer isDeleted;
 }

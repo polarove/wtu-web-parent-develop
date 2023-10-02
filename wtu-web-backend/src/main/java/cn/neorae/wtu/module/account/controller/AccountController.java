@@ -99,15 +99,21 @@ public class AccountController {
     }
 
     @Operation(summary = "变更在线状态")
-    @PostMapping("/updateOnlineStatus")
-    public ResponseVO<String> updateOnlineStatus(@Valid @RequestBody UpdateOnlineStatusDTO updateOnlineStatusDTO ) {
-        return userService.updateOnlineStatus(updateOnlineStatusDTO);
+    @GetMapping("/updateOnlineStatus")
+    public ResponseVO<String> updateOnlineStatus(@Valid @RequestParam Integer status ) {
+        return userService.updateOnlineStatus(status);
     }
 
     @Operation(summary = "变更账户加成状态")
     @PostMapping("/updateUserBooster")
     public ResponseVO<String> updateUserBooster(@Valid @RequestBody UpdateUserBoosterDT0 updateUserBoosterDT0 ) {
         return userService.updateUserBooster(updateUserBoosterDT0);
+    }
+
+    @Operation(summary = "变更账户加成状态")
+    @GetMapping("/updateUserAccelerator")
+    public ResponseVO<String> updateUserAccelerator(@Valid @RequestParam String name) {
+        return userService.updateUserAccelerator(name);
     }
 
     @Operation(summary = "切换服务器")

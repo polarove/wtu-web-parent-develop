@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.team.domain.dto.toggle;
+package cn.neorae.wtu.module.team.domain.dto.broadcast;
 
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import lombok.Data;

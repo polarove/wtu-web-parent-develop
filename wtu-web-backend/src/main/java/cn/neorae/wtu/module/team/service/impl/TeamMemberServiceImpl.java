@@ -7,7 +7,7 @@ import cn.neorae.wtu.module.account.mapper.UserMapper;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
 import cn.neorae.wtu.module.team.domain.bo.TeamWarframeBO;
-import cn.neorae.wtu.module.team.domain.bo.UserBO;
+import cn.neorae.wtu.module.team.domain.bo.TeamUserBO;
 import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
 import cn.neorae.wtu.module.team.service.TeamMemberService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -39,12 +39,12 @@ public class TeamMemberServiceImpl extends ServiceImpl<TeamMemberMapper, TeamMem
         teamWarframeBO.setEn(member.getEn());
         teamWarframeBO.setCn(member.getCn());
         teamMemberBO.setWarframe(teamWarframeBO);
-        UserBO userBO = new UserBO();
+        TeamUserBO teamUserBO = new TeamUserBO();
         if (StrUtil.isNotBlank(member.getUserUuid())){
             User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, member.getUserUuid()));
-            BeanUtil.copyProperties(user, userBO);
+            BeanUtil.copyProperties(user, teamUserBO);
         }
-        teamMemberBO.setUser(userBO);
+        teamMemberBO.setUser(teamUserBO);
         return CompletableFuture.completedFuture(teamMemberBO);
     }
 }

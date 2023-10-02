@@ -31,7 +31,7 @@ public interface UserService extends IService<User> {
 
     ResponseVO<UserVO> saveMyProfile(SaveMyProfileDTO saveMyProfileDTO);
 
-    ResponseVO<String> updateOnlineStatus(UpdateOnlineStatusDTO updateOnlineStatusDTO);
+    ResponseVO<String> updateOnlineStatus(Integer status);
 
     ResponseVO<String> updateUserBooster(UpdateUserBoosterDT0 updateUserBoosterDT0);
 
@@ -41,4 +41,5 @@ public interface UserService extends IService<User> {
 
     ResponseVO<UserVO> toggleServer(String uuid, ToggleServerDTO toggleServerDTO);
 
+    ResponseVO<String> updateUserAccelerator(String name);
 }

@@ -3,7 +3,7 @@ package cn.neorae.wtu.module.team.domain.bo;
 import lombok.Data;
 
 @Data
-public class UserBO {
+public class TeamUserBO {
 
     private String uuid;
 
@@ -22,5 +22,7 @@ public class UserBO {
     private Integer resourceDropRateBooster;
 
     private Integer modDropRateBooster;
+
+    private String accelerator;
 
 }
