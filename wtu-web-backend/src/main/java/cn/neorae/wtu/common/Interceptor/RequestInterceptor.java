@@ -9,9 +9,11 @@ import cn.neorae.wtu.common.util.UserUtil;
 import cn.neorae.wtu.common.util.Values;
 import cn.neorae.wtu.module.account.domain.User;
 import cn.neorae.wtu.module.account.mapper.UserMapper;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -31,7 +33,7 @@ public class RequestInterceptor implements HandlerInterceptor {
     private UserMapper userMapper;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler) throws Exception {
         log.info("请求路径：{}", request.getRequestURI());
         if (handler instanceof HandlerMethod method) {
             // 获取方法上有没有打FreePass注解
@@ -57,11 +59,11 @@ public class RequestInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
+    public void postHandle(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler, @Nullable ModelAndView modelAndView) throws Exception {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+    public void afterCompletion(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler, @Nullable Exception ex) throws Exception {
         String uuid = CookieUtil.getUUID(request, Values.Fingerprint);
         if (StrUtil.isNotBlank(uuid)) {
             UserUtil.removeUser(uuid);
