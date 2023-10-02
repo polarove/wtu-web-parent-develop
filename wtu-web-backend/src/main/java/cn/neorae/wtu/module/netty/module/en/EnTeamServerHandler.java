@@ -4,8 +4,7 @@ import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketConnectionDTO;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
-import cn.neorae.wtu.module.netty.exceptions.UserNotFoundException;
-import cn.neorae.wtu.module.netty.exceptions.UserNotLoginException;
+import cn.neorae.wtu.module.netty.exceptions.UserException;
 import cn.neorae.wtu.module.netty.module.PreHandler;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -22,26 +21,26 @@ public class EnTeamServerHandler extends SimpleChannelInboundHandler<TextWebSock
 
     // 行为控制器
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws UserNotFoundException, UserNotLoginException {
-        try{
-            WebsocketConnectionDTO websocketConnectionDTO = PreHandler.execute(ctx, msg);
+    public void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) {
+        WebsocketConnectionDTO websocketConnectionDTO;
+        try {
+            websocketConnectionDTO = PreHandler.execute(ctx, msg);
             if (websocketConnectionDTO.getServer().equals(NettyServerEnum.GameServerEnum.CN.getType())){
                 return;
             }
+        } catch (UserException e) {
+            ctx.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(e.getResponseEnum()));
+            return;
+        }
+        try {
             switch (NettyServerEnum.ConnectionEnum.match(websocketConnectionDTO.getAction())) {
                 case CONNECT -> EnTeamConnectionHandler.execute(ctx, msg);
                 case DISCONNECT -> EnTeamDisconnectionHandler.execute(ctx, msg);
                 case MESSAGE -> EnTeamMessageHandler.execute(ctx, msg);
                 default -> ctx.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(ResponseEnum.NOT_SUPPORTED));
             }
-        } catch (UserNotLoginException e) {
-            ctx.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(e.getResponseEnum()));
-        } catch (UserNotFoundException e) {
-            ctx.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(e.getResponseEnum()));
         } catch (Exception e) {
             log.info("error:{}",e.getMessage());
         }
     }
-
-
 }

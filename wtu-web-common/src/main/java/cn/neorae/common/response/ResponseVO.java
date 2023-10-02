@@ -142,8 +142,8 @@ public class ResponseVO<T> implements Serializable {
      * @param route 重定向至前端路由
      * @return ResponseVO
      */
-    public static  <T> ResponseVO<T> Unauthorized(T route){
-        return new ResponseVO<>(ResponseEnum.UNAUTHORIZED.getMessage(), Enums.Bool.FALSE.getType(), ResponseEnum.UNAUTHORIZED.getCode(), route);
+    public static  <T> ResponseVO<T> redirect(T route, ResponseEnum responseEnum){
+        return new ResponseVO<>(responseEnum.getMessage(), Enums.Bool.FALSE.getType(), responseEnum.getCode(), route);
     }
 
 }

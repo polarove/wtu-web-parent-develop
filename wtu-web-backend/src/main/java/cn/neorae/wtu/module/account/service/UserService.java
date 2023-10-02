@@ -19,6 +19,8 @@ public interface UserService extends IService<User> {
 
     ResponseVO<UserVO> login(LoginDTO loginDTO, HttpServletResponse response) throws MessagingException;
 
+    ResponseVO<UserVO> loginByUUID(String uuid, HttpServletResponse response);
+
     ResponseVO<ResponseEnum> verify(VerificationDTO verificationDTO);
 
     ResponseVO<String> getRecoverCode(String email) throws MessagingException;
@@ -33,9 +35,10 @@ public interface UserService extends IService<User> {
 
     ResponseVO<String> updateUserBooster(UpdateUserBoosterDT0 updateUserBoosterDT0);
 
-    ResponseVO<UserVO> getUserVOByUUID(HttpServletRequest request);
+    ResponseVO<UserVO> getUserVOByUUID();
 
     ResponseVO<String> logout(String uuid, HttpServletResponse response);
 
     ResponseVO<UserVO> toggleServer(String uuid, ToggleServerDTO toggleServerDTO);
+
 }

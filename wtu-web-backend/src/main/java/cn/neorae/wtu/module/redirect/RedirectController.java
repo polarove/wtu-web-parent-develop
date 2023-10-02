@@ -1,7 +1,10 @@
 package cn.neorae.wtu.module.redirect;
 
 import cn.neorae.common.annotation.FreePass;
+import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.common.exception.RedirectException;
+import cn.neorae.wtu.module.netty.exceptions.UserException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RedirectController {
 
 
-    @GetMapping("/unauthorized")
+    @GetMapping("/login")
     @Operation(summary = "重定向至登录")
     @FreePass
-    public ResponseVO<String> unauthorized(String route) {
-        return ResponseVO.Unauthorized(route);
+    public void unauthorized(String route) throws RedirectException {
+           throw new RedirectException(route);
     }
 }

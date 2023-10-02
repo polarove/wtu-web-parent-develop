@@ -63,8 +63,8 @@ public class TeamController {
         return teamService.toggleTeamStatus(toggleTeamStatusDTO);
     }
 
-    @GetMapping("/removeTeam")
-    public ResponseVO<String> removeTeam(@RequestParam Integer teamId) {
+    @PostMapping("/removeTeam")
+    public ResponseVO<String> removeTeam(@RequestBody Integer teamId) {
         return teamService.removeTeamById(teamId);
     }
 

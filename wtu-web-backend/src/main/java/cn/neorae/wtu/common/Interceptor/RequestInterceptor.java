@@ -45,17 +45,13 @@ public class RequestInterceptor implements HandlerInterceptor {
             // 为null表示该方法没打注解，需校验登录状态
             if (freePass == null) {
                 if (StrUtil.isBlank(uuid)) {
-                    response.sendRedirect("/redirect/unauthorized?route=login");
+                    response.sendRedirect("/redirect/login?route=login");
                     return false;
                 }
                 User user = userMapper.getUserByUUID(uuid, Enums.Polar.FALSE.getCode());
                 if (BeanUtil.isEmpty(user)) {
-                    response.sendRedirect("/redirect/unauthorized?route=login");
+                    response.sendRedirect("/redirect/login?route=login");
                     return false;
-                }
-                // 服务器重启后，重新登陆
-                if (!StpUtil.isLogin(uuid)){
-                    StpUtil.login(uuid);
                 }
                 UserUtil.addUser(user);
                 return true;

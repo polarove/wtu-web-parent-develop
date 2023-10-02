@@ -3,6 +3,7 @@ package cn.neorae.wtu.common.exception;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
+import cn.neorae.wtu.module.netty.exceptions.UserException;
 import com.sun.mail.util.MailConnectException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -40,5 +41,15 @@ public class ControllerAdvisor extends RuntimeException{
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseVO<String> NoSuchElementExceptionHandler() {
         return ResponseVO.failed(ResponseEnum.BAD_NETTY_PARAM);
+    }
+
+    @ExceptionHandler(RedirectException.class)
+    public ResponseVO<String> RedirectExceptionHandler(RedirectException e) {
+        return ResponseVO.redirect(e.getRoute(), ResponseEnum.REDIRECT_LOGIN);
+    }
+
+    @ExceptionHandler(UserException.class)
+    public ResponseVO<String> UserExceptionHandler(UserException e) {
+        return ResponseVO.failed(e.getResponseEnum());
     }
 }

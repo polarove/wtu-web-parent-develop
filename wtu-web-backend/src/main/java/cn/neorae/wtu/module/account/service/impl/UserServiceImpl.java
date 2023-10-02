@@ -18,6 +18,7 @@ import cn.neorae.wtu.module.account.mapper.UserMapper;
 import cn.neorae.wtu.module.account.service.UserService;
 import cn.neorae.wtu.module.mail.MailService;
 import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
+import cn.neorae.wtu.module.netty.exceptions.UserException;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
 import cn.neorae.wtu.module.team.service.TeamService;
@@ -28,6 +29,7 @@ import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 * @Date 2023-09-18 09:10:08
 */
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
 
@@ -76,12 +79,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (!StrUtil.equals(password, user.getPassword())){
             return ResponseVO.failed(ResponseEnum.LOGIN_ERROR);
         }
+        return getUserVOResponseVO(response, user);
+    }
+    @Override
+    public ResponseVO<UserVO> loginByUUID(String uuid, HttpServletResponse response) {
+        User user = this.baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid, uuid));
+        if (BeanUtil.isEmpty(user)){
+            throw new UserException(ResponseEnum.USER_NOT_FOUND);
+        }
+        return getUserVOResponseVO(response, user);
+    }
+
+    private ResponseVO<UserVO> getUserVOResponseVO(HttpServletResponse response, User user) {
         user.setOnlineStatus(Enums.OnlineStatus.ONLINE.getCode());
         this.baseMapper.updateById(user);
         StpUtil.login(user.getUuid());
         CookieUtil.setCookie(response, Values.Fingerprint, user.getUuid(), Values.CookieExpiry, values.domain);
         return ResponseVO.wrapData(parseUserVO(user));
     }
+
+
     @Override
     public ResponseVO<ResponseEnum> verify(VerificationDTO verificationDTO) {
         String email = verificationDTO.getEmail();
@@ -156,8 +173,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
 
     @Override
-    public ResponseVO<UserVO> getUserVOByUUID(HttpServletRequest httpServletRequest) {
-        String uuid = CookieUtil.getUUID(httpServletRequest, Values.Fingerprint);
+    public ResponseVO<UserVO> getUserVOByUUID() {
+        String uuid = StpUtil.getLoginIdAsString();
         User user = UserUtil.getUserByUuid(uuid);
         return ResponseVO.wrapData(parseUserVO(user));
     }

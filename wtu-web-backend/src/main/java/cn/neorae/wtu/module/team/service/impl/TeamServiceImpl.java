@@ -13,7 +13,7 @@ import cn.neorae.wtu.module.account.domain.User;
 import cn.neorae.wtu.module.netty.NettyApplication;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
-import cn.neorae.wtu.module.netty.module.ChannelUtil;
+import cn.neorae.wtu.module.netty.util.ChannelUtil;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
@@ -137,6 +137,9 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     @Transactional
     public ResponseVO<String> removeTeamById(Integer teamId) {
         Team team = this.getOne(new LambdaQueryWrapper<Team>().eq(Team::getId, teamId));
+        if (!StrUtil.equals(team.getCreatorUuid(), StpUtil.getLoginIdAsString())){
+            throw new TeamException(ResponseEnum.TEAM_NOT_FOUND);
+        }
         List<Integer> requirementIdList = teamRequirementMapper
                 .selectList(new LambdaQueryWrapper<TeamRequirement>().eq(TeamRequirement::getTeamId, teamId))
                 .parallelStream()
@@ -228,7 +231,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         Integer status = toggleTeamStatusDTO.getStatus();
 
         Team team = this.baseMapper.selectOne(new LambdaQueryWrapper<Team>().eq(Team::getId, teamId));
-        if (BeanUtil.isEmpty(team)){
+        if (BeanUtil.isEmpty(team) || !StrUtil.equals(team.getCreatorUuid(), StpUtil.getLoginIdAsString())){
             return ResponseVO.failed(ResponseEnum.TEAM_NOT_FOUND);
         }
         team.setStatus(status);

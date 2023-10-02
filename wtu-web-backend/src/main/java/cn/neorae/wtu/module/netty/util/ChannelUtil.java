@@ -1,4 +1,4 @@
-package cn.neorae.wtu.module.netty.module;
+package cn.neorae.wtu.module.netty.util;
 
 import cn.neorae.wtu.module.netty.NettyApplication;
 import io.netty.channel.Channel;
