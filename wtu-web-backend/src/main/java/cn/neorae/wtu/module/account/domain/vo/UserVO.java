@@ -19,6 +19,8 @@ public class UserVO {
 
     private Integer level;
 
+    private String accelerator;
+
     private Integer affinityBooster;
 
     private Integer creditBooster;

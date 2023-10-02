@@ -129,6 +129,12 @@ public class User implements Serializable {
     private Integer verified;
 
     /**
+     * 加速器名字
+     */
+    @TableField(value = "accelerator")
+    private String accelerator;
+
+    /**
      * Deleted 0: not deleted 1: deleted
      */
     @TableField(value = "is_deleted")

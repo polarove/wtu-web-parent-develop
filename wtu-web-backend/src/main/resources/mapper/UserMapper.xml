@@ -23,6 +23,7 @@
             <result property="resourceDropRateBooster" column="resource_drop_rate_booster" jdbcType="TINYINT"/>
             <result property="modDropRateBooster" column="mod_drop_rate_booster" jdbcType="TINYINT"/>
             <result property="server" column="server" jdbcType="TINYINT"/>
+            <result property="accelerator" column="accelerator" jdbcType="VARCHAR"/>
             <result property="verified" column="verified" jdbcType="TINYINT"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
@@ -33,7 +34,7 @@
         name,avatar,description,
         clan_id,level,online_status,
         affinity_booster,credit_booster,resource_booster,
-        resource_droprate_booster,mod_droprate_booster,server,verified,
+        resource_droprate_booster,mod_droprate_booster,server,accelerator, verified,
         is_deleted
     </sql>
 
