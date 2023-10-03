@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class JoinTeamBuildDTO {
 
+    private Integer id;
+
     private String focus;
 
     private TeamWarframeBO warframe;

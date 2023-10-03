@@ -16,6 +16,7 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -159,7 +160,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
                                 //websocket支持
                                 .addLast(new WebSocketServerProtocolHandler(EnRoot)) //websocket的根路径
                                 .addLast(new EnTeamServerHandler());
-                        log.info("新连接加入国际服");
+                        log.info("新wss连接加入国际服");
                     }
                 });
 
@@ -180,7 +181,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
                                 //websocket支持
                                 .addLast(new WebSocketServerProtocolHandler(CnRoot)) //websocket的根路径
                                 .addLast(new CnTeamServerHandler());
-                        log.info("新连接加入国服");
+                        log.info("新wss连接加入国服");
                     }
                 });
 
@@ -206,7 +207,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@Nonnull  ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
     @Override

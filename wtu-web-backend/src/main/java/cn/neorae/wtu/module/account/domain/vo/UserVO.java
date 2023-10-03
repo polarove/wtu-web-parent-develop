@@ -4,6 +4,7 @@ import cn.neorae.wtu.module.team.domain.bo.TeamUserBO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserVO extends TeamUserBO {
@@ -13,4 +14,5 @@ public class UserVO extends TeamUserBO {
     private Integer server;
 
     private Integer level;
+
 }

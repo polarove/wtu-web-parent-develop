@@ -20,9 +20,8 @@ public class PreHandler {
 
 
     public static WebsocketConnectionDTO execute(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws UserException, WssServerException, TestSocketException {
-        log.info("msg:{}",msg.text());
-
         WebsocketConnectionDTO websocketConnectionDTO = JSON.parseObject(msg.text(), WebsocketConnectionDTO.class);
+        log.info("route:{}, uuid:{}, server: {}, action: {}", websocketConnectionDTO.getRoute(), websocketConnectionDTO.getUuid(), websocketConnectionDTO.getServer(), websocketConnectionDTO.getAction());
         if (websocketConnectionDTO.getAction().equals(NettyServerEnum.ConnectionEnum.PING.getType())){
             ctx.writeAndFlush(WssResponseVO.CONNECT_SUCCEED(ResponseEnum.PONG));
         }

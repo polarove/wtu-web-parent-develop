@@ -1,14 +1,10 @@
 package cn.neorae.wtu.module.account.domain.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class UpdateUserBoosterDT0 {
-
-    @NotBlank(message = "uuid不能为空")
-    private String uuid;
 
     @NotNull(message = "经验值加成不能为空")
     private Integer affinityBooster;

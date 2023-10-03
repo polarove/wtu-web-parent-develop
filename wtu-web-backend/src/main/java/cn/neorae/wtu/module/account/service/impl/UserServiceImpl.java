@@ -12,6 +12,7 @@ import cn.neorae.wtu.common.util.CookieUtil;
 import cn.neorae.wtu.common.util.UserUtil;
 import cn.neorae.wtu.common.util.Values;
 import cn.neorae.wtu.module.account.domain.User;
+import cn.neorae.wtu.module.account.domain.bo.UserBoosterBO;
 import cn.neorae.wtu.module.account.domain.dto.*;
 import cn.neorae.wtu.module.account.domain.vo.UserVO;
 import cn.neorae.wtu.module.account.mapper.UserMapper;
@@ -211,7 +212,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public ResponseVO<String> updateUserBooster(UpdateUserBoosterDT0 updateUserBoosterDT0) {
-        String uuid = updateUserBoosterDT0.getUuid();
+        String uuid = StpUtil.getLoginIdAsString();
         User user = UserUtil.getUserByUuid(uuid);
         BeanUtil.copyProperties(updateUserBoosterDT0, user);
         this.baseMapper.updateById(user);
@@ -295,7 +296,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     private UserVO parseUserVO (User user) {
         UserVO userVO = new UserVO();
+        UserBoosterBO userBoosterBO = new UserBoosterBO();
+        BeanUtil.copyProperties(user, userBoosterBO);
         BeanUtil.copyProperties(user, userVO);
+        userVO.setBooster(userBoosterBO);
         return userVO;
     }
 }
