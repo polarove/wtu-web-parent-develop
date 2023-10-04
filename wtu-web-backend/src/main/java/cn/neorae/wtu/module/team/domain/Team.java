@@ -68,6 +68,12 @@ public class Team implements Serializable {
     private String creatorUuid;
 
     /**
+     * 队伍类型，0：仅限邀请，1：公开加入
+     */
+    @TableField(value = "is_public")
+    private Boolean isPublic;
+
+    /**
      * 0: not deleted, 1: deleted
      */
     @TableField(value = "is_deleted")

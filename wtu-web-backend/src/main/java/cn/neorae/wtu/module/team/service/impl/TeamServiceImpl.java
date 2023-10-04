@@ -22,7 +22,8 @@ import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.get.GetTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.join.JoinTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.join.ApplicationDTO;
+import cn.neorae.wtu.module.team.domain.dto.join.ApplicationGroupDTO;
 import cn.neorae.wtu.module.team.domain.dto.toggle.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
@@ -41,9 +42,14 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.PendingResult;
+import org.redisson.api.RList;
+import org.redisson.api.RSet;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,6 +82,11 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     @Resource
     private TeamMapper teamMapper;
 
+    @Resource
+    private RedissonClient redissonClient;
+
+    private static final String TEAM_APPLICATION_PREFIX = "team:application:";
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseVO<Integer> createTeam(CreateTeamDTO createTeamDTO) {
@@ -88,6 +99,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         team.setUuid(UUID.randomUUID().toString());
         team.setStatus(Enums.Polar.TRUE.getCode());
         team.setIsDeleted(Enums.Polar.FALSE.getCode());
+        team.setIsPublic(createTeamDTO.getIsPublic());
 
         // 保存队伍
         if (BeanUtil.isNotEmpty(team)){
@@ -179,6 +191,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         return ResponseVO.completed();
     }
 
+
     @Override
     public ResponseVO<String> broadcastToggleTeamStatus(BroadcastToggleTeamStatusDTO broadcastToggleTeamStatusDTO) {
         Integer server = broadcastToggleTeamStatusDTO.getTeam().getServer();
@@ -240,12 +253,12 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     }
 
     @Override
-    public ResponseVO<String> joinTeam(JoinTeamDTO joinTeamDTO) {
+    public ResponseVO<String> joinTeam(ApplicationDTO applicationDTO) {
         Channel channel;
 
-        switch (NettyServerEnum.GameServerEnum.match(joinTeamDTO.getTeam().getServer())) {
-            case EN -> channel = NettyApplication.EN_PUBLIC_CHANNEL_POOL.get(joinTeamDTO.getReceiver());
-            case CN -> channel = NettyApplication.CN_PUBLIC_CHANNEL_POOL.get(joinTeamDTO.getReceiver());
+        switch (NettyServerEnum.GameServerEnum.match(applicationDTO.getTeam().getServer())) {
+            case EN -> channel = NettyApplication.EN_PUBLIC_CHANNEL_POOL.get(applicationDTO.getReceiver());
+            case CN -> channel = NettyApplication.CN_PUBLIC_CHANNEL_POOL.get(applicationDTO.getReceiver());
             default -> throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
         }
         if (channel == null){
@@ -253,12 +266,30 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         } else if (!channel.isActive()){
             throw new TeamException(ResponseEnum.CHANNEL_NOT_ACTIVE);
         } else{
-            channel.writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(joinTeamDTO)));
+            channel.writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(applicationDTO)));
         }
-        NettyApplication.EN_TEAM_ORIGIN.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(joinTeamDTO)));
+
+        // todo: 保存申请信息
+        RList<ApplicationGroupDTO> rList = redissonClient.getList(TEAM_APPLICATION_PREFIX + applicationDTO.getReceiver());
+
+        if (!rList.isEmpty()){
+            String uuid  =  applicationDTO.getTeam().getUuid();
+            String title =  applicationDTO.getTeam().getTitle();
+            String receiver = applicationDTO.getReceiver();
+            ApplicationGroupDTO applicationGroupDTO = new ApplicationGroupDTO();
+        }
+
+        rList.add(JSON.parseObject(JSON.toJSONString(applicationDTO), ApplicationGroupDTO.class));
+
+        NettyApplication.EN_TEAM_ORIGIN.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(applicationDTO)));
         return ResponseVO.completed();
     }
 
+
+    @Override
+    public ResponseVO<List<TeamVO>> getJoinTeamRequestListByUserId(Integer userId) {
+        return null;
+    }
 }
 
 

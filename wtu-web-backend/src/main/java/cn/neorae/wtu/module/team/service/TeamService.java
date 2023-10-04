@@ -7,11 +7,13 @@ import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.get.GetTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.join.JoinTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.join.ApplicationDTO;
 import cn.neorae.wtu.module.team.domain.dto.toggle.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author Neorae
@@ -30,11 +32,13 @@ public interface TeamService extends IService<Team> {
 
     ResponseVO<String> toggleTeamStatus(ToggleTeamStatusDTO toggleTeamStatusDTO);
 
-    ResponseVO<String> joinTeam(JoinTeamDTO joinTeamDTO);
+    ResponseVO<String> joinTeam(ApplicationDTO applicationDTO);
 
     ResponseVO<String> broadcastTeam(BroadcastTeamDTO broadcastTeamDTO);
 
     ResponseVO<String> broadcastDeleteTeam(BroadcastDeleteTeamDTO broadcastDeleteTeamDTO);
 
     ResponseVO<String> broadcastToggleTeamStatus(BroadcastToggleTeamStatusDTO broadcastToggleTeamStatusDTO);
+
+    ResponseVO<List<TeamVO>> getJoinTeamRequestListByUserId(Integer userId);
 }

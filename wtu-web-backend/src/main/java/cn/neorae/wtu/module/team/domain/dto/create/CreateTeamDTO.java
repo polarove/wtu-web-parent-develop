@@ -15,6 +15,9 @@ public class CreateTeamDTO {
 
     private List<CreateTeamMemberDTO> members;
 
+    @NotNull(message = "队伍类型不能为空")
+    private Boolean isPublic;
+
     @NotNull(message = "所处服务器不能为空")
     private Integer server;
 

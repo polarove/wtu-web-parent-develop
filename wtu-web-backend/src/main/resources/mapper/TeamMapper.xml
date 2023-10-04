@@ -14,13 +14,14 @@
             <result property="title" column="title" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="TINYINT"/>
             <result property="creatorUuid" column="creator_uuid" jdbcType="VARCHAR"/>
+            <result property="isPublic" column="is_public" jdbcType="TINYINT"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,create_time,update_time,
         uuid,server,channel,
-        title,status,creator_uuid,
+        title,status,creator_uuid,is_public
         is_deleted
     </sql>
 </mapper>

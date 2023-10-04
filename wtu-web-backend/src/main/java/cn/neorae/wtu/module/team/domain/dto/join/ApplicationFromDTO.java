@@ -6,5 +6,5 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class JoinTeamFromDTO extends TeamUserBO {
+public class ApplicationFromDTO extends TeamUserBO {
 }

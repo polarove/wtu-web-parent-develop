@@ -4,7 +4,7 @@ import cn.neorae.wtu.module.team.domain.bo.TeamWarframeBO;
 import lombok.Data;
 
 @Data
-public class JoinTeamBuildDTO {
+public class ApplicationBuildDTO {
 
     private Integer id;
 

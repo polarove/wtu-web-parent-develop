@@ -31,6 +31,8 @@ public class TeamBO {
 
     private String creatorUuid;
 
+    private Boolean isPublic;
+
 
     private Integer isDeleted;
 

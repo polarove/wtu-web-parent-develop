@@ -8,7 +8,7 @@ import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.get.GetTeamDTO;
-import cn.neorae.wtu.module.team.domain.dto.join.JoinTeamDTO;
+import cn.neorae.wtu.module.team.domain.dto.join.ApplicationDTO;
 import cn.neorae.wtu.module.team.domain.dto.toggle.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.service.TeamService;
@@ -18,6 +18,8 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/team")
@@ -69,9 +71,14 @@ public class TeamController {
         return teamService.removeTeamById(teamId);
     }
 
+    @GetMapping("/getJoinTeamRequestListByUserId")
+    public ResponseVO<List<TeamVO>> getJoinTeamRequestListByUserId(@Valid @RequestParam Integer userId) {
+        return teamService.getJoinTeamRequestListByUserId(userId);
+    }
+
     @PostMapping("/joinTeam")
-    public ResponseVO<String> joinTeam(@Valid @RequestBody JoinTeamDTO joinTeamDTO) {
-        return teamService.joinTeam(joinTeamDTO);
+    public ResponseVO<String> joinTeam(@Valid @RequestBody ApplicationDTO applicationDTO) {
+        return teamService.joinTeam(applicationDTO);
     }
 
 }

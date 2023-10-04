@@ -44,6 +44,7 @@ public enum ResponseEnum {
     NOT_FOUND(404, "请求的资源不存在"),
     VERIFICATION_REQUIRED(405, "账户需要验证"),
     FAILED(500, "请求失败"),
+    RESOURCE_LOCKED(501, "资源被锁定"),
 
     INVALID_BOOSTER(1001, "无效的加成类型"),
     TEAM_NOT_FOUND(1002, "队伍不存在"),

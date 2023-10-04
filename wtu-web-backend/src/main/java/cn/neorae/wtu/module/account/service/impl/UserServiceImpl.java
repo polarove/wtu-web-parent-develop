@@ -281,6 +281,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userVO.setServer(Enums.Server.INTERNATIONAL.getCode());
         userVO.setLevel(0);
 
+        UserBoosterBO userBoosterBO = new UserBoosterBO();
+        userBoosterBO.setAffinityBooster(Enums.Polar.FALSE.getCode());
+        userBoosterBO.setCreditBooster(Enums.Polar.FALSE.getCode());
+        userBoosterBO.setResourceBooster(Enums.Polar.FALSE.getCode());
+        userBoosterBO.setModDropRateBooster(Enums.Polar.FALSE.getCode());
+        userBoosterBO.setResourceDropRateBooster(Enums.Polar.FALSE.getCode());
+        userVO.setBooster(userBoosterBO);
+
         // 发送验证邮件
         String url = values.frontAddr + "/account/verify?uuid=" + uuid + "&email=" + email;
         mailService.verifyAccount(email, "Warframe Team Up - 账户验证", url);
