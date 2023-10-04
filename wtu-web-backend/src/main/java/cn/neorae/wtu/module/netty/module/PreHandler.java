@@ -15,15 +15,17 @@ import cn.neorae.wtu.module.netty.module.en.EnTeamConnectionHandler;
 import cn.neorae.wtu.module.netty.module.en.EnTeamDisconnectionHandler;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 
-public class PreHandler {
+public class PreHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
 
-    public static WebsocketConnectionDTO execute(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws UserException, WssServerException, TestSocketException {
+    @Override
+    public void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws UserException, WssServerException, TestSocketException {
         WebsocketConnectionDTO websocketConnectionDTO = JSON.parseObject(msg.text(), WebsocketConnectionDTO.class);
         log.info("route:{}, uuid:{}, server: {}, action: {}", websocketConnectionDTO.getRoute(), websocketConnectionDTO.getUuid(), websocketConnectionDTO.getServer(), websocketConnectionDTO.getAction());
         if (websocketConnectionDTO.getAction().equals(NettyServerEnum.ConnectionEnum.PING.getType())){
@@ -61,6 +63,5 @@ public class PreHandler {
                 }
             }
         }
-        return websocketConnectionDTO;
     }
 }

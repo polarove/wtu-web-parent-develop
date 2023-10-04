@@ -1,7 +1,6 @@
 package cn.neorae.wtu.module.netty;
 
-import cn.neorae.wtu.module.netty.module.cn.CnTeamServerHandler;
-import cn.neorae.wtu.module.netty.module.en.EnTeamServerHandler;
+import cn.neorae.wtu.module.netty.module.PreHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
@@ -159,7 +158,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
                                 .addLast(new HttpObjectAggregator(1024 * 64))
                                 //websocket支持
                                 .addLast(new WebSocketServerProtocolHandler(EnRoot)) //websocket的根路径
-                                .addLast(new EnTeamServerHandler());
+                                .addLast(new PreHandler());
                         log.info("新wss连接加入国际服");
                     }
                 });
@@ -180,7 +179,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
                                 .addLast(new HttpObjectAggregator(1024 * 64))
                                 //websocket支持
                                 .addLast(new WebSocketServerProtocolHandler(CnRoot)) //websocket的根路径
-                                .addLast(new CnTeamServerHandler());
+                                .addLast(new PreHandler());
                         log.info("新wss连接加入国服");
                     }
                 });
