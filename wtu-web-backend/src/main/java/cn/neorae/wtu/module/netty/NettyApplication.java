@@ -29,7 +29,6 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -147,7 +146,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel socketChannel) throws IOException {
+                    protected void initChannel(SocketChannel socketChannel) {
                         ChannelPipeline pipeline = socketChannel.pipeline();
                         //添加http编码解码器
                         pipeline.addFirst(sslContext.newHandler(socketChannel.alloc()))
@@ -206,7 +205,7 @@ public class NettyApplication implements ApplicationRunner, ApplicationListener<
     }
 
     @Override
-    public void setApplicationContext(@Nonnull  ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
     @Override
