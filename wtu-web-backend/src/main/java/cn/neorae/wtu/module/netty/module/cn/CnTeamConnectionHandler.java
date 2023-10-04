@@ -8,6 +8,7 @@ import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.domain.vo.connection.AfterConnectionBO;
 import cn.neorae.wtu.module.netty.exceptions.ChannelException;
 import com.alibaba.fastjson2.JSON;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +27,13 @@ public class CnTeamConnectionHandler  {
         AfterConnectionBO afterConnectionBO = new AfterConnectionBO();
         afterConnectionBO.setTotal(NettyApplication.CN_PUBLIC_CHANNEL_POOL.size());
         log.info("total:{}", afterConnectionBO.getTotal());
+        Channel channel = channelHandlerContext.channel();
         try {
             NettyApplication.CN_CHANNEL_GROUP_LIST.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){
-                    channelGroup.add(channelHandlerContext.channel());
+                    if (!channelGroup.contains(channel)) {
+                        channelGroup.add(channelHandlerContext.channel());
+                    }
                     afterConnectionBO.setClients(channelGroup.size());
                     channelGroup.writeAndFlush(WssResponseVO.CONNECT_SUCCEED(JSON.toJSONString(afterConnectionBO)));
                 }

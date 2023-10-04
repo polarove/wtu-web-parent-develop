@@ -6,6 +6,7 @@ import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.domain.vo.connection.AfterConnectionBO;
 import cn.neorae.wtu.module.netty.exceptions.ChannelException;
 import com.alibaba.fastjson2.JSON;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +21,10 @@ public class EnTeamDisconnectionHandler {
         AfterConnectionBO afterConnectionBO = new AfterConnectionBO();
         afterConnectionBO.setTotal(NettyApplication.EN_PUBLIC_CHANNEL_POOL.size());
         log.info("total:{}", afterConnectionBO.getTotal());
+        Channel channel = channelHandlerContext.channel();
         try {
             NettyApplication.EN_CHANNEL_GROUP_LIST.forEach(channelGroup ->{
-                if (channelGroup.name().equals(dto.getRoute())){
+                if (channelGroup.name().equals(dto.getRoute()) && channelGroup.contains(channel)){
                     afterConnectionBO.setClients(channelGroup.size() - 1);
                     channelGroup.writeAndFlush(WssResponseVO.CONNECT_SUCCEED(JSON.toJSONString(afterConnectionBO)));
                     channelGroup.remove(channelHandlerContext.channel());
