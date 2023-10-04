@@ -26,7 +26,6 @@ public class EnTeamConnectionHandler {
         afterConnectionBO.setTotal(NettyApplication.EN_PUBLIC_CHANNEL_POOL.size());
         log.info("total:{}", afterConnectionBO.getTotal());
         try {
-            log.info("en_________________connection:{}",dto.getRoute());
             NettyApplication.EN_CHANNEL_GROUP_LIST.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){
                     channelGroup.add(channelHandlerContext.channel());

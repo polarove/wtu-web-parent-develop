@@ -21,7 +21,6 @@ public class CnTeamConnectionHandler  {
 
 
     public static void execute(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame socketFrame) throws ChannelException {
-        log.info("cn_________________connection:{}",socketFrame.text());
         WebsocketConnectionDTO dto = JSON.parseObject(socketFrame.text(), WebsocketConnectionDTO.class);
         NettyApplication.CN_PUBLIC_CHANNEL_POOL.putIfAbsent(dto.getUuid(), channelHandlerContext.channel());
         AfterConnectionBO afterConnectionBO = new AfterConnectionBO();
