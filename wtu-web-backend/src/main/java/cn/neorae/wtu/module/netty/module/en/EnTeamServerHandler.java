@@ -26,6 +26,7 @@ public class EnTeamServerHandler extends SimpleChannelInboundHandler<TextWebSock
         try {
             websocketConnectionDTO = PreHandler.execute(ctx, msg);
             if (websocketConnectionDTO.getServer().equals(NettyServerEnum.GameServerEnum.CN.getType())){
+                log.info("cn server, return");
                 return;
             }
         } catch (UserException e) {
@@ -36,7 +37,6 @@ public class EnTeamServerHandler extends SimpleChannelInboundHandler<TextWebSock
             switch (NettyServerEnum.ConnectionEnum.match(websocketConnectionDTO.getAction())) {
                 case CONNECT -> EnTeamConnectionHandler.execute(ctx, msg);
                 case DISCONNECT -> EnTeamDisconnectionHandler.execute(ctx, msg);
-                case MESSAGE -> EnTeamMessageHandler.execute(ctx, msg);
                 default -> ctx.channel().writeAndFlush(WssResponseVO.CONNECT_FAIL(ResponseEnum.NOT_SUPPORTED));
             }
         } catch (Exception e) {

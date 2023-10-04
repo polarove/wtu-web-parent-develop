@@ -79,8 +79,6 @@ public interface NettyServerEnum {
 
         DISCONNECT(2),
 
-        MESSAGE(3),
-
         NOT_SUPPORTED(-1);
 
         private final Integer type;

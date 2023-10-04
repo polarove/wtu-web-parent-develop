@@ -19,6 +19,7 @@ public class EnTeamDisconnectionHandler {
         NettyApplication.EN_PUBLIC_CHANNEL_POOL.remove(dto.getUuid());
         AfterConnectionBO afterConnectionBO = new AfterConnectionBO();
         afterConnectionBO.setTotal(NettyApplication.EN_PUBLIC_CHANNEL_POOL.size());
+        log.info("total:{}", afterConnectionBO.getTotal());
         try {
             NettyApplication.EN_CHANNEL_GROUP_LIST.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){

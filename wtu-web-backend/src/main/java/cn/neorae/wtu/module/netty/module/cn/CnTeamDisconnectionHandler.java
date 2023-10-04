@@ -20,7 +20,7 @@ public class CnTeamDisconnectionHandler {
             NettyApplication.CN_PUBLIC_CHANNEL_POOL.remove(dto.getUuid());
             AfterConnectionBO afterConnectionBO = new AfterConnectionBO();
             afterConnectionBO.setTotal(NettyApplication.CN_PUBLIC_CHANNEL_POOL.size());
-
+            log.info("total:{}", afterConnectionBO.getTotal());
             try {
                 NettyApplication.CN_CHANNEL_GROUP_LIST.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){

@@ -21,9 +21,12 @@ public class EnTeamConnectionHandler {
     public static void execute(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame socketFrame) throws ChannelException {
         WebsocketConnectionDTO dto = JSON.parseObject(socketFrame.text(), WebsocketConnectionDTO.class);
         NettyApplication.EN_PUBLIC_CHANNEL_POOL.putIfAbsent(dto.getUuid(), channelHandlerContext.channel());
+
         AfterConnectionBO afterConnectionBO = new AfterConnectionBO();
         afterConnectionBO.setTotal(NettyApplication.EN_PUBLIC_CHANNEL_POOL.size());
+        log.info("total:{}", afterConnectionBO.getTotal());
         try {
+            log.info("en_________________connection:{}",dto.getRoute());
             NettyApplication.EN_CHANNEL_GROUP_LIST.forEach(channelGroup ->{
                 if (channelGroup.name().equals(dto.getRoute())){
                     channelGroup.add(channelHandlerContext.channel());
