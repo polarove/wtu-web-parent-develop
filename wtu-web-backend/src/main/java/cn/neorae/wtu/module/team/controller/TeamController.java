@@ -46,7 +46,7 @@ public class TeamController {
     }
 
     @PostMapping("/broadcastToggleTeamStatus")
-    public ResponseVO<String> broadcastToggleTeamStatus(@Valid @RequestBody BroadcastToggleTeamStatusDTO broadcastToggleTeamStatusDTO) {
+    public ResponseVO<String> broadcastToggleTeamStatus(@RequestBody BroadcastToggleTeamStatusDTO broadcastToggleTeamStatusDTO) {
         return teamService.broadcastToggleTeamStatus(broadcastToggleTeamStatusDTO);
     }
 

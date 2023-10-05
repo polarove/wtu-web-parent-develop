@@ -1,6 +1,7 @@
 package cn.neorae.wtu.module.team.domain.dto.toggle;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -9,8 +10,9 @@ public class ToggleTeamStatusDTO {
 
 
 
-    @NotBlank(message = "id不能为空")
+    @NotNull(message = "id不能为空")
     private Integer teamId;
 
+    @NotNull(message = "id不能为空")
     private Integer status;
 }
