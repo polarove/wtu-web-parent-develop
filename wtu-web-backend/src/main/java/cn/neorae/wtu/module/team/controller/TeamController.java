@@ -79,7 +79,7 @@ public class TeamController {
 
     @PostMapping("/joinTeam")
     public ResponseVO<String> joinTeam(@Valid @RequestBody ApplicationDTO applicationDTO) {
-        String receiver = applicationDTO.getReceiver();
+        String receiver = applicationDTO.getReceiver().getUuid();
         return teamService.applicationResult(applicationDTO,receiver);
     }
 

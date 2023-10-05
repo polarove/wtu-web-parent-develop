@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ApplicationDTO {
 
-    private String receiver;
+    private ApplicationReceiverDTO receiver;
 
     private String status;
 
