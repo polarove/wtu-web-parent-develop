@@ -46,7 +46,7 @@ public class TeamController {
     }
 
     @PostMapping("/broadcastToggleTeamStatus")
-    public ResponseVO<String> broadcastToggleTeamStatus(@RequestBody BroadcastToggleTeamStatusDTO broadcastToggleTeamStatusDTO) {
+    public ResponseVO<String> broadcastToggleTeamStatus(@Valid @RequestBody BroadcastToggleTeamStatusDTO broadcastToggleTeamStatusDTO) {
         return teamService.broadcastToggleTeamStatus(broadcastToggleTeamStatusDTO);
     }
 
@@ -71,6 +71,7 @@ public class TeamController {
         return teamService.removeTeamById(teamId);
     }
 
+    // todo: 2021/10/3 未完成
     @GetMapping("/getJoinTeamRequestListByUserId")
     public ResponseVO<List<TeamVO>> getJoinTeamRequestListByUserId(@Valid @RequestParam Integer userId) {
         return teamService.getJoinTeamRequestListByUserId(userId);
@@ -78,7 +79,14 @@ public class TeamController {
 
     @PostMapping("/joinTeam")
     public ResponseVO<String> joinTeam(@Valid @RequestBody ApplicationDTO applicationDTO) {
-        return teamService.joinTeam(applicationDTO);
+        String receiver = applicationDTO.getReceiver();
+        return teamService.applicationResult(applicationDTO,receiver);
+    }
+
+    @PostMapping("/joinTeam/result")
+    public ResponseVO<String> applicationResult(@Valid @RequestBody ApplicationDTO applicationDTO) {
+        String from = applicationDTO.getFrom().getUuid();
+        return teamService.applicationResult(applicationDTO,from);
     }
 
 }

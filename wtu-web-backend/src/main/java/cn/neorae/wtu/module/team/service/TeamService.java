@@ -32,7 +32,7 @@ public interface TeamService extends IService<Team> {
 
     ResponseVO<String> toggleTeamStatus(ToggleTeamStatusDTO toggleTeamStatusDTO);
 
-    ResponseVO<String> joinTeam(ApplicationDTO applicationDTO);
+//    ResponseVO<String> joinTeam(ApplicationDTO applicationDTO);
 
     ResponseVO<String> broadcastTeam(BroadcastTeamDTO broadcastTeamDTO);
 
@@ -41,4 +41,10 @@ public interface TeamService extends IService<Team> {
     ResponseVO<String> broadcastToggleTeamStatus(BroadcastToggleTeamStatusDTO broadcastToggleTeamStatusDTO);
 
     ResponseVO<List<TeamVO>> getJoinTeamRequestListByUserId(Integer userId);
+
+    /**
+     *
+     * @param to uuid
+     */
+    ResponseVO<String> applicationResult(ApplicationDTO applicationDTO, String to);
 }

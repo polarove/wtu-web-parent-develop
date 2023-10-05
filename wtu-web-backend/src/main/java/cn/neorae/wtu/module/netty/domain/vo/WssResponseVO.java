@@ -28,6 +28,32 @@ public class WssResponseVO {
 
     private Integer action;
 
+    public static TextWebSocketFrame JOIN_ACCEPT(Object data) {
+        return new TextWebSocketFrame(
+                JSON.toJSONString(
+                        new WssResponseVO(
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getMessage(),
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
+                                data,
+                                true,
+                                LocalDateTime.now(),
+                                NettyServerEnum.ActionEnum.JOIN_ACCEPT.getType()
+                        )));
+    }
+
+    public static TextWebSocketFrame JOIN_REJECT(Object data) {
+        return new TextWebSocketFrame(
+                JSON.toJSONString(
+                        new WssResponseVO(
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getMessage(),
+                                ResponseEnum.WSS_RESPONSE_SUCCESS.getCode(),
+                                data,
+                                true,
+                                LocalDateTime.now(),
+                                NettyServerEnum.ActionEnum.JOIN_REJECT.getType()
+                        )));
+    }
+
     public static TextWebSocketFrame JOIN(Object data) {
         return new TextWebSocketFrame(
                 JSON.toJSONString(

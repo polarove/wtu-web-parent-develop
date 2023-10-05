@@ -23,7 +23,6 @@ import cn.neorae.wtu.module.team.domain.dto.broadcast.BroadcastToggleTeamStatusD
 import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.get.GetTeamDTO;
 import cn.neorae.wtu.module.team.domain.dto.join.ApplicationDTO;
-import cn.neorae.wtu.module.team.domain.dto.join.ApplicationGroupDTO;
 import cn.neorae.wtu.module.team.domain.dto.toggle.ToggleTeamStatusDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
@@ -39,10 +38,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import io.netty.channel.Channel;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -249,40 +246,36 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         return ResponseVO.completed();
     }
 
-    @Override
-    public ResponseVO<String> joinTeam(ApplicationDTO applicationDTO) {
-        Channel channel;
 
-        switch (NettyServerEnum.GameServerEnum.match(applicationDTO.getTeam().getServer())) {
-            case EN -> channel = NettyApplication.EN_PUBLIC_CHANNEL_POOL.get(applicationDTO.getReceiver());
-            case CN -> channel = NettyApplication.CN_PUBLIC_CHANNEL_POOL.get(applicationDTO.getReceiver());
+    @Override
+    public ResponseVO<String> applicationResult(ApplicationDTO applicationDTO, String to) {
+        Channel channel;
+        Integer server = applicationDTO.getTeam().getServer();
+        switch (NettyServerEnum.GameServerEnum.match(server)) {
+            case EN -> channel = NettyApplication.EN_PUBLIC_CHANNEL_POOL.get(to);
+            case CN -> channel = NettyApplication.CN_PUBLIC_CHANNEL_POOL.get(to);
             default -> throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
         }
         if (channel == null){
+            log.info("channel_not_found");
             throw new TeamException(ResponseEnum.CHANNEL_NOT_FOUND);
         } else if (!channel.isActive()){
+            log.info("channel_not_active");
             throw new TeamException(ResponseEnum.CHANNEL_NOT_ACTIVE);
         } else{
-            channel.writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(applicationDTO)));
+            switch (NettyServerEnum.ApplicationStatus.match(applicationDTO.getStatus())) {
+                case pending -> channel.writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(applicationDTO)));
+                case accepted -> channel.writeAndFlush(WssResponseVO.JOIN_ACCEPT(JSON.toJSONString(applicationDTO)));
+                case rejected -> channel.writeAndFlush(WssResponseVO.JOIN_REJECT(JSON.toJSONString(applicationDTO)));
+                default -> throw new TeamException(ResponseEnum.UNKNOWN_APPLICATION_STATUS);
+            }
         }
 
         // todo: 保存申请信息
-        RList<ApplicationGroupDTO> rList = redissonClient.getList(TEAM_APPLICATION_PREFIX + applicationDTO.getReceiver());
-
-        if (!rList.isEmpty()){
-            String uuid  =  applicationDTO.getTeam().getUuid();
-            String title =  applicationDTO.getTeam().getTitle();
-            String receiver = applicationDTO.getReceiver();
-            ApplicationGroupDTO applicationGroupDTO = new ApplicationGroupDTO();
-        }
-
-        rList.add(JSON.parseObject(JSON.toJSONString(applicationDTO), ApplicationGroupDTO.class));
-
-        NettyApplication.EN_TEAM_ORIGIN.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(applicationDTO)));
         return ResponseVO.completed();
     }
 
-
+    // todo: 2021/10/3 未完成
     @Override
     public ResponseVO<List<TeamVO>> getJoinTeamRequestListByUserId(Integer userId) {
         return null;

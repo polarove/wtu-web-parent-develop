@@ -1,6 +1,5 @@
 package cn.neorae.wtu.module.team.domain.dto.toggle;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

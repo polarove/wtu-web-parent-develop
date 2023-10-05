@@ -95,6 +95,33 @@ public interface NettyServerEnum {
 
     @AllArgsConstructor
     @Getter
+    enum ApplicationStatus implements NettyServerEnum {
+
+        STATIC("static"),
+
+        pending("pending"),
+
+        accepted("accepted"),
+
+        rejected("rejected"),
+
+        NOT_SUPPORTED("not_supported");
+
+
+        private final String type;
+
+        public static ApplicationStatus match (String type) {
+            for (ApplicationStatus applicationStatus : ApplicationStatus.values()) {
+                if (applicationStatus.getType().equals(type)) {
+                    return applicationStatus;
+                }
+            }
+            return NOT_SUPPORTED;
+        }
+    }
+
+    @AllArgsConstructor
+    @Getter
     enum ActionEnum implements NettyServerEnum {
 
         CONNECTION(1),
@@ -106,6 +133,9 @@ public interface NettyServerEnum {
         TOGGLE_STATUS(4),
 
         JOIN(5),
+        JOIN_ACCEPT(6),
+
+        JOIN_REJECT(7),
 
         NOT_SUPPORTED(0);
 

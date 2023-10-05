@@ -65,11 +65,12 @@ public enum ResponseEnum {
     BAD_NETTY_TYPE(2010, "请求类型错误"),
     BAD_NETTY_PARAM(2011, "websocket请求参数错误"),
     BAD_NETTY_BODY(2012, "请求体错误"),
+    UNKNOWN_APPLICATION_STATUS(2013, "未知的入队请求状态"),
 
-    UNKNOWN_GAME_SERVER(2013, "未知的游戏服务器"),
+    UNKNOWN_GAME_SERVER(2014, "未知的游戏服务器"),
 
-    USER_REJECTED(2014, "请求被拒绝"),
-    USER_OFFLINE(2015, "用户不在线"),
+    USER_REJECTED(2015, "请求被拒绝"),
+    USER_OFFLINE(2016, "用户不在线"),
 
     // Netty Server Success Code
 
