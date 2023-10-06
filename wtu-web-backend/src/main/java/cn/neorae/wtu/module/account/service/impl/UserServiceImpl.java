@@ -272,8 +272,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userMapper.register(user);
 
         // 属性拷贝
-        String append = StrUtil.sub(uuid, 0, 4);
-        userVO.setName("未更改的用户名" + append);
+        userVO.setName("一般路过Tenno");
         userVO.setAvatar("https://www.neorae.cn/data/avatar/default/excalibur.png");
         userVO.setDescription("平平无奇的星际海盗罢了...");
         userVO.setUuid(uuid);
