@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.wtu.module.netty.domain.dto.WebsocketConnectionDTO;
-import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
 import cn.neorae.wtu.module.netty.exceptions.TestSocketException;
 import cn.neorae.wtu.module.netty.exceptions.UserException;
@@ -26,11 +25,9 @@ public class PreHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> 
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws UserException, WssServerException, TestSocketException {
+        log.info("msg: {}", msg.text());
         WebsocketConnectionDTO websocketConnectionDTO = JSON.parseObject(msg.text(), WebsocketConnectionDTO.class);
         log.info("route:{}, uuid:{}, server: {}, action: {}", websocketConnectionDTO.getRoute(), websocketConnectionDTO.getUuid(), websocketConnectionDTO.getServer(), websocketConnectionDTO.getAction());
-        if (websocketConnectionDTO.getAction().equals(NettyServerEnum.ConnectionEnum.PING.getType())){
-            ctx.writeAndFlush(WssResponseVO.CONNECT_SUCCEED(ResponseEnum.PONG));
-        }
         String uuid = websocketConnectionDTO.getUuid();
         Integer server = websocketConnectionDTO.getServer();
         Integer action = websocketConnectionDTO.getAction();
@@ -64,4 +61,5 @@ public class PreHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> 
             }
         }
     }
+
 }

@@ -89,4 +89,9 @@ public class TeamController {
         return teamService.applicationResult(applicationDTO,from);
     }
 
+    @PostMapping("/joinTeam/broadcast")
+    public ResponseVO<String> joinTeamBroadcast(@Valid @RequestBody ApplicationDTO applicationDTO) {
+        return teamService.joinTeamBroadcast(applicationDTO);
+    }
+
 }

@@ -73,8 +73,6 @@ public interface NettyServerEnum {
     @Getter
     enum ConnectionEnum implements NettyServerEnum {
 
-        PING(0),
-
         CONNECT(1),
 
         DISCONNECT(2),

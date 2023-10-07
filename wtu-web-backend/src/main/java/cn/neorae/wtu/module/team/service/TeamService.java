@@ -47,4 +47,6 @@ public interface TeamService extends IService<Team> {
      * @param to uuid
      */
     ResponseVO<String> applicationResult(ApplicationDTO applicationDTO, String to);
+
+    ResponseVO<String> joinTeamBroadcast(ApplicationDTO applicationDTO);
 }

@@ -275,6 +275,22 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         return ResponseVO.completed();
     }
 
+    @Override
+    public ResponseVO<String> joinTeamBroadcast(ApplicationDTO applicationDTO) {
+        // todo: 广播申请结果并保存到数据库
+//        Team team = this.baseMapper.selectOne(new LambdaQueryWrapper<Team>().eq(Team::getUuid, applicationDTO.getTeam().getUuid()));
+//        TeamMember teamMember = teamMemberMapper.selectOne(new LambdaQueryWrapper<TeamMember>().eq(TeamMember::getTeamId, team.getId()).eq(TeamMember::getId, applicationDTO.getBuild().getId()));
+//        teamMember.setUserUuid(StpUtil.getLoginIdAsString());
+//        teamMemberMapper.updateById(teamMember);
+//        Integer server = applicationDTO.getTeam().getServer();
+//        switch (NettyServerEnum.GameServerEnum.match(server)) {
+//            case EN -> ChannelUtil.getEnChannelGroupByRoute(applicationDTO.getTeam().getChannel()).writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(applicationDTO)));
+//            case CN -> ChannelUtil.getCnChannelGroupByRoute(applicationDTO.getTeam().getChannel()).writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(applicationDTO)));
+//            default -> throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
+//        }
+        return ResponseVO.completed();
+    }
+
     // todo: 2021/10/3 未完成
     @Override
     public ResponseVO<List<TeamVO>> getJoinTeamRequestListByUserId(Integer userId) {
