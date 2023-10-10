@@ -28,7 +28,7 @@ public interface NettyServerEnum {
 
         HUNT("hunt"),
 
-        DURIVI("durivi"),
+        DUVIRI("duviri"),
 
         EMPYREAN("empyrean"),
 
