@@ -88,10 +88,4 @@ public class TeamController {
         String from = applicationDTO.getFrom().getUuid();
         return teamService.applicationResult(applicationDTO,from);
     }
-
-    @PostMapping("/joinTeam/broadcast")
-    public ResponseVO<String> joinTeamBroadcast(@Valid @RequestBody ApplicationDTO applicationDTO) {
-        return teamService.joinTeamBroadcast(applicationDTO);
-    }
-
 }

@@ -69,13 +69,6 @@ public class TeamMember implements Serializable {
     private Integer leader;
 
     /**
-     * 是否已被选择，0：否，1：是
-     */
-    @TableField(value = "occupied")
-    private Integer occupied;
-
-
-    /**
      * 0: not deleted, 1: deleted
      */
     @TableField(value = "is_deleted")

@@ -48,5 +48,4 @@ public interface TeamService extends IService<Team> {
      */
     ResponseVO<String> applicationResult(ApplicationDTO applicationDTO, String to);
 
-    ResponseVO<String> joinTeamBroadcast(ApplicationDTO applicationDTO);
 }

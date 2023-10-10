@@ -14,8 +14,6 @@ public class TeamMemberBO {
 
     private TeamWarframeBO warframe;
 
-    private Integer occupied;
-
     private TeamUserBO user;
 
     private Integer isDeleted;

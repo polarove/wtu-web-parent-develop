@@ -14,13 +14,12 @@
             <result property="cn" column="cn" jdbcType="VARCHAR"/>
             <result property="focus" column="focus" jdbcType="VARCHAR"/>
             <result property="leader" column="leader" jdbcType="TINYINT"/>
-            <result property="occupied" column="occupied" jdbcType="TINYINT"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,create_time,update_time,
         team_id,user_uuid,en,cn
-        focus,leader,occupied,is_deleted
+        focus,leader,is_deleted
     </sql>
 </mapper>

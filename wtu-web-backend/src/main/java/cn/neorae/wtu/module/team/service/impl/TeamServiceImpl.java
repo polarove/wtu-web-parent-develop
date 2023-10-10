@@ -10,7 +10,6 @@ import cn.neorae.common.enums.ResponseEnum;
 import cn.neorae.common.response.ResponseVO;
 import cn.neorae.wtu.common.exception.TeamException;
 import cn.neorae.wtu.module.account.domain.User;
-import cn.neorae.wtu.module.netty.NettyApplication;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
 import cn.neorae.wtu.module.netty.util.ChannelUtil;
@@ -37,9 +36,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
-import io.netty.channel.Channel;
+import io.netty.channel.group.ChannelGroup;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -249,47 +249,36 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
 
     @Override
     public ResponseVO<String> applicationResult(ApplicationDTO applicationDTO, String to) {
-        Channel channel;
-        Integer server = applicationDTO.getTeam().getServer();
-        switch (NettyServerEnum.GameServerEnum.match(server)) {
-            case EN -> channel = NettyApplication.EN_PUBLIC_CHANNEL_POOL.get(to);
-            case CN -> channel = NettyApplication.CN_PUBLIC_CHANNEL_POOL.get(to);
-            default -> throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
-        }
-        if (channel == null){
-            log.info("channel_not_found");
-            throw new TeamException(ResponseEnum.CHANNEL_NOT_FOUND);
-        } else if (!channel.isActive()){
-            log.info("channel_not_active");
-            throw new TeamException(ResponseEnum.CHANNEL_NOT_ACTIVE);
-        } else{
+        RLock lock = redissonClient.getLock(TEAM_APPLICATION_PREFIX + applicationDTO.getTeam().getUuid() + ":" + applicationDTO.getBuild().getId());
+        lock.lock();
+        try {
+            ChannelGroup channelGroup;
+            Integer server = applicationDTO.getTeam().getServer();
+            String route = applicationDTO.getTeam().getChannel();
+            switch (NettyServerEnum.GameServerEnum.match(server)) {
+                case EN -> channelGroup = ChannelUtil.getEnChannelGroupByRoute(route);
+                case CN -> channelGroup = ChannelUtil.getCnChannelGroupByRoute(route);
+                default -> throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
+            }
+
             switch (NettyServerEnum.ApplicationStatus.match(applicationDTO.getStatus())) {
-                case pending -> channel.writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(applicationDTO)));
-                case accepted -> channel.writeAndFlush(WssResponseVO.JOIN_ACCEPT(JSON.toJSONString(applicationDTO)));
-                case rejected -> channel.writeAndFlush(WssResponseVO.JOIN_REJECT(JSON.toJSONString(applicationDTO)));
+                case pending -> channelGroup.writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(applicationDTO)));
+                case accepted -> {
+                    TeamMember member = teamMemberMapper.selectOne(new LambdaQueryWrapper<TeamMember>().eq(TeamMember::getId, applicationDTO.getBuild().getId()));
+                    channelGroup.writeAndFlush(WssResponseVO.JOIN_ACCEPT(JSON.toJSONString(applicationDTO)));
+                    member.setUserUuid(applicationDTO.getFrom().getUuid());
+                    teamMemberMapper.updateById(member);
+                }
+                case rejected -> channelGroup.writeAndFlush(WssResponseVO.JOIN_REJECT(JSON.toJSONString(applicationDTO)));
                 default -> throw new TeamException(ResponseEnum.UNKNOWN_APPLICATION_STATUS);
             }
+        } finally {
+            lock.unlock();
         }
-
         // todo: 保存申请信息
         return ResponseVO.completed();
     }
 
-    @Override
-    public ResponseVO<String> joinTeamBroadcast(ApplicationDTO applicationDTO) {
-        // todo: 广播申请结果并保存到数据库
-//        Team team = this.baseMapper.selectOne(new LambdaQueryWrapper<Team>().eq(Team::getUuid, applicationDTO.getTeam().getUuid()));
-//        TeamMember teamMember = teamMemberMapper.selectOne(new LambdaQueryWrapper<TeamMember>().eq(TeamMember::getTeamId, team.getId()).eq(TeamMember::getId, applicationDTO.getBuild().getId()));
-//        teamMember.setUserUuid(StpUtil.getLoginIdAsString());
-//        teamMemberMapper.updateById(teamMember);
-//        Integer server = applicationDTO.getTeam().getServer();
-//        switch (NettyServerEnum.GameServerEnum.match(server)) {
-//            case EN -> ChannelUtil.getEnChannelGroupByRoute(applicationDTO.getTeam().getChannel()).writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(applicationDTO)));
-//            case CN -> ChannelUtil.getCnChannelGroupByRoute(applicationDTO.getTeam().getChannel()).writeAndFlush(WssResponseVO.JOIN(JSON.toJSONString(applicationDTO)));
-//            default -> throw new TeamException(ResponseEnum.UNKNOWN_GAME_SERVER);
-//        }
-        return ResponseVO.completed();
-    }
 
     // todo: 2021/10/3 未完成
     @Override
