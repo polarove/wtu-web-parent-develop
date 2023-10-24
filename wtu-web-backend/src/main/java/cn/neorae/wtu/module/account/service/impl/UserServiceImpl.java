@@ -193,11 +193,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public ResponseVO<UserVO> saveMyProfile(SaveMyProfileDTO saveMyProfileDTO) {
-        String uuid = saveMyProfileDTO.getUuid();
-        User user = UserUtil.getUserByUuid(uuid);
-        if (BeanUtil.isEmpty(user)){
-            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
-        }
+        User user = getThreadUser(StpUtil.getLoginIdAsString());
         BeanUtil.copyProperties(saveMyProfileDTO, user);
         this.baseMapper.updateById(user);
         return ResponseVO.wrapData(parseUserVO(user));
@@ -206,11 +202,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     // todo: wss广播通知
     public ResponseVO<String> updateOnlineStatus(Integer status) {
-        String uuid = StpUtil.getLoginIdAsString();
-        User user = UserUtil.getUserByUuid(uuid);
-        if (BeanUtil.isEmpty(user)){
-            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
-        }
+        User user = getThreadUser(StpUtil.getLoginIdAsString());
         user.setOnlineStatus(status);
         this.baseMapper.updateById(user);
         return ResponseVO.completed();
@@ -218,11 +210,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public ResponseVO<String> updateUserBooster(UpdateUserBoosterDT0 updateUserBoosterDT0) {
-        String uuid = StpUtil.getLoginIdAsString();
-        User user = UserUtil.getUserByUuid(uuid);
-        if (BeanUtil.isEmpty(user)){
-            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
-        }
+        User user = getThreadUser(StpUtil.getLoginIdAsString());
         BeanUtil.copyProperties(updateUserBoosterDT0, user);
         this.baseMapper.updateById(user);
         return ResponseVO.completed();
@@ -230,11 +218,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public ResponseVO<UserVO> togglePlatform(String loginIdAsString, String platform) {
-        String uuid = StpUtil.getLoginIdAsString();
-        User user = UserUtil.getUserByUuid(uuid);
-        if (BeanUtil.isEmpty(user)){
-            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
-        }
+        User user = getThreadUser(StpUtil.getLoginIdAsString());
         user.setPlatform(platform);
         this.baseMapper.updateById(user);
         return ResponseVO.completed();
@@ -243,11 +227,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     // todo: wss广播通知
     public ResponseVO<String> updateUserAccelerator(String name) {
-        String uuid = StpUtil.getLoginIdAsString();
-        User user = UserUtil.getUserByUuid(uuid);
-        if (BeanUtil.isEmpty(user)){
-            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
-        }
+        User user = getThreadUser(StpUtil.getLoginIdAsString());
         user.setAccelerator(name);
         this.baseMapper.updateById(user);
         return ResponseVO.completed();
@@ -255,10 +235,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public ResponseVO<UserVO> toggleServer(String uuid, ToggleServerDTO toggleServerDTO) {
-        User user = UserUtil.getUserByUuid(uuid);
-        if(BeanUtil.isEmpty(user)){
-            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
-        }
+        User user = getThreadUser(uuid);
         Integer current = toggleServerDTO.getCurrent();
         Integer previous = toggleServerDTO.getPrevious();
         user.setServer(current);
@@ -332,6 +309,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         BeanUtil.copyProperties(user, userVO);
         userVO.setBooster(userBoosterBO);
         return userVO;
+    }
+
+    private User getThreadUser(String uuid) {
+        User user = UserUtil.getUserByUuid(uuid);
+        if(BeanUtil.isEmpty(user)){
+            throw new UserException(ResponseEnum.USER_NOT_FOUND);
+        }else{
+            return user;
+        }
     }
 }
 
