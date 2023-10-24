@@ -3,7 +3,6 @@ package cn.neorae.wtu.common.Interceptor;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.neorae.common.annotation.FreePass;
-import cn.neorae.common.enums.Enums;
 import cn.neorae.wtu.common.util.CookieUtil;
 import cn.neorae.wtu.common.util.UserUtil;
 import cn.neorae.wtu.common.util.Values;

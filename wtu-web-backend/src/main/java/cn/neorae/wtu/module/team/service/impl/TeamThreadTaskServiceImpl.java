@@ -2,8 +2,6 @@ package cn.neorae.wtu.module.team.service.impl;
 
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.neorae.wtu.module.team.service.TeamMemberService;
-import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
@@ -15,6 +13,8 @@ import cn.neorae.wtu.module.team.domain.dto.create.CreateTeamRequirementDTO;
 import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
 import cn.neorae.wtu.module.team.mapper.TeamRequirementMapper;
+import cn.neorae.wtu.module.team.service.TeamMemberService;
+import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import org.springframework.scheduling.annotation.Async;
