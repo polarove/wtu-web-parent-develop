@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/account")
-@Tag(name = "账户接口")
+@Tag(name = "账户")
 @Slf4j
 public class AccountController {
 
@@ -119,5 +119,11 @@ public class AccountController {
     @PostMapping("/toggleServer")
     public ResponseVO<UserVO> toggleServer(@Valid @RequestBody ToggleServerDTO toggleServerDTO) {
         return userService.toggleServer(StpUtil.getLoginIdAsString(), toggleServerDTO);
+    }
+
+    @Operation(summary = "切换游戏平台")
+    @GetMapping("/togglePlatform")
+    public ResponseVO<UserVO> togglePlatform(@Valid @RequestParam String platform ) {
+        return userService.togglePlatform(StpUtil.getLoginIdAsString(), platform);
     }
 }

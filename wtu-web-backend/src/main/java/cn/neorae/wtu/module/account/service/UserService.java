@@ -41,4 +41,6 @@ public interface UserService extends IService<User> {
     ResponseVO<UserVO> toggleServer(String uuid, ToggleServerDTO toggleServerDTO);
 
     ResponseVO<String> updateUserAccelerator(String name);
+
+    ResponseVO<UserVO> togglePlatform(String loginIdAsString, String platform);
 }

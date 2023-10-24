@@ -53,9 +53,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private StringRedisTemplate stringRedisTemplate;
 
     @Resource
-    private UserMapper userMapper;
-
-    @Resource
     private MailService mailService;
 
     @Resource
@@ -198,6 +195,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public ResponseVO<UserVO> saveMyProfile(SaveMyProfileDTO saveMyProfileDTO) {
         String uuid = saveMyProfileDTO.getUuid();
         User user = UserUtil.getUserByUuid(uuid);
+        if (BeanUtil.isEmpty(user)){
+            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
+        }
         BeanUtil.copyProperties(saveMyProfileDTO, user);
         this.baseMapper.updateById(user);
         return ResponseVO.wrapData(parseUserVO(user));
@@ -208,6 +208,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public ResponseVO<String> updateOnlineStatus(Integer status) {
         String uuid = StpUtil.getLoginIdAsString();
         User user = UserUtil.getUserByUuid(uuid);
+        if (BeanUtil.isEmpty(user)){
+            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
+        }
         user.setOnlineStatus(status);
         this.baseMapper.updateById(user);
         return ResponseVO.completed();
@@ -217,7 +220,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public ResponseVO<String> updateUserBooster(UpdateUserBoosterDT0 updateUserBoosterDT0) {
         String uuid = StpUtil.getLoginIdAsString();
         User user = UserUtil.getUserByUuid(uuid);
+        if (BeanUtil.isEmpty(user)){
+            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
+        }
         BeanUtil.copyProperties(updateUserBoosterDT0, user);
+        this.baseMapper.updateById(user);
+        return ResponseVO.completed();
+    }
+
+    @Override
+    public ResponseVO<UserVO> togglePlatform(String loginIdAsString, String platform) {
+        String uuid = StpUtil.getLoginIdAsString();
+        User user = UserUtil.getUserByUuid(uuid);
+        if (BeanUtil.isEmpty(user)){
+            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
+        }
+        user.setPlatform(platform);
         this.baseMapper.updateById(user);
         return ResponseVO.completed();
     }
@@ -227,6 +245,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public ResponseVO<String> updateUserAccelerator(String name) {
         String uuid = StpUtil.getLoginIdAsString();
         User user = UserUtil.getUserByUuid(uuid);
+        if (BeanUtil.isEmpty(user)){
+            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
+        }
         user.setAccelerator(name);
         this.baseMapper.updateById(user);
         return ResponseVO.completed();

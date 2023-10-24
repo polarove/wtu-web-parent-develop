@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/team")
-@Tag(name = "队伍接口")
+@Tag(name = "队伍")
 @Slf4j
 public class TeamController {
 
