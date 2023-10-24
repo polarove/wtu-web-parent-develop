@@ -10,9 +10,7 @@ import com.github.yulichang.base.MPJBaseMapper;
 * @Entity cn.neorae.wtu.module.account.domain.User
 */
 public interface UserMapper extends MPJBaseMapper<User> {
-    void register (User user);
 
-    User getUserByUUID(String uuid, Integer notDeleted);
 }
 
 

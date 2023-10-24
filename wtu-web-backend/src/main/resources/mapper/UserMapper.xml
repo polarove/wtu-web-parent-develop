@@ -14,7 +14,6 @@
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="clanId" column="clan_id" jdbcType="INTEGER"/>
             <result property="level" column="level" jdbcType="INTEGER"/>
             <result property="onlineStatus" column="online_status" jdbcType="INTEGER"/>
             <result property="affinityBooster" column="affinity_booster" jdbcType="TINYINT"/>
@@ -23,6 +22,7 @@
             <result property="resourceDropRateBooster" column="resource_drop_rate_booster" jdbcType="TINYINT"/>
             <result property="modDropRateBooster" column="mod_drop_rate_booster" jdbcType="TINYINT"/>
             <result property="server" column="server" jdbcType="TINYINT"/>
+            <result property="platform" column="platform" jdbcType="VARCHAR"/>
             <result property="accelerator" column="accelerator" jdbcType="VARCHAR"/>
             <result property="verified" column="verified" jdbcType="TINYINT"/>
             <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
@@ -32,19 +32,10 @@
         id,create_time,update_time,
         uuid,email,password,
         name,avatar,description,
-        clan_id,level,online_status,
+        level,online_status,
         affinity_booster,credit_booster,resource_booster,
-        resource_droprate_booster,mod_droprate_booster,server,accelerator, verified,
+        resource_droprate_booster,mod_droprate_booster,server,platform,accelerator, verified,
         is_deleted
     </sql>
 
-    <insert id="register" useGeneratedKeys="true">
-        insert into user (email, password, uuid, online_status) values (#{email}, #{password}, #{uuid}, #{onlineStatus})
-    </insert>
-    <select id="getUserByUUID" resultType="cn.neorae.wtu.module.account.domain.User">
-        select
-        *
-        from user
-        where uuid = #{uuid} and is_deleted = #{notDeleted}
-    </select>
 </mapper>

@@ -5,12 +5,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.neorae.wtu.module.account.domain.User;
 import cn.neorae.wtu.module.account.domain.bo.UserBoosterBO;
 import cn.neorae.wtu.module.account.mapper.UserMapper;
+import cn.neorae.wtu.module.team.service.TeamMemberService;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.bo.TeamMemberBO;
 import cn.neorae.wtu.module.team.domain.bo.TeamUserBO;
 import cn.neorae.wtu.module.team.domain.bo.TeamWarframeBO;
 import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
-import cn.neorae.wtu.module.team.service.TeamMemberService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 */
 @Service
 public class TeamMemberServiceImpl extends ServiceImpl<TeamMemberMapper, TeamMember>
-    implements TeamMemberService{
+    implements TeamMemberService {
 
     @Resource
     private UserMapper userMapper;

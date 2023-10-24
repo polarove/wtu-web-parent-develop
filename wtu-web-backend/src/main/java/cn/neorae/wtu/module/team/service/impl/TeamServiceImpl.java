@@ -13,6 +13,9 @@ import cn.neorae.wtu.module.account.domain.User;
 import cn.neorae.wtu.module.netty.domain.vo.WssResponseVO;
 import cn.neorae.wtu.module.netty.enums.NettyServerEnum;
 import cn.neorae.wtu.module.netty.util.ChannelUtil;
+import cn.neorae.wtu.module.team.service.TeamMemberService;
+import cn.neorae.wtu.module.team.service.TeamRequirementService;
+import cn.neorae.wtu.module.team.service.TeamService;
 import cn.neorae.wtu.module.team.domain.Team;
 import cn.neorae.wtu.module.team.domain.TeamMember;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
@@ -27,10 +30,7 @@ import cn.neorae.wtu.module.team.domain.vo.TeamVO;
 import cn.neorae.wtu.module.team.mapper.TeamMapper;
 import cn.neorae.wtu.module.team.mapper.TeamMemberMapper;
 import cn.neorae.wtu.module.team.mapper.TeamRequirementMapper;
-import cn.neorae.wtu.module.team.service.TeamMemberService;
-import cn.neorae.wtu.module.team.service.TeamRequirementService;
-import cn.neorae.wtu.module.team.service.TeamService;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -54,7 +54,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
-    implements TeamService{
+    implements TeamService {
 
 
     @Resource
@@ -190,7 +190,6 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
     public ResponseVO<String> broadcastToggleTeamStatus(BroadcastToggleTeamStatusDTO broadcastToggleTeamStatusDTO) {
         Integer server = broadcastToggleTeamStatusDTO.getTeam().getServer();
         String route = broadcastToggleTeamStatusDTO.getTeam().getChannel();
-        System.out.println(JSON.toJSONString(broadcastToggleTeamStatusDTO));
         switch (NettyServerEnum.GameServerEnum.match(server)) {
             case EN -> ChannelUtil.getEnChannelGroupByRoute(route).writeAndFlush(WssResponseVO.TOGGLE_STATUS(JSON.toJSONString(broadcastToggleTeamStatusDTO)));
             case CN -> ChannelUtil.getCnChannelGroupByRoute(route).writeAndFlush(WssResponseVO.TOGGLE_STATUS(JSON.toJSONString(broadcastToggleTeamStatusDTO)));

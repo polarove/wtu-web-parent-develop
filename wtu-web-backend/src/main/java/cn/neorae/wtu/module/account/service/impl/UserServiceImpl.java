@@ -156,7 +156,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         // 修改密码
-        User user = this.baseMapper.getUserByUUID(uuid, Enums.Polar.FALSE.getCode());
+        User user = this.baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email).eq(User::getUuid, uuid));
+        if (BeanUtil.isEmpty(user)){
+            return ResponseVO.failed(ResponseEnum.USER_NOT_FOUND);
+        }
         user.setPassword(password);
         this.baseMapper.updateById(user);
 
@@ -269,7 +272,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user.setPassword(password);
         user.setUuid(uuid);
         user.setOnlineStatus(Enums.OnlineStatus.ONLINE.getCode());
-        userMapper.register(user);
+        this.baseMapper.insert(user);
 
         // 属性拷贝
         userVO.setName("一般路过Tenno");
@@ -277,7 +280,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userVO.setDescription("平平无奇的星际海盗罢了...");
         userVO.setUuid(uuid);
         userVO.setOnlineStatus(Enums.OnlineStatus.ONLINE.getCode());
-        userVO.setServer(Enums.Server.INTERNATIONAL.getCode());
+        userVO.setServer(NettyServerEnum.GameServerEnum.EN.getType());
         userVO.setLevel(0);
 
         UserBoosterBO userBoosterBO = new UserBoosterBO();

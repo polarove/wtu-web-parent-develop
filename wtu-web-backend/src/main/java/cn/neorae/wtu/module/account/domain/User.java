@@ -68,12 +68,6 @@ public class User implements Serializable {
     private String description;
 
     /**
-     * Clan ID
-     */
-    @TableField(value = "clan_id")
-    private Integer clanId;
-
-    /**
      * Rank
      */
     @TableField(value = "level")
@@ -120,6 +114,12 @@ public class User implements Serializable {
      */
     @TableField(value = "server")
     private Integer server;
+
+    /**
+     * platform
+     */
+    @TableField(value = "platform")
+    private String platform;
 
 
     /**

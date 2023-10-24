@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+    <!--如果使用nacos配置contextName不写或者为nacos不能为其他值-->
+    <contextName>nacos</contextName>
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.path"/>
+    <springProperty scope="context" name="FILE_NAME" source="spring.application.name"/>
+    <property name="STDOUT_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %easyHighlight(%5.5level) %magenta(%pid) --- [%15.15thread] %cyan(%-40.40logger{39} [%4.4line]) : %msg%n"/>
+    <property name="FILE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5.5level %pid --- [%15.15thread] %-40.40logger{40} [%4.4line] : %msg%n"/>
+    <property name="MAX_HISTORY" value="30"/>
+    <property name="MAX_SIZE" value="10MB"/>
+
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder
+                class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.suncnpap.framework.web.config.logback.EasyPatternLayout">
+                <pattern>
+                    ${logging.console.pattern:-${STDOUT_PATTERN}}
+                </pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 只打印错误日志 -->
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <fileNamePattern>
+                ${LOG_PATH}/${FILE_NAME}/error/%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <!--日志文件保留天数-->
+            <maxHistory>${logging.file.max-history:-${MAX_HISTORY}}</maxHistory>
+            <maxFileSize>${logging.file.max.size:-${MAX_SIZE}}}</maxFileSize>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.suncnpap.framework.web.config.logback.EasyPatternLayout">
+                <pattern>
+                    ${logging.console.pattern:-${FILE_PATTERN}}
+                </pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <fileNamePattern>
+                ${LOG_PATH}/${FILE_NAME}/debug/%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+
+            <!--日志文件保留天数-->
+            <maxHistory>${logging.file.max-history:-${MAX_HISTORY}}</maxHistory>
+            <maxFileSize>${logging.file.max.size:-${MAX_SIZE}}}</maxFileSize>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.suncnpap.framework.web.config.logback.EasyPatternLayout">
+                <pattern>
+                    ${logging.console.pattern:-${FILE_PATTERN}}
+                </pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 只打印info的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <fileNamePattern>
+                ${LOG_PATH}/${FILE_NAME}/info/%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+
+            <!--日志文件保留天数-->
+            <maxHistory>${logging.file.max-history:-${MAX_HISTORY}}</maxHistory>
+            <maxFileSize>${logging.file.max.size:-${MAX_SIZE}}}</maxFileSize>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.suncnpap.framework.web.config.logback.EasyPatternLayout">
+                <pattern>
+                    ${logging.console.pattern:-${FILE_PATTERN}}
+                </pattern>
+            </layout>
+        </encoder>
+
+    </appender>
+
+
+    <root level="${logging.level:-info}">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE_DEBUG"/>
+        <appender-ref ref="FILE_INFO"/>
+        <appender-ref ref="FILE_ERROR"/>
+    </root>
+
+</configuration>

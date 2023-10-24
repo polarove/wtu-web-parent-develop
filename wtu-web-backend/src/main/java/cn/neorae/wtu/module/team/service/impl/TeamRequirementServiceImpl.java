@@ -1,10 +1,10 @@
 package cn.neorae.wtu.module.team.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import cn.neorae.wtu.module.team.domain.TeamRequirement;
 import cn.neorae.wtu.module.team.domain.bo.TeamRequirementsBO;
 import cn.neorae.wtu.module.team.mapper.TeamRequirementMapper;
-import cn.neorae.wtu.module.team.service.TeamRequirementService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 */
 @Service
 public class TeamRequirementServiceImpl extends ServiceImpl<TeamRequirementMapper, TeamRequirement>
-    implements TeamRequirementService{
+    implements TeamRequirementService {
 
     @Override
     @Async

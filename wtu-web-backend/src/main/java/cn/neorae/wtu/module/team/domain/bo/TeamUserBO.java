@@ -18,4 +18,6 @@ public class TeamUserBO {
 
     private UserBoosterBO booster;
 
+    private String platform;
+
 }

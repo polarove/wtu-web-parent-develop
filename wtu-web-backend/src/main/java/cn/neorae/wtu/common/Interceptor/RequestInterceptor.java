@@ -9,6 +9,7 @@ import cn.neorae.wtu.common.util.UserUtil;
 import cn.neorae.wtu.common.util.Values;
 import cn.neorae.wtu.module.account.domain.User;
 import cn.neorae.wtu.module.account.mapper.UserMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,7 +45,7 @@ public class RequestInterceptor implements HandlerInterceptor {
                     response.sendRedirect("/redirect/login?route=login");
                     return false;
                 }
-                User user = userMapper.getUserByUUID(uuid, Enums.Polar.FALSE.getCode());
+                User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUuid,uuid));
                 if (BeanUtil.isEmpty(user)) {
                     response.sendRedirect("/redirect/login?route=login");
                     return false;
