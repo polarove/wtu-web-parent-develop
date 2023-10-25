@@ -79,8 +79,8 @@ public class TeamThreadTaskServiceImpl {
     }
 
     @Async
-    public CompletableFuture<Team> setTeamStatus(Team team, Integer status) {
+    public void setTeamStatus(Team team, Integer status) {
         team.setStatus(status);
-        return CompletableFuture.completedFuture(team);
+        CompletableFuture.completedFuture(team);
     }
 }
