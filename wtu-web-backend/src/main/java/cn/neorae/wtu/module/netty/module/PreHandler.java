@@ -25,7 +25,6 @@ public class PreHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> 
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws UserException, WssServerException, TestSocketException {
-        log.info("msg: {}", msg.text());
         WebsocketConnectionDTO websocketConnectionDTO = JSON.parseObject(msg.text(), WebsocketConnectionDTO.class);
         log.info("route:{}, uuid:{}, server: {}, action: {}", websocketConnectionDTO.getRoute(), websocketConnectionDTO.getUuid(), websocketConnectionDTO.getServer(), websocketConnectionDTO.getAction());
         String uuid = websocketConnectionDTO.getUuid();
@@ -59,6 +58,8 @@ public class PreHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> 
                     throw new WssServerException(ResponseEnum.NOT_SUPPORTED);
                 }
             }
+
+            default -> throw new WssServerException(ResponseEnum.UNKNOWN_GAME_SERVER);
         }
     }
 

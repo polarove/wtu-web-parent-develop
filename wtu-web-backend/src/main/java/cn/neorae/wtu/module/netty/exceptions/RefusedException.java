@@ -1,7 +1,9 @@
 package cn.neorae.wtu.module.netty.exceptions;
 
 import cn.neorae.common.enums.ResponseEnum;
+import lombok.Getter;
 
+@Getter
 public class RefusedException extends RuntimeException {
 
     private final ResponseEnum responseEnum;
@@ -11,7 +13,7 @@ public class RefusedException extends RuntimeException {
         this.responseEnum = responseEnum;
     }
 
-    public static void throwException() throws UserException {
-        throw new UserException(ResponseEnum.USER_REJECTED);
+    public static void throwException() throws RefusedException {
+        throw new RefusedException(ResponseEnum.USER_REJECTED);
     }
 }

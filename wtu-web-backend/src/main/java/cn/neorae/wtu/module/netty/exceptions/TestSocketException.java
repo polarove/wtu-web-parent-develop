@@ -14,8 +14,8 @@ public class TestSocketException extends RuntimeException{
         this.responseEnum = responseEnum;
     }
 
-    public static void throwException() throws UserException {
-        throw new UserException(ResponseEnum.USER_NOT_FOUND);
+    public static void throwException() throws TestSocketException {
+        throw new TestSocketException(ResponseEnum.USER_NOT_FOUND);
     }
 
 }
