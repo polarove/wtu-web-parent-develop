@@ -126,4 +126,16 @@ public class AccountController {
     public ResponseVO<UserVO> togglePlatform(@Valid @RequestParam String platform ) {
         return userService.togglePlatform(StpUtil.getLoginIdAsString(), platform);
     }
+
+    @Operation(summary = "上传裂缝订阅列表")
+    @PostMapping("/uploadFissureSubscriptions")
+    public ResponseVO<String> uploadFissureSubscriptions(@Valid @RequestBody SyncFissureSubscriptionsDTO syncFissureSubscriptionsDTO) {
+        return userService.syncFissureSubscriptions(syncFissureSubscriptionsDTO);
+    }
+
+    @Operation(summary = "下载裂缝订阅列表")
+    @GetMapping("/downloadFissureSubscriptions")
+    public ResponseVO<SyncFissureSubscriptionsDTO> downloadFissureSubscriptions(@Valid @RequestParam String uuid) {
+        return userService.downloadFissureSubscriptions(uuid);
+    }
 }

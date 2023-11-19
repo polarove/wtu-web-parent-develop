@@ -2,6 +2,8 @@ package cn.neorae.wtu.module.account.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -30,6 +32,8 @@ import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +67,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Resource
     private TeamService teamService;
+
+    @Resource
+    private RedissonClient redissonClient;
 
     @Override
     public ResponseVO<UserVO> login(LoginDTO loginDTO, HttpServletResponse response) throws MessagingException {
@@ -300,6 +307,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         CookieUtil.setCookie(response, Values.Fingerprint, uuid, Values.CookieExpiry, values.domain);
 
         return ResponseVO.wrapData(userVO);
+    }
+
+    @Override
+    public ResponseVO<String> syncFissureSubscriptions(SyncFissureSubscriptionsDTO syncFissureSubscriptionsDTO) {
+        RBucket<SyncFissureSubscriptionsDTO> rBucket = redissonClient.getBucket(StpUtil.getLoginIdAsString() + ":syncFissureSubscriptions");
+        rBucket.set(syncFissureSubscriptionsDTO);
+        return ResponseVO.completed();
+    }
+
+    @Override
+    public ResponseVO<SyncFissureSubscriptionsDTO> downloadFissureSubscriptions(String uuid) {
+        RBucket<SyncFissureSubscriptionsDTO> rBucket = redissonClient.getBucket(StpUtil.getLoginIdAsString() + ":syncFissureSubscriptions");
+        return ResponseVO.wrapData(rBucket.get());
     }
 
     private UserVO parseUserVO (User user) {

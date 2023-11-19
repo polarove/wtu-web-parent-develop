@@ -43,4 +43,8 @@ public interface UserService extends IService<User> {
     ResponseVO<String> updateUserAccelerator(String name);
 
     ResponseVO<UserVO> togglePlatform(String loginIdAsString, String platform);
+
+    ResponseVO<String> syncFissureSubscriptions(SyncFissureSubscriptionsDTO syncFissureSubscriptionsDTO);
+
+    ResponseVO<SyncFissureSubscriptionsDTO> downloadFissureSubscriptions(String uuid);
 }
