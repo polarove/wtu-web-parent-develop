@@ -9,8 +9,8 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 39.98.44.254:8848
+        server-addr: 140.210.195.116:8848
       config:
         file-extension: yml
-        server-addr: 39.98.44.254:8848
+        server-addr: 140.210.195.116:8848
         shared-configs: wtu-web-backend.yml
