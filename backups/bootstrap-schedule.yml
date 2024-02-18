@@ -1,0 +1,16 @@
+server:
+  port: 7676
+
+spring:
+  profiles:
+    active: @spring.profiles.active@
+  application:
+    name: wtu-web-backend
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 140.210.195.116:8848
+      config:
+        file-extension: yml
+        server-addr: 140.210.195.116:8848
+        shared-configs: wtu-web-backend.yml
