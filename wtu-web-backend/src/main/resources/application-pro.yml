@@ -1,7 +1,7 @@
 server:
   ssl:
-    certificate: classpath:ssl/pro/cert.crt
-    certificate-private-key: classpath:ssl/pro/cert-key.key
+    certificate: classpath:ssl/pro/cert.pem
+    certificate-private-key: classpath:ssl/pro/cert.key
 
 netty:
   en:
@@ -15,6 +15,6 @@ netty:
     certificate-private-key: ssl/pro/netty.key
 
 domain:
-  frontend: https://www.neorae.cn
-  backend: https://www.neorae.cn:6767
-  name: www.neorae.cn
+  frontend: https://warframe.team
+  backend: https://warframe.team:6767
+  name: warframe.team
